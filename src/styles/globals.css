@@ -1,0 +1,11 @@
+
+a {
+    text-decoration: none;
+}
+
+@media screen and (min-width: 990px) {
+    .remove-px-10 {
+        padding-left: 5% !important;
+        padding-right: 5% !important;
+    }
+}
