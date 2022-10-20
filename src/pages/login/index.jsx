@@ -49,7 +49,7 @@ const Container = () => {
                    Username or password invalid!
                 </Alert>
                 <fieldset>
-                    <div className={classNames(`bg-cyan-300 flex items-center mt-4 px-3 rounded-lg dark:bg-stone-400`)}>
+                    <div className={classNames(`border border-solid border-blue-600 flex items-center mt-4 px-3 rounded-lg dark:bg-stone-400`)}>
                         <AccountCircle className="text-slate-700" />
                         <Input 
                             className="grow"
@@ -58,7 +58,7 @@ const Container = () => {
                             required
                         />
                     </div>
-                    <div className={classNames(`bg-cyan-300 flex items-center mt-4 px-3 rounded-lg dark:bg-stone-400`)}>
+                    <div className={classNames(`border border-solid border-blue-600 flex items-center mt-4 px-3 rounded-lg dark:bg-stone-400`)}>
                         <IconButton
                             aria-label="toggle password visibility"
                             onClick={handleClickShowPassword}
@@ -89,7 +89,7 @@ const Container = () => {
                             </Link>
                         </Typography>
                         <Button 
-                            className="bg-cyan-500 mt-6 py-3 rounded-2xl text-base w-full"
+                            className="bg-blue-600 mt-6 py-3 rounded-2xl text-base w-full"
                             variant="contained"
                             type="submit"
                         >Submit
