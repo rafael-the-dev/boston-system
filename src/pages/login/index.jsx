@@ -12,11 +12,13 @@ import Input from 'src/components/Input';
 
 
 const Container = () => {
-    const userNameRef = useRef(null);
     const [ values, setValues ] = useState({
         password: '',
         showPassword: false,
     });
+    
+    const alertRef = useRef(null);
+    const userNameRef = useRef(null);
 
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
