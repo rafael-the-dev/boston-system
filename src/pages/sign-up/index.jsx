@@ -16,6 +16,13 @@ const Container = () => {
         password: '',
         showPassword: false,
     });
+
+    const [ errors, setErrors ] = useState({
+        'confirm-password': [],
+        name: [],
+        password: [],
+        username: []
+    })
     
     const alertRef = useRef(null);
     const userNameRef = useRef(null);
@@ -35,6 +42,40 @@ const Container = () => {
         setValues(currentValues => ({ ...currentValues, [prop]: event.target.value }));
     }, []);
 
+    const passwordChangeHandler = useCallback(value => {
+        const passwordErrors = [];
+
+        const startWithUppercaseLetter = () => {
+            const isValid = /^[A-Z]/.test(value);
+
+            if(!isValid) {
+                passwordErrors.push({
+                    message: "must start with uppercased letter",
+                    name: ""
+                })
+            }
+        };
+
+        const hasNumbers = () => {
+            const isValid = /[0-9]{2,}/g.test(value);
+
+            if(!isValid) {
+                passwordErrors.push({
+                    message: "must contain at least two numbers",
+                    name: ""
+                })
+            }
+        };
+
+        startWithUppercaseLetter();
+        hasNumbers();
+
+        setErrors(currentErrors => ({
+            ...currentErrors,
+            'password': passwordErrors
+        }))
+    }, [])
+
     return (
         <div className="min-h-screen flex items-center justify-center w-full px-5 md:px-0 dark:bg-stone-500">
             <Paper 
@@ -50,18 +91,27 @@ const Container = () => {
                 </Alert>
                 <fieldset>
                     <Input 
+                        errors={errors}
+                        id="name"
                         placeholder="Full name"
                         ref={userNameRef}
                     />
                     <Input 
+                        errors={errors}
+                        id="username"
                         placeholder="Username"
                         ref={userNameRef}
                     />
                     <Input 
+                        errors={errors}
+                        id="password"
+                        onChange={passwordChangeHandler}
                         placeholder="Password"
                         ref={userNameRef}
                     />
                     <Input 
+                        errors={errors}
+                        id="confirm-password"
                         placeholder="Comfirm password"
                         ref={userNameRef}
                     />
