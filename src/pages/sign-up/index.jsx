@@ -67,8 +67,20 @@ const Container = () => {
             }
         };
 
+        const hasWhitespace = () => {
+            const isValid = /\s+/g.test(value);
+            
+            if(isValid) {
+                passwordErrors.push({
+                    message: "must not contain white space",
+                    name: ""
+                })
+            }
+        };
+
         startWithUppercaseLetter();
         hasNumbers();
+        hasWhitespace();
 
         setErrors(currentErrors => ({
             ...currentErrors,
