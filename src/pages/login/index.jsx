@@ -1,4 +1,4 @@
-import { Alert, AlertTitle, Button, IconButton, Paper, Typography } from '@mui/material';
+import { Alert, AlertTitle, IconButton, Paper, Typography } from '@mui/material';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 
@@ -7,7 +7,9 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
 
 import classNames from 'classnames'
-import classes from "./styles.module.css"
+import classes from "./styles.module.css";
+
+import { Button } from "src/components/signup-page"
 import Input from 'src/components/Input';
 
 
@@ -80,7 +82,7 @@ const Container = () => {
                         className={classNames("flex flex-col sm:items-center mt-6")}>
                         <Typography component="p" className="ml-4 text-sm dark:text-slate-400">
                             don't you have an account? 
-                            <Link href="/signup">
+                            <Link href="/sign-up">
                                 <a 
                                     className={classNames(classes.signUpLink, 
                                     "ml-2 text-blue-700 uppercase underline hover:opacity-90")}>
@@ -88,12 +90,7 @@ const Container = () => {
                                 </a>
                             </Link>
                         </Typography>
-                        <Button 
-                            className="bg-blue-600 mt-6 py-3 rounded-2xl text-base w-full"
-                            variant="contained"
-                            type="submit"
-                        >Submit
-                        </Button>
+                        <Button >Submit</Button>
                     </div>
                 </fieldset>
             </Paper>

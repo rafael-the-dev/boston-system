@@ -1,4 +1,4 @@
-import { Alert, AlertTitle, Button, IconButton, Paper, Typography } from '@mui/material';
+import { Alert, AlertTitle, Paper, Typography } from '@mui/material';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 
@@ -8,8 +8,8 @@ import Visibility from '@mui/icons-material/Visibility';
 
 import classNames from 'classnames'
 import classes from "./styles.module.css"
-import Input from 'src/components/Input';
 
+import { Button, Input } from "src/components/signup-page"
 
 const Container = () => {
     const [ values, setValues ] = useState({
@@ -50,51 +50,34 @@ const Container = () => {
                 </Alert>
                 <fieldset>
                     <Input 
-                        className="border border-solid border-blue-600 mb-4 rounded-lg w-full"
-                        fullWidth
                         placeholder="Full name"
                         ref={userNameRef}
-                        required
                     />
                     <Input 
-                        className="border border-solid border-blue-600 mb-4 rounded-lg w-full"
-                        fullWidth
                         placeholder="Username"
                         ref={userNameRef}
-                        required
                     />
                     <Input 
-                        className="border border-solid border-blue-600 mb-4 rounded-lg w-full"
-                        fullWidth
                         placeholder="Password"
                         ref={userNameRef}
-                        required
                     />
                     <Input 
-                        className="border border-solid border-blue-600 rounded-lg w-full"
-                        fullWidth
                         placeholder="Comfirm password"
                         ref={userNameRef}
-                        required
                     />
                     <div 
                         className={classNames("flex flex-col sm:items-center mt-6")}>
                         <Typography component="p" className="ml-4 text-sm dark:text-slate-400">
-                            don't you have an account? 
-                            <Link href="/signup">
+                            have an account? 
+                            <Link href="/login">
                                 <a 
                                     className={classNames(classes.signUpLink, 
                                     "ml-2 text-blue-700 uppercase underline hover:opacity-90")}>
-                                    sign up.
+                                    sign in.
                                 </a>
                             </Link>
                         </Typography>
-                        <Button 
-                            className="bg-blue-700 mt-6 py-3 rounded-2xl text-base w-full"
-                            variant="contained"
-                            type="submit"
-                        >Submit
-                        </Button>
+                        <Button>Submit</Button>
                     </div>
                 </fieldset>
             </Paper>
