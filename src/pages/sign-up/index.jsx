@@ -1,10 +1,6 @@
 import { Alert, AlertTitle, Paper, Typography } from '@mui/material';
-import { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
-
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import Visibility from '@mui/icons-material/Visibility';
 
 import classNames from 'classnames'
 import classes from "./styles.module.css"
@@ -12,11 +8,6 @@ import classes from "./styles.module.css"
 import { Button, Input } from "src/components/signup-page"
 
 const Container = () => {
-    const [ values, setValues ] = useState({
-        password: '',
-        showPassword: false,
-    });
-
     const [ errors, setErrors ] = useState({
         'confirm-password': [],
         name: [],
@@ -26,6 +17,12 @@ const Container = () => {
     
     const alertRef = useRef(null);
     const userNameRef = useRef(null);
+
+    const hasErrors = useMemo(() => {
+        return Boolean(Object.values(errors).reduce((previousValue, currentValue) => {
+            return previousValue + currentValue.length;
+        }, 0))
+    }, [ errors ]);
 
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
@@ -78,9 +75,19 @@ const Container = () => {
             }
         };
 
+        const checkLength = () => {
+            if(value.length < 8) {
+                passwordErrors.push({
+                    message: "must contain at least 8 characters",
+                    name: ""
+                })
+            }
+        };
+
         startWithUppercaseLetter();
         hasNumbers();
         hasWhitespace();
+        checkLength();
 
         setErrors(currentErrors => ({
             ...currentErrors,
@@ -139,7 +146,7 @@ const Container = () => {
                                 </a>
                             </Link>
                         </Typography>
-                        <Button>Submit</Button>
+                        <Button disabled={hasErrors}>Submit</Button>
                     </div>
                 </fieldset>
             </Paper>
