@@ -3,7 +3,9 @@ import { useCallback, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 
 import classNames from 'classnames'
-import classes from "./styles.module.css"
+import classes from "./styles.module.css";
+
+import Validation from "src/models/Validation"
 
 import { Button, Input } from "src/components/signup-page"
 
@@ -39,6 +41,18 @@ const Container = () => {
         setValues(currentValues => ({ ...currentValues, [prop]: event.target.value }));
     }, []);
 
+    const usernameChangeHandler = useCallback((value) => {
+        const usernameErrors = [];
+
+        Validation.hasWhitespace(value, (whitespaceError) => usernameErrors.push(whitespaceError));
+
+        setErrors(currentErrors => ({
+            ...currentErrors,
+            'username': usernameErrors
+        }))
+
+    }, [])
+
     const passwordChangeHandler = useCallback(value => {
         const passwordErrors = [];
 
@@ -64,17 +78,6 @@ const Container = () => {
             }
         };
 
-        const hasWhitespace = () => {
-            const isValid = /\s+/g.test(value);
-            
-            if(isValid) {
-                passwordErrors.push({
-                    message: "must not contain white space",
-                    name: ""
-                })
-            }
-        };
-
         const checkLength = () => {
             if(value.length < 8) {
                 passwordErrors.push({
@@ -86,13 +89,17 @@ const Container = () => {
 
         startWithUppercaseLetter();
         hasNumbers();
-        hasWhitespace();
+        Validation.hasWhitespace(value, (whitespaceError) => passwordErrors.push(whitespaceError));
         checkLength();
 
         setErrors(currentErrors => ({
             ...currentErrors,
             'password': passwordErrors
         }))
+    }, []);
+
+    const confirmPasswordChangeHandler = useCallback((value) => {
+
     }, [])
 
     return (
@@ -118,6 +125,7 @@ const Container = () => {
                     <Input 
                         errors={errors}
                         id="username"
+                        onChange={usernameChangeHandler}
                         placeholder="Username"
                         ref={userNameRef}
                     />
