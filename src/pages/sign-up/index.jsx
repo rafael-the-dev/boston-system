@@ -44,7 +44,8 @@ const Container = () => {
     const usernameChangeHandler = useCallback((value) => {
         const usernameErrors = [];
 
-        Validation.hasWhitespace(value, (whitespaceError) => usernameErrors.push(whitespaceError));
+        Validation.hasWhitespace({ value, onSuccess: (error) => usernameErrors.push(error) });
+        Validation.checkLength({ min: 8, value, onError: (error) => usernameErrors.push(error) });
 
         setErrors(currentErrors => ({
             ...currentErrors,
@@ -56,41 +57,10 @@ const Container = () => {
     const passwordChangeHandler = useCallback(value => {
         const passwordErrors = [];
 
-        const startWithUppercaseLetter = () => {
-            const isValid = /^[A-Z]/.test(value);
-
-            if(!isValid) {
-                passwordErrors.push({
-                    message: "must start with uppercased letter",
-                    name: ""
-                })
-            }
-        };
-
-        const hasNumbers = () => {
-            const isValid = /[0-9]{2,}/g.test(value);
-
-            if(!isValid) {
-                passwordErrors.push({
-                    message: "must contain at least two numbers",
-                    name: ""
-                })
-            }
-        };
-
-        const checkLength = () => {
-            if(value.length < 8) {
-                passwordErrors.push({
-                    message: "must contain at least 8 characters",
-                    name: ""
-                })
-            }
-        };
-
-        startWithUppercaseLetter();
-        hasNumbers();
-        Validation.hasWhitespace(value, (whitespaceError) => passwordErrors.push(whitespaceError));
-        checkLength();
+        Validation.startWithUppercaseLetter({ value, onError: error => passwordErrors.push(error) })
+        Validation.hasNumbers({ value, onError: (error) => passwordErrors.push(error)})
+        Validation.hasWhitespace({ value, onSuccess: (error) => passwordErrors.push(error) });
+        Validation.checkLength({ min: 8, value, onError: (error) => passwordErrors.push(error) });
 
         setErrors(currentErrors => ({
             ...currentErrors,
