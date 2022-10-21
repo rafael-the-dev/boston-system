@@ -9,7 +9,7 @@ class Validation {
 
         onSuccess && onSuccess();
     }
-    
+
     static hasNumbers = ({ value, onError, onSuccess }) => {
         const isValid = /[0-9]{2,}/g.test(value);
 
@@ -21,6 +21,19 @@ class Validation {
         }
 
         onSuccess && onSuccess();
+    }
+
+    static hasSpecialChars = ({ onError, onSuccess, value }) => {
+        const isValid = /\W+/g.test(value);
+
+        if(isValid) {
+            onSuccess({
+                message: "Must not contain special characters",
+                name: ""
+            })
+        }
+
+        onError && onError();
     }
 
     static hasWhitespace = ({ value, onSuccess, onError }) => {

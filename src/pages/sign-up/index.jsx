@@ -46,6 +46,7 @@ const Container = () => {
 
         Validation.hasWhitespace({ value, onSuccess: (error) => usernameErrors.push(error) });
         Validation.checkLength({ min: 8, value, onError: (error) => usernameErrors.push(error) });
+        Validation.hasSpecialChars({ value, onSuccess: (error) => usernameErrors.push(error) });
 
         setErrors(currentErrors => ({
             ...currentErrors,
