@@ -17,7 +17,9 @@ const Container = () => {
         username: []
     })
     
-    const alertRef = useRef(null);
+    const confirmPasswordRef = useRef(null);
+    const nameRef = useRef(null);
+    const passwordRef = useRef(null);
     const userNameRef = useRef(null);
 
     const hasErrors = useMemo(() => {
@@ -26,20 +28,18 @@ const Container = () => {
         }, 0))
     }, [ errors ]);
 
-    const handleMouseDownPassword = (event) => {
-        event.preventDefault();
-    };
+    const nameChangeHandler = useCallback((value) => {
+        const nameErrors = [];
+        
+        Validation.checkLength({ min: 5, value: value.trim(), onError: (error) => nameErrors.push(error) });
+        Validation.hasNumbers({ min: 1, value, onError: () => {}, onSuccess: () => nameErrors.push({ name: "", message: "Must not contain numbers" })})
+        Validation.hasSpecialChars({ value: value.trim(), onSuccess: (error) => nameErrors.push(error) });
 
-    const handleClickShowPassword = useCallback(() => {
-        setValues(currentValues => ({
-          ...currentValues,
-          showPassword: !currentValues.showPassword
+        setErrors(currentErrors => ({
+            ...currentErrors,
+            'name': nameErrors
         }));
-    }, []);
-
-    const handleChange = useCallback((prop) => (event) => {
-        setValues(currentValues => ({ ...currentValues, [prop]: event.target.value }));
-    }, []);
+    }, [])
 
     const usernameChangeHandler = useCallback((value) => {
         const usernameErrors = [];
@@ -82,16 +82,13 @@ const Container = () => {
                 <Typography className="font-bold mb-8 text-center text-2xl uppercase  dark:text-slate-300">
                     Sign up
                 </Typography>
-                <Alert className={classNames("hidden mb-4")} ref={alertRef} severity="error">
-                    <AlertTitle>Error</AlertTitle>
-                   Username or password invalid!
-                </Alert>
                 <fieldset>
                     <Input 
                         errors={errors}
                         id="name"
+                        onChange={nameChangeHandler}
                         placeholder="Full name"
-                        ref={userNameRef}
+                        ref={nameRef}
                     />
                     <Input 
                         errors={errors}
@@ -105,13 +102,13 @@ const Container = () => {
                         id="password"
                         onChange={passwordChangeHandler}
                         placeholder="Password"
-                        ref={userNameRef}
+                        ref={passwordRef}
                     />
                     <Input 
                         errors={errors}
                         id="confirm-password"
                         placeholder="Comfirm password"
-                        ref={userNameRef}
+                        ref={confirmPasswordRef}
                     />
                     <div 
                         className={classNames("flex flex-col sm:items-center mt-6")}>

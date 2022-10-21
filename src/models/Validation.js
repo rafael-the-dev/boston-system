@@ -10,14 +10,15 @@ class Validation {
         onSuccess && onSuccess();
     }
 
-    static hasNumbers = ({ value, onError, onSuccess }) => {
-        const isValid = /[0-9]{2,}/g.test(value);
+    static hasNumbers = ({ min, value, onError, onSuccess }) => {
+        const isValid = new RegExp(`[0-9]{${min ?? 2},}`, "g").test(value);
 
         if(!isValid) {
             onError({
                 message: "must contain at least two numbers",
                 name: ""
             })
+            return;
         }
 
         onSuccess && onSuccess();
