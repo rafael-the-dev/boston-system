@@ -8,6 +8,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        blue: {
+          300: "#0079FF",
+          500: "#4B6A9B",
+          700: "#1E2A47",
+          800: "#2B3442",
+          900: "#141D2F"
+        }
       },
       spacing: {
         "5": "5%"
