@@ -1,8 +1,10 @@
-import { useCallback, useEffect, useState} from "react"
+import { useCallback, useEffect, useMemo, useState} from "react"
 import { Drawer } from "@mui/material"
 
 const Container = ({ anchor, children, classes, id, onOpen, onClose }) => {
     const [ open, setOpen ] = useState(false);
+
+    const childrenMemo = useMemo(() => children, [ children ]);
 
     const openHandler = useCallback(() => setOpen(true), []);
     const closeHandler = useCallback(() => setOpen(false), []);
@@ -22,7 +24,7 @@ const Container = ({ anchor, children, classes, id, onOpen, onClose }) => {
             open={open}
             onClose={closeHandler}
             classes={classes}>
-            { children }
+            { childrenMemo }
         </Drawer>
     );
 };
