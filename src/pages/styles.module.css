@@ -1,0 +1,9 @@
+.heroPanel {
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    top: -36px;
+    width: 90%;
+}
+
+.quote {
+    font-size: .9rem;
+}
