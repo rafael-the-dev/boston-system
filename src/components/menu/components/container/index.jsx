@@ -4,7 +4,6 @@ import classNames from "classnames";
 import classes from "./styles.module.css";
 
 import HomeIcon from '@mui/icons-material/Home';
-import DashboardIcon from '@mui/icons-material/Dashboard';
 import PaidIcon from '@mui/icons-material/Paid';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import TimelineIcon from '@mui/icons-material/Timeline';
