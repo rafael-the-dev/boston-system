@@ -7,7 +7,7 @@ import classes from "./styles.module.css";
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 
 import Container from "./components/container";
-import Dialog from "src/components/dialog";
+import Drawer from "src/components/Drawer";
 
 
 const Menu = () => {
@@ -22,7 +22,8 @@ const Menu = () => {
                 <Container />
             </Hidden>
             <Hidden lgUp>
-                <Dialog
+                <Drawer
+                    anchor="left"
                     classes={{ 
                         paper: classNames(classes.dialogPaper, "h-full m-0 max-h-full rounded-none"),
                         scrollPaper: "justify-start"
@@ -31,7 +32,7 @@ const Menu = () => {
                     onOpen={onClickRef}
                     onClose={onCloseRef}>
                     <Container />
-                </Dialog>
+                </Drawer>
             </Hidden>
             <SpeedDial
                 ariaLabel="menu button"
