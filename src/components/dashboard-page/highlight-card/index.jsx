@@ -5,18 +5,21 @@ import classes from "./styles.module.css";
 
 import Link from "src/components/link"
 
-const Card = ({ color, href, title }) => {
+const Card = ({ color, href, icon, title }) => {
 
     return (
         <Link
             className={classNames(classes.card, "mb-4")}
             href={href}>
             <div 
-                className="h-full"
+                className="flex h-full items-center justify-between px-4 relative"
                 style={{ backgroundColor: color }}>
-                <Typography>
+                <Typography
+                    component="h2"
+                    className="font-bold text-lg text-white sm:text-xl">
                     { title }
                 </Typography>
+                { icon }
             </div>
         </Link>
     );

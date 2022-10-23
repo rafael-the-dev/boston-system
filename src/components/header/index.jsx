@@ -1,4 +1,4 @@
-import { Breadcrumbs, Hidden, IconButton } from "@mui/material"
+import { Breadcrumbs, Hidden, IconButton, Typography } from "@mui/material"
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
@@ -13,14 +13,18 @@ const Header = () => {
                 <Hidden lgUp>
                     <Menu />
                 </Hidden>
-                <Hidden smDown>
+                <Hidden xlDown>
                     <IconButton className="p-0 hover:bg-transparent">
                         <ArrowBackIcon />
                     </IconButton>
                     <Breadcrumbs></Breadcrumbs>
                 </Hidden>
             </div>
-            <div>
+            <div className="flex items-center">
+                <Hidden smDown>
+                    <Typography
+                        className="mr-3">Rafael Tivane</Typography>
+                </Hidden>
                 <Avatar />
             </div>
         </header>
