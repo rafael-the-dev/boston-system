@@ -3,12 +3,14 @@ import classNames from "classnames"
 
 import classes from "./styles.module.css";
 
+import { HightlightCard } from "src/components/dashboard-page"
+
 const Home = () => {
 
     return (
         <main>
-            <section>
-                <div className="bg-blue-500 px-5 pt-4 pb-12">
+            <section className={classes.main}>
+                <div className="bg-blue-500 px-5 pt-4 pb-12 sm:pt-8 sm:pb-16">
                     <Typography
                         component="h1"
                         className="font-bold text-2xl text-white">
@@ -16,13 +18,13 @@ const Home = () => {
                     </Typography>
                 </div>
                 <div className="relative">
-                    <div className={classNames(classes.heroPanel, `absolute bg-white left-5 px-3 py-4`)}>
+                    <div className={classNames(classes.heroPanel, `absolute bg-white left-5 px-3 py-4 sm:px-4 sm:py-6`)}>
                         <Typography
                             component="h2"
                             className="">
                             Seja bem-vindo ao painel de gerenciamento
                         </Typography>
-                        <div className="border-l-4 border-solid border-blue-500 bg-gray-200 mt-4 py-3 px-2">
+                        <div className="border-l-4 border-solid border-blue-500 bg-gray-200 mt-4 py-3 px-2 md:py-4 md:px-3">
                             <Typography>
                                 <sapn className="font-medium">Hello, Rafael Tivane</sapn><br/>
                                 <span className={classes.quote}>
@@ -33,6 +35,12 @@ const Home = () => {
                     </div>
                 </div>
             </section>
+            <div className={classNames(classes.highlightsContainer, "flex flex-wrap items-stretch justify-between px-5")}>
+                <HightlightCard color="#fde68a" href="/" icon title="Home" />
+                <HightlightCard color="#fecaca" href="/" icon title="Home"/>
+                <HightlightCard color="#e9d5ff" href="/" icon title="Home"/>
+                <HightlightCard color="#a5f3fc" href="/" icon title="Home"/>
+            </div>
         </main>
     );
 };

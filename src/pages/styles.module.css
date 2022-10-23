@@ -7,3 +7,13 @@
 .quote {
     font-size: .9rem;
 }
+
+.highlightsContainer {
+    margin-top: 11rem;
+}
+
+@media screen and (min-width: 600px) {
+    .heroPanel {
+        top: -40px;
+    }
+}

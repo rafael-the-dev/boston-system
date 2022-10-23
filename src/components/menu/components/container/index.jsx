@@ -13,15 +13,15 @@ import ListItem from "../list-item";
 
 const Container = () => {
     return (
-        <aside className="bg-blue-800 h-screen">
-            <div className="bg-blue-500 px-5 py-4">
+        <aside className={classNames(classes.container, "bg-blue-800 h-screen")}>
+            <div className="bg-blue-500 px-5 py-4 lg:py-3">
                 <Link 
                     className="text-lg sm:text-xl md:text-2xl text-white uppercase"
                     href="/">
                     Logo
                 </Link>
             </div>
-            <ul className="py-3">
+            <ul className="py-3 lg:pt-6">
                 <ListItem href="/">
                     <HomeIcon /> Home
                 </ListItem>

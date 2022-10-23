@@ -1,0 +1,16 @@
+.card {
+    min-height: 170px;
+    width: 100%;
+}
+
+@media screen and (min-width: 600px) {
+    .card {
+        width: 48%
+    }
+}
+
+@media screen and (min-width: 990px) {
+    .card {
+        width: 23.5%
+    }
+}
