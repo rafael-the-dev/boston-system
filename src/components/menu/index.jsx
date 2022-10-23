@@ -1,10 +1,10 @@
 import * as React from "react";
 import classNames from "classnames";
-import { Hidden, SpeedDial } from "@mui/material";
+import { Hidden, IconButton } from "@mui/material";
 
 import classes from "./styles.module.css";
 
-import SpeedDialIcon from '@mui/material/SpeedDialIcon';
+import MenuIcon from '@mui/icons-material/Menu';
 
 import Container from "./components/container";
 import Drawer from "src/components/Drawer";
@@ -22,6 +22,11 @@ const Menu = () => {
                 <Container />
             </Hidden>
             <Hidden lgUp>
+                <IconButton 
+                    className="p-0 hover:bg-transparent"
+                    onClick={clickHandler}>
+                    <MenuIcon />
+                </IconButton>
                 <Drawer
                     anchor="left"
                     classes={{ 
@@ -34,12 +39,6 @@ const Menu = () => {
                     <Container />
                 </Drawer>
             </Hidden>
-            <SpeedDial
-                ariaLabel="menu button"
-                onClick={clickHandler}
-                sx={{ position: 'absolute', bottom: 16, right: 16 }}
-                icon={<SpeedDialIcon />}
-            />
         </>
     );
 };
