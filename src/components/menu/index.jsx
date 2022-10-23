@@ -1,6 +1,7 @@
 import * as React from "react";
 import classNames from "classnames";
 import { Hidden, IconButton } from "@mui/material";
+import { useRouter } from "next/router"
 
 import classes from "./styles.module.css";
 
@@ -15,6 +16,9 @@ const Menu = () => {
     const onCloseRef = React.useRef(null);
 
     const clickHandler = () => onClickRef.current?.();
+
+    const { pathname } = useRouter();
+    if([ "/sign-up", "/login" ].includes(pathname)) return <></>;
 
     return (
         <>

@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Avatar, IconButton } from "@mui/material";
+import { useRouter } from "next/router"
 import classNames from "classnames";
 
 import classes from "./styles.module.css";
@@ -15,6 +16,9 @@ const Container = () => {
     const onOpen = React.useRef(null);
 
     const clickHandler = e => onOpen.current?.(e);
+
+    const router = useRouter();
+    const logout = () => router.push("/login");
     
     return (
         <>
@@ -35,7 +39,9 @@ const Container = () => {
                         <PersonIcon />
                         Perfil
                     </ListItem>
-                    <ListItem classes={{ button: "capitalize" }}>
+                    <ListItem 
+                        classes={{ button: "capitalize" }}
+                        onClick={logout}>
                         <LogoutIcon />
                         Sair
                     </ListItem>

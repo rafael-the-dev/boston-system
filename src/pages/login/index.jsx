@@ -1,5 +1,6 @@
 import { Alert, AlertTitle, IconButton, Paper, Typography } from '@mui/material';
-import { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { useRouter } from "next/router";
 import Link from 'next/link'
 
 import AccountCircle from '@mui/icons-material/AccountCircle';
@@ -37,12 +38,19 @@ const Container = () => {
         setValues(currentValues => ({ ...currentValues, [prop]: event.target.value }));
     }, []);
 
+    const router = useRouter();
+    const submitHandler = useCallback(e => {
+        e.preventDefault();
+        router.push("/")
+    }, [ router ])
+
     return (
         <div className="min-h-screen flex items-center justify-center w-full px-5 md:px-0 dark:bg-stone-500">
             <Paper 
                 className={classNames(classes.loginContainer, `px-5 py-8 rounded-2xl w-full md:px-6 dark:bg-stone-900`)}
                 component="form"
-                elavation={0}>
+                elavation={0}
+                onSubmit={submitHandler}>
                 <Typography className="font-bold mb-8 text-center text-2xl uppercase  dark:text-slate-300">
                     Login
                 </Typography>

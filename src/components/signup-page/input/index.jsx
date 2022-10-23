@@ -1,7 +1,9 @@
 import * as React from "react";
 import classNames from "classnames"
 import Typography from "@mui/material/Typography";
-import { v4 as uuuidV4 } from "uuid"
+import { v4 as uuuidV4 } from "uuid";
+
+import classes from "./styles.module.css";
 
 import Input from 'src/components/Input';
 
@@ -21,8 +23,8 @@ const DefaultInput = React.forwardRef((props, ref) => {
         <div className="mb-4">
             <Input 
                 { ...props }
-                className={classNames("border border-solid rounded-lg w-full", 
-                hasErrors() ? "border-red-600" : "border-blue-600" )}
+                className={classNames(classes.input, "border-solid rounded-lg w-full", 
+                hasErrors() ? "border-red-600" : "border-blue-800" )}
                 error={hasErrors()}
                 fullWidth
                 onChange={changeHandler}

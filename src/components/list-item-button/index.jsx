@@ -7,7 +7,8 @@ const Container = ({ children, classes, className, onClick }) => {
         <li className={classNames("", classes?.root)}>
             <Button
                 className={classNames(`flex items-center justify-between py-3 px-3 rounded-none w-full 
-                hover:bg-stone-200`, classes?.button)}>
+                hover:bg-stone-200`, classes?.button)}
+                onClick={onClick}>
                 { children }
             </Button>
         </li>

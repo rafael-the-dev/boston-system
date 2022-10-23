@@ -87,27 +87,27 @@ const Container = () => {
                         errors={errors}
                         id="name"
                         onChange={nameChangeHandler}
-                        placeholder="Full name"
+                        placeholder="Nome completo"
                         ref={nameRef}
                     />
                     <Input 
                         errors={errors}
                         id="username"
                         onChange={usernameChangeHandler}
-                        placeholder="Username"
+                        placeholder="Nome do usuario"
                         ref={userNameRef}
                     />
                     <Input 
                         errors={errors}
                         id="password"
                         onChange={passwordChangeHandler}
-                        placeholder="Password"
+                        placeholder="Palavra-passe"
                         ref={passwordRef}
                     />
                     <Input 
                         errors={errors}
                         id="confirm-password"
-                        placeholder="Comfirm password"
+                        placeholder="Comfirme palavra-passe"
                         ref={confirmPasswordRef}
                     />
                     <div 
