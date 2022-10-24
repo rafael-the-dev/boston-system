@@ -3,6 +3,11 @@ a {
     text-decoration: none;
 }
 
+
+.sign-up-select .MuiOutlinedInput-root {
+    border-radius: .5rem !important;
+}
+
 @media screen and (min-width: 990px) {
     .remove-px-10 {
         padding-left: 5% !important;

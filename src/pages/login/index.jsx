@@ -1,5 +1,5 @@
 import { Alert, AlertTitle, IconButton, Paper, Typography } from '@mui/material';
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useRouter } from "next/router";
 import Link from 'next/link'
 
@@ -15,12 +15,14 @@ import Input from 'src/components/Input';
 
 
 const Container = () => {
+    const [ loading, setLoading ] = useState(false);
     const [ values, setValues ] = useState({
         password: '',
         showPassword: false,
     });
     
     const alertRef = useRef(null);
+    const passwordRef = useRef(null);
     const userNameRef = useRef(null);
 
     const handleMouseDownPassword = (event) => {
@@ -41,8 +43,92 @@ const Container = () => {
     const router = useRouter();
     const submitHandler = useCallback(e => {
         e.preventDefault();
-        router.push("/")
-    }, [ router ])
+
+        setLoading(true);
+
+        const options = {
+            body: JSON.stringify({
+                password: passwordRef.current.value,
+                username: userNameRef.current.value
+            }),
+            method: "PUT",
+        };
+
+        fetch('/api/login', options)
+            .then(() => {
+                router.push("/")
+            })
+            .catch(err => {
+                console.error(err);
+                setLoading(false);
+            })
+    }, [ router ]);
+
+    const legendMemo = useMemo(() => (
+        <Typography className="font-bold mb-8 text-center text-2xl uppercase  dark:text-slate-300">
+            Login
+        </Typography>
+    ), []);
+
+    const alertMemo = useMemo(() => (
+        <Alert className={classNames("hidden mb-4")} ref={alertRef} severity="error">
+            <AlertTitle>Error</AlertTitle>
+            Username or password invalid!
+        </Alert>
+    ), [])
+
+    const usernameMemo = useMemo(() => (
+        <div className={classNames(`border border-solid border-blue-700 flex items-center mt-4 px-3 rounded-lg dark:bg-stone-400`)}>
+            <AccountCircle className="text-slate-700" />
+            <Input 
+                className="grow"
+                placeholder="Username"
+                ref={userNameRef}
+                required
+            />
+        </div>
+    ), []);
+
+    const passwordMemo = useMemo(() => (
+        <div className={classNames(`border border-solid border-blue-700 flex items-center mt-4 px-3 rounded-lg dark:bg-stone-400`)}>
+            <IconButton
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                onMouseDown={handleMouseDownPassword}
+                edge="start"
+            >
+                { values.showPassword ? <VisibilityOff className="text-slate-700" /> : <Visibility className="text-slate-700" />}
+            </IconButton>
+            <Input 
+                className="grow"
+                onChange={handleChange('password')}
+                placeholder="password"
+                ref={passwordRef}
+                required
+                type={values.showPassword ? 'text' : 'password'}
+                value={values.password}
+            />
+        </div>
+    ), [ handleClickShowPassword, handleMouseDownPassword, values ]);
+
+    const signUpMemo = useMemo(() => (
+        <Typography component="p" className="ml-4 text-sm dark:text-slate-400">
+            don't you have an account? 
+            <Link href="/sign-up">
+                <a 
+                    className={classNames(classes.signUpLink, 
+                    "ml-2 text-blue-700 uppercase underline hover:opacity-90")}>
+                    sign up.
+                </a>
+            </Link>
+        </Typography>
+    ), []);
+
+    const submitButtonMemo = useMemo(() => (
+        <Button >
+            { loading ? "Loading..." : "Submit" }
+        </Button>
+    ), [ loading ])
 
     return (
         <div className="min-h-screen flex items-center justify-center w-full px-5 md:px-0 dark:bg-stone-500">
@@ -51,54 +137,15 @@ const Container = () => {
                 component="form"
                 elavation={0}
                 onSubmit={submitHandler}>
-                <Typography className="font-bold mb-8 text-center text-2xl uppercase  dark:text-slate-300">
-                    Login
-                </Typography>
-                <Alert className={classNames("hidden mb-4")} ref={alertRef} severity="error">
-                    <AlertTitle>Error</AlertTitle>
-                   Username or password invalid!
-                </Alert>
                 <fieldset>
-                    <div className={classNames(`border border-solid border-blue-600 flex items-center mt-4 px-3 rounded-lg dark:bg-stone-400`)}>
-                        <AccountCircle className="text-slate-700" />
-                        <Input 
-                            className="grow"
-                            placeholder="Username"
-                            ref={userNameRef}
-                            required
-                        />
-                    </div>
-                    <div className={classNames(`border border-solid border-blue-600 flex items-center mt-4 px-3 rounded-lg dark:bg-stone-400`)}>
-                        <IconButton
-                            aria-label="toggle password visibility"
-                            onClick={handleClickShowPassword}
-                            onMouseDown={handleMouseDownPassword}
-                            edge="start"
-                        >
-                            { values.showPassword ? <VisibilityOff className="text-slate-700" /> : <Visibility className="text-slate-700" />}
-                        </IconButton>
-                        <Input 
-                            className="grow"
-                            placeholder="password"
-                            required
-                            type={values.showPassword ? 'text' : 'password'}
-                            value={values.password}
-                            onChange={handleChange('password')}
-                        />
-                    </div>
+                    { legendMemo }
+                    { alertMemo }
+                    { usernameMemo }
+                    { passwordMemo }
                     <div 
                         className={classNames("flex flex-col sm:items-center mt-6")}>
-                        <Typography component="p" className="ml-4 text-sm dark:text-slate-400">
-                            don't you have an account? 
-                            <Link href="/sign-up">
-                                <a 
-                                    className={classNames(classes.signUpLink, 
-                                    "ml-2 text-blue-700 uppercase underline hover:opacity-90")}>
-                                    sign up.
-                                </a>
-                            </Link>
-                        </Typography>
-                        <Button >Submit</Button>
+                        { signUpMemo }
+                        { submitButtonMemo }
                     </div>
                 </fieldset>
             </Paper>
