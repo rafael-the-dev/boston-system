@@ -1,10 +1,15 @@
-import { useCallback, useMemo, useState } from "react"
-import { Button, Checkbox, FormControlLabel, Typography } from "@mui/material";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { Button, Checkbox, FormControlLabel, MenuItem, Typography } from "@mui/material";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Input from "src/components/default-input";
 import classNames from "classnames";
+import moment from "moment"
 
 import classes from "./styles.module.css";
+
+import Validation from "src/models/Validation";
+
+import Link from "src/components/link"
 
 /**
  *  w12 === w-1/2
@@ -12,77 +17,317 @@ import classes from "./styles.module.css";
 */
 
 const Container = () => {
-    const [ date, setDate ] = useState(null);
+    const [ available, setAvailable ] = useState(true);
+    const [ barCode, setBarCode ] = useState({ errors: [], value: "" })
+    const [ category, setCategory ] = useState(null);
+    const [ categories, setCategories ] = useState([]);
+    const [ date, setDate ] = useState({ errors: [], value: null });
+    const [ name, setName ] = useState({ errors: [], value: "" });
+    const [ purchasePrice, setPurchasePrice ] = useState({ errors: [], value: "" });
+    const [ purchaseVat, setPurchaseVat ] = useState({ errors: [], value: "" });
+    const [ sellPrice, setSellPrice ] = useState({ errors: [], price: "" });
+    const [ sellVat, setSellVat ] = useState({ errors: [], value: "" });
+
+    const [ loading, setLoading ] = useState(false)
+
+    const availableRef = useRef(false);
+    const barCodeRef = useRef("");
+    const categoryRef = useRef("");
+    const dateRef = useRef("");
+    const nameRef = useRef("");
+    const purchasePriceRef = useRef(0);
+    const purchaseVatRef = useRef(0);
+    const sellPriceRef = useRef(0);
+    const sellVatRef = useRef(0)
+
+    const submitHandler = useCallback((e) => {
+        e.preventDefault();
+
+        setLoading(true);
+
+        const options = {
+            body: JSON.stringify({
+                available: availableRef.current,
+                barCode: barCodeRef.current,
+                category: categoryRef.current,
+                date: moment(dateRef.current).toDate().toISOString().slice(0, 19).replace('T', ' '),
+                name: nameRef.current,
+                purchasePrice: purchasePriceRef.current,
+                purchaseVat: purchaseVatRef.current,
+                sellPrice: sellPriceRef.current,
+                sellVat: sellVatRef.current 
+            }),
+            method: "POST"
+        };
+
+        fetch("/api/products", options)
+            .then(res => {
+                console.log(res);
+                e.target.reset();
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error(err);
+                setLoading(false);
+            })
+    }, []);
+
+    const legendMemo = useMemo(() => (
+        <Typography
+            component="legend"
+            className="bg-blue-500 capitalize px-5 py-6 text-center text-xl text-white w-full xl:py-8 xl:text-2xl">
+            Cadastro de produto
+        </Typography>
+    ), []);
+
+    const nameChangeHandler = useCallback(e => {
+        const value = e.target.value;
+        const errors = [];
+
+        Validation.checkLength({ min: 2, onError: (error) => errors.push(error), value: value.trim() });
+
+        nameRef.current = value;
+        setName({
+            errors,
+            value
+        })
+    }, [])
+
+    const nameMemo = useMemo(() => (
+        <Input 
+            className={classNames(classes.input, classes.w12)}
+            label="Nome"
+            onChange={nameChangeHandler}
+            required
+            value={name.value}
+            variant="outlined"
+        />
+    ), [ name ]);
+
+    const categoryChangeHandler = useCallback(e => {
+        const { value } = e.target;
+        categoryRef.current = value;
+        setCategory(value);
+    }, [])
+
+    const categoriesMemo = useMemo(() => {
+        return (
+            <Input
+                className={classNames(classes.input, classes.w12)}
+                label="Categoria"
+                onChange={categoryChangeHandler}
+                value={category}
+                select>
+                {
+                    categories.map((item) => (
+                        <MenuItem
+                            key={item.idGrupo}
+                            value={item.idGrupo}>
+                            { item.Descricao }
+                        </MenuItem>
+                    ))
+                }
+            </Input>
+        );
+    }, [ category, categories, categoryChangeHandler ]);
+
+    const barCodeChangeHandler = useCallback((e) => {
+        const value = e.target.value.trim();
+
+        barCodeRef.current = value;
+
+        setBarCode({
+            errors: [],
+            value
+        })
+    }, [])
+
+    const barCodeMemo = useMemo(() => (
+        <Input 
+            className={classNames(classes.input, classes.w12)}
+            label="Codigo de barra"
+            onChange={barCodeChangeHandler}
+            required
+            value={barCode.value}
+            variant="outlined"
+        />
+    ), [ barCode, barCodeChangeHandler ]);
 
     const dateChangeHandler = useCallback((value) => {
+        dateRef.current = value;
         setDate(value)
+    }, []);
+
+    const datePickerMemo = useMemo(() => (
+        <DatePicker
+            label="Date"
+            required
+            value={date}
+            onChange={dateChangeHandler}
+            renderInput={(params) => <Input {...params} className={classNames(classes.input, classes.w12)} />}
+        />
+    ), [ date, dateChangeHandler ]);
+
+    const sellPriceChangeHandler = useCallback(e => {
+        const errors = [];
+        const { value } = e.target;
+
+        sellPriceRef.current = value;
+
+        setSellPrice({
+            errors, 
+            value
+        })
+    }, [])
+
+    const sellPriceMemo = useMemo(() => (
+        <Input 
+            className={classNames(classes.input, classes.w13)}
+            label="Preco de venda"
+            onChange={sellPriceChangeHandler}
+            required
+            value={sellPrice.value}
+            variant="outlined"
+        />
+    ), [ sellPrice ]);
+
+    const purchasePriceChangeHandler = useCallback(e => {
+        const { value } = e.target;
+        const errors = [];
+
+        purchasePriceRef.current = value;
+
+        setPurchasePrice({
+            errors,
+            value
+        })
+    }, [])
+
+    const purchasePriceMemo = useMemo(() => (
+        <Input 
+            className={classNames(classes.input, classes.w13)}
+            label="Preco de compra"
+            onChange={purchasePriceChangeHandler}
+            required
+            value={purchasePrice.value}
+            variant="outlined"
+        />
+    ), [ purchasePrice, purchasePriceChangeHandler ]);
+
+    const sellVatChangeHandler = useCallback(e => {
+        const errors = [];
+        const { value } = e.target;
+
+        sellVatRef.current = value;
+
+        setSellVat({
+            errors,
+            value
+        })
+    }, [])
+
+    const sellVatMemo = useMemo(() => (
+        <Input 
+            className={classNames(classes.input, classes.w13)}
+            label="Iva de venda"
+            onChange={sellVatChangeHandler}
+            required
+            value={sellVat.value}
+            variant="outlined"
+        />
+    ), [ sellVat ]);
+
+    const purchaseVatChangeHandler = useCallback(e => {
+        const errors = [];
+        const { value } = e.target;
+
+        purchaseVatRef.current = value;
+
+        setPurchaseVat({
+            errors,
+            value
+        })
+    }, [])
+
+    const purchaseVatMemo = useMemo(() => (
+        <Input 
+            className={classNames(classes.input, classes.w13)}
+            label="Iva de compra"
+            onChange={purchaseVatChangeHandler}
+            required
+            value={purchaseVat.value}
+            variant="outlined"
+        />
+    ), [ purchaseVatChangeHandler, purchaseVat ]);
+
+    const availabilityChangeHandler = useCallback(e => {
+        const { checked } = e.target;
+
+        availableRef.current = checked;
+        setAvailable(checked);
+    }, [])
+
+    const availabilityMemo = useMemo(() => (
+        <FormControlLabel 
+            control={<Checkbox checked={available} onChange={availabilityChangeHandler} />} 
+            label="Disponivel" 
+        />
+    ), [ available, availabilityChangeHandler ]);
+
+    const cancelButton = useMemo(() => (
+        <Link 
+            className="mr-3"
+            href="/">
+            <Button 
+                className={classNames("border-red-500 text-red-500 sm:py-2 hover:bg-red-500 hover:border-red-500 hover:text-white")}
+                type="button"
+                variant="outlined">
+                Cancelar
+            </Button>
+        </Link>
+    ), [])
+
+    useEffect(() => {
+        fetch('/api/categories')
+            .then(res => res.json())
+            .then(data => setCategories(data))
+            .catch(console.error)
     }, [])
 
     return (
         <main className={classes.main}>
-            <form className="flex flex-col h-full items-stretch justify-between pb-8">
+            <form 
+                className="flex flex-col h-full items-stretch justify-between pb-8"
+                onSubmit={submitHandler}>
                 <fieldset className="grow">
-                    <Typography
-                        component="legend"
-                        className="bg-blue-500 capitalize px-5 py-6 text-center text-xl text-white w-full xl:py-8 xl:text-2xl">
-                        Cadastro de produto
-                    </Typography>
+                    { legendMemo }
                     <div className="px-5 py-6 xl:py-8">
-                        <Input 
-                            className={classNames(classes.input)}
-                            label="Nome"
-                            variant="outlined"
-                        />
                         <div className="flex flex-wrap justify-between w-full">
-                            <Input 
-                                className={classNames(classes.input, classes.w12)}
-                                label="Codigo de barra"
-                                variant="outlined"
-                            />
-                            <DatePicker
-                                label="Date"
-                                value={date}
-                                onChange={dateChangeHandler}
-                                renderInput={(params) => <Input {...params} className={classNames(classes.input, classes.w12)} />}
-                            />
+                            { nameMemo }
+                            { categoriesMemo }
                         </div>
                         <div className="flex flex-wrap justify-between w-full">
-                            <Input 
-                                className={classNames(classes.input, classes.w13)}
-                                label="Preco de venda"
-                                variant="outlined"
-                            />
-                            <Input 
-                                className={classNames(classes.input, classes.w13)}
-                                label="Preco de compra"
-                                variant="outlined"
-                            />
-                            <Input 
-                                className={classNames(classes.input, classes.w13)}
-                                label="Iva de venda"
-                                variant="outlined"
-                            />
+                            { barCodeMemo }
+                            { datePickerMemo }
+                        </div>
+                        <div className="flex flex-wrap justify-between w-full">
+                            { sellPriceMemo }
+                            { purchasePriceMemo }
+                            { sellVatMemo }
+                            { purchaseVatMemo }
                         </div>
                         <div>
-                            <FormControlLabel 
-                                control={<Checkbox defaultChecked />} 
-                                label="Disponivel" 
-                            />
+                            { availabilityMemo }
                         </div>
                     </div>
                 </fieldset>
                 <div className="flex justify-end px-5">
-                    <Button 
-                        className={classNames("border-red-500 mr-3 text-red-500 sm:py-2 hover:bg-red-500 hover:border-red-500 hover:text-white")}
-                        type="button"
-                        variant="outlined">
-                        Cancelar
-                    </Button>
+                    { cancelButton }
                     <Button
                         className={classNames("bg-blue-800 text-white hover:bg-blue-500 sm:py-2")}
-                        variant="contained"
-                        >
-                        Submeter
+                        type="submit"
+                        variant="contained">
+                        { loading ? "Loading..." : "Submeter" }
                     </Button>
                 </div>
             </form>
