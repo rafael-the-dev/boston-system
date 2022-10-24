@@ -8,15 +8,29 @@ const connection = createConnection({
 });
 
 
-connection.connect(err => {
-    if (err) {
-        console.error('error connecting: ' + err.stack);
-        return;
-    }
-    
-    console.log('connected as id ' + connection.threadId);
-});
+const createDBConnection = (dbConfig) => {
+    return new Promise((resolve, reject) => {
+        connection.connect(err => {
+            if (err) {
+                console.error('error connecting: ' + err.stack);
+
+                dbConfig.db = null;
+                dbConfig.isConnected = false;
+
+                reject(err)
+                return;
+            }
+            
+            console.log('connected as id ' + connection.threadId);
+
+            dbConfig.isConnected = true;
+
+            resolve();
+        });
+    })
+};
 
 module.exports = {
+    createDBConnection, 
     connection
 };

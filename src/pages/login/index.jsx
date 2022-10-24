@@ -1,4 +1,4 @@
-import { Alert, AlertTitle, IconButton, Paper, Typography } from '@mui/material';
+import { IconButton, Paper, Typography } from '@mui/material';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useRouter } from "next/router";
 import Link from 'next/link'
@@ -10,6 +10,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import classNames from 'classnames'
 import classes from "./styles.module.css";
 
+import Alert from "src/components/alert"
 import { Button } from "src/components/signup-page"
 import Input from 'src/components/Input';
 
@@ -21,7 +22,8 @@ const Container = () => {
         showPassword: false,
     });
     
-    const alertRef = useRef(null);
+    const onOpen = useRef(null);
+    const onClose = useRef(null);
     const passwordRef = useRef(null);
     const userNameRef = useRef(null);
 
@@ -44,6 +46,7 @@ const Container = () => {
     const submitHandler = useCallback(e => {
         e.preventDefault();
 
+        onClose.current?.();
         setLoading(true);
 
         const options = {
@@ -55,11 +58,14 @@ const Container = () => {
         };
 
         fetch('/api/login', options)
-            .then(() => {
+            .then((res) => {
+                if(res.status === 500) throw new Error();
+
                 router.push("/")
             })
             .catch(err => {
                 console.error(err);
+                onOpen.current?.();
                 setLoading(false);
             })
     }, [ router ]);
@@ -71,10 +77,14 @@ const Container = () => {
     ), []);
 
     const alertMemo = useMemo(() => (
-        <Alert className={classNames("hidden mb-4")} ref={alertRef} severity="error">
-            <AlertTitle>Error</AlertTitle>
-            Username or password invalid!
-        </Alert>
+        <Alert 
+            className={classNames("mb-4")}  
+            description="Username or password invalid!"
+            onClose={onClose}
+            onOpen={onOpen}
+            severity="error"
+            title="Error"
+        />
     ), [])
 
     const usernameMemo = useMemo(() => (

@@ -1,7 +1,9 @@
 const bcrypt = require("bcrypt");
+
+const { apiHandler } = require("src/helpers/api-handler")
 const { query } = require("src/helpers/db")
 
-const handler = async (req, res) => {
+const requestHandler = async (req, res) => {
 
     const { method } = req;
 
@@ -24,17 +26,9 @@ const handler = async (req, res) => {
                                     username: user.Username
                                 }))
                             })
-                            .catch(err => {
-                                console.error(err);
-                                res.status(500).end();
-                            })
                     }
 
-                    res.status(500).end();
-                })
-                .catch(err => {
-                    console.error(err);
-                    res.status(500).end();
+                    throw new Error();
                 })
         }
         default: {
@@ -43,4 +37,5 @@ const handler = async (req, res) => {
     }
 };
 
+const handler = apiHandler(requestHandler )
 export default handler;
