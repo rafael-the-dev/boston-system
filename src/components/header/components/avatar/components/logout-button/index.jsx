@@ -26,7 +26,8 @@ const Container = () => {
 
     return (
         <ListItem 
-            classes={{ button: "capitalize" }}
+            classes={{ button: "capitalize text-red-500" }}
+            disabled={!Boolean(user)}
             onClick={clickHandler}>
             { loading ? "Loading..." : (
                 <>
