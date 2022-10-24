@@ -43,7 +43,7 @@ const Home = () => {
                 </div>
             </section>
             <div className={classNames(classes.highlightsContainer, "flex flex-wrap items-stretch justify-between px-5")}>
-                <HightlightCard color="#fde68a" href="/" icon={<LiquorIcon />} title="Produtos" />
+                <HightlightCard color="#fde68a" href="register-product" icon={<LiquorIcon />} title="Produtos" />
                 <HightlightCard color="#fecaca" href="/" icon title="Home"/>
                 <HightlightCard color="#e9d5ff" href="/" icon title="Home"/>
                 <HightlightCard color="#a5f3fc" href="/" icon={<GroupIcon />} title="Usuarios"/>

@@ -12,7 +12,9 @@ import Menu from "src/components/menu"
 const Header = () => {
     const { loggedUser } = React.useContext(LoginContext);
 
-    const { pathname } = useRouter();
+    const router = useRouter();
+    const { pathname } = router;
+    console.log("router", router)
     if([ "/sign-up", "/login" ].includes(pathname)) return <></>;
 
     return (

@@ -8,7 +8,7 @@ import { LoginContext } from "src/context";
 import ListItem from "src/components/list-item-button"
 
 const Container = () => {
-    const { logoutHelper, user } = React.useContext(LoginContext);
+    const { addUser, logoutHelper, user } = React.useContext(LoginContext);
     const router = useRouter();
 
     const [ loading, setLoading ] = React.useState(false);
@@ -17,7 +17,10 @@ const Container = () => {
         setLoading(true);
 
         logoutHelper()
-            .then(res => { router.push('/login')})
+            .then(res => { 
+                addUser(null);
+                router.push('/login');
+            })
             .catch(err => {
                 console.error(err);
                 setLoading(false);

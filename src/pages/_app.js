@@ -5,6 +5,8 @@ import { CacheProvider } from '@emotion/react';
 import { theme } from 'src/material-ui/theme';
 import createEmotionCache from 'src/material-ui/createEmotionCache';
 import { ThemeProvider } from '@mui/material/styles';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
 import Layout from 'src/components/layout';
 
@@ -31,9 +33,11 @@ function MyApp(props) {
                         <ThemeProvider theme={theme}>
                             {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
                             <CssBaseline />
-                            <Layout>
-                                <Component {...pageProps} />
-                            </Layout>
+                            <LocalizationProvider dateAdapter={AdapterMoment}>
+                                <Layout>
+                                    <Component {...pageProps} />
+                                </Layout>
+                            </LocalizationProvider>
                         </ThemeProvider>
                     </CacheProvider>
                 </AppContextProvider>
