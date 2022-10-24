@@ -18,13 +18,18 @@ const requestHandler = async (req, res) => {
 
                     if(await bcrypt.compare(password, user.Password)) {                        
                         return query(`INSERT INTO userlog (login, user, data) value (now(), ?, now());`, [ user.idUser ])
-                            .then(() => {
-                                res.send(JSON.stringify({
+                            .then((response) => {
+                                res.json({
+                                    access: {
+                                        loginId: response.insertId,
+                                        token: "",
+
+                                    },
                                     category: user.Categoria,
                                     firstName: user.Nome,
                                     lastName: user.Apelido,
                                     username: user.Username
-                                }))
+                                });
                             })
                     }
 

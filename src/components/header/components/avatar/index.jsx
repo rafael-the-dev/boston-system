@@ -5,12 +5,12 @@ import classNames from "classnames";
 
 import classes from "./styles.module.css";
 
-import LogoutIcon from '@mui/icons-material/Logout';
 import PersonIcon from '@mui/icons-material/Person';
 
 import { LoginContext } from "src/context";
 
-import ListItem from "src/components/list-item-button"
+import ListItem from "src/components/list-item-button";
+import Logout from "./components/logout-button"
 import Popover from "src/components/popover";
 
 
@@ -22,6 +22,10 @@ const Container = () => {
 
     const router = useRouter();
     const logout = () => router.push("/login");
+
+    const logoutHandler = () => {
+        logoutHelper();
+    };
     
     return (
         <>
@@ -42,12 +46,7 @@ const Container = () => {
                         <PersonIcon />
                         Perfil
                     </ListItem>
-                    <ListItem 
-                        classes={{ button: "capitalize" }}
-                        onClick={logout}>
-                        <LogoutIcon />
-                        Sair
-                    </ListItem>
+                    <Logout />
                 </ul>
             </Popover>
         </>

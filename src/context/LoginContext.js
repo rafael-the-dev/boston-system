@@ -10,6 +10,11 @@ const LoginContextProvider = ({ children }) => {
         if(user) return user;
 
         return {
+            access: {
+                loginId: "",
+                token: "",
+
+            },
             category: "",
             firstName: "",
             lastName: "",
@@ -17,12 +22,26 @@ const LoginContextProvider = ({ children }) => {
         };
     }, [ user ]);
 
-    const addUser = useCallback((newUser) => setUser(newUser), [])
+    const addUser = useCallback((newUser) => setUser(newUser), []);
+
+    const logoutHelper = useCallback(async () => {
+        const options = {
+            body: JSON.stringify({
+                loginId: loggedUser.access.loginId,
+                username: loggedUser.username
+            }),
+            method: "PUT"
+        };
+
+        await fetch("/api/logout", options);
+        return;
+    }, [ loggedUser ])
 
     return (
         <LoginContext.Provider
             value={{ 
                 addUser,
+                logoutHelper,
                 loggedUser,
                 user
             }}>
