@@ -1,5 +1,5 @@
 import { IconButton, Paper, Typography } from '@mui/material';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useContext, useMemo, useRef, useState } from 'react';
 import { useRouter } from "next/router";
 import Link from 'next/link'
 
@@ -10,12 +10,16 @@ import Visibility from '@mui/icons-material/Visibility';
 import classNames from 'classnames'
 import classes from "./styles.module.css";
 
+import { LoginContext } from "src/context"
+
 import Alert from "src/components/alert"
 import { Button } from "src/components/signup-page"
 import Input from 'src/components/Input';
 
 
 const Container = () => {
+    const { addUser } = useContext(LoginContext);
+
     const [ loading, setLoading ] = useState(false);
     const [ values, setValues ] = useState({
         password: '',
@@ -61,6 +65,10 @@ const Container = () => {
             .then((res) => {
                 if(res.status === 500) throw new Error();
 
+                return res.json();
+            })
+            .then(data => {
+                addUser(data);
                 router.push("/")
             })
             .catch(err => {

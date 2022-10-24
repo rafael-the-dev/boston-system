@@ -1,12 +1,17 @@
+import * as React from "react";
 import { Breadcrumbs, Hidden, IconButton, Typography } from "@mui/material";
 import { useRouter } from "next/router"
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
+import { LoginContext } from "src/context";
+
 import Avatar from "./components/avatar";
 import Menu from "src/components/menu"
 
 const Header = () => {
+    const { loggedUser } = React.useContext(LoginContext);
+
     const { pathname } = useRouter();
     if([ "/sign-up", "/login" ].includes(pathname)) return <></>;
 
@@ -26,7 +31,7 @@ const Header = () => {
             <div className="flex items-center">
                 <Hidden smDown>
                     <Typography
-                        className="mr-3">Rafael Tivane</Typography>
+                        className="mr-3">{ loggedUser.lastName }, { loggedUser.firstName }</Typography>
                 </Hidden>
                 <Avatar />
             </div>

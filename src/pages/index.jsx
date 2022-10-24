@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Button, Typography } from "@mui/material"
 import classNames from "classnames"
 
@@ -6,9 +7,12 @@ import classes from "./styles.module.css";
 import GroupIcon from '@mui/icons-material/Group';
 import LiquorIcon from '@mui/icons-material/Liquor';
 
+import { LoginContext } from "src/context";
+
 import { HightlightCard } from "src/components/dashboard-page"
 
 const Home = () => {
+    const { loggedUser } = React.useContext(LoginContext);
 
     return (
         <main>
@@ -29,7 +33,7 @@ const Home = () => {
                         </Typography>
                         <div className="border-l-4 border-solid border-blue-500 bg-gray-200 mt-4 py-3 px-2 md:py-4 md:px-3">
                             <Typography>
-                                <sapn className="font-medium">Hello, Rafael Tivane</sapn><br/>
+                                <sapn className="font-medium">Hello, { loggedUser.firstName } { loggedUser.lastName }</sapn><br/>
                                 <span className={classes.quote}>
                                     A vida e feita de escolhas...
                                 </span>
