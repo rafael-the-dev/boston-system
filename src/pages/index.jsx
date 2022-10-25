@@ -33,7 +33,7 @@ const Home = () => {
                         </Typography>
                         <div className="border-l-4 border-solid border-blue-500 bg-gray-200 mt-4 py-3 px-2 md:py-4 md:px-3">
                             <Typography>
-                                <sapn className="font-medium">Hello, { loggedUser.firstName } { loggedUser.lastName }</sapn><br/>
+                                <span className="font-medium">Hello, { loggedUser.firstName } { loggedUser.lastName }</span><br/>
                                 <span className={classes.quote}>
                                     A vida e feita de escolhas...
                                 </span>
@@ -43,9 +43,9 @@ const Home = () => {
                 </div>
             </section>
             <div className={classNames(classes.highlightsContainer, "flex flex-wrap items-stretch justify-between px-5")}>
-                <HightlightCard color="#fde68a" href="register-product" icon={<LiquorIcon />} title="Produtos" />
-                <HightlightCard color="#fecaca" href="/" icon title="Home"/>
-                <HightlightCard color="#e9d5ff" href="/" icon title="Home"/>
+                <HightlightCard color="#fde68a" href="products" icon={<LiquorIcon />} title="Produtos" />
+                <HightlightCard color="#fecaca" href="sale" icon title="Home"/>
+                <HightlightCard color="#e9d5ff" href="sign-up?id=rafaeltivane" icon title="Home"/>
                 <HightlightCard color="#a5f3fc" href="/" icon={<GroupIcon />} title="Usuarios"/>
             </div>
         </main>

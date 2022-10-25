@@ -1,5 +1,3 @@
-const bcrypt = require("bcrypt");
-
 const { apiHandler } = require("src/helpers/api-handler")
 const { query } = require("src/helpers/db")
 
@@ -8,6 +6,12 @@ const requestHandler = async (req, res) => {
     const { method } = req;
 
     switch(method) {
+        case "GET": {
+            return query(`SELECT * FROM Produto`)
+                .then(result => {
+                    res.json(result);
+                })
+        }
         case "POST": {
             const { body } = req; 
             const { available, barCode, category, date, sellVat, name, purchasePrice, purchaseVat, sellPrice  } = JSON.parse(body);

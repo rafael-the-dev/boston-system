@@ -1,14 +1,24 @@
 import { createContext, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Validation from "src/models/Validation";
+import { useRouter } from "next/router"
 
 const SignUpContext = createContext();
 SignUpContext.displayName = "SignUpContext";
 
 const SignUpContextProvider = ({ children }) => {
-    const [ firstNameError, setFirstNameError ] = useState([]);
-    const [ lastNameError, setLastNameError ] = useState([]);
+    const [ firstName, setFirstName ] = useState({
+        error: [],
+        value: "",
+    });
+    const [ lastName, setLastName ] = useState({
+        error: [],
+        value: "",
+    });
     const [ user, setUser ] = useState("Administrator");
-    const [ usernameError, setUserNameError ] = useState([]);
+    const [ username, setUserName ] = useState({
+        error: [],
+        value: "",
+    });
     const [ confirmPassword, setConfirmPassword ] = useState({
         error: [],
         value: ""
@@ -17,32 +27,41 @@ const SignUpContextProvider = ({ children }) => {
         error: [],
         value: ""
     });
+    const [ loading, setLoading ] = useState(false);
 
     const passwordRef = useRef("");
     const userRef = useRef("Administrator")
 
     const childrenMemo = useMemo(() => <>{ children }</>, [ children ]);
 
+    const { query: { id } } = useRouter();
+
     const onSubmit = useCallback((details) => {
-       const body = JSON.stringify({
-            ...details,
-            password: passwordRef.current,
-            user: userRef.current
-       })
+        setLoading(true);
 
-       fetch('/api/users', {
-            body,
-            method: "POST"
-       }).then(res => {
+        const passwordObj  = id ? {} : { password: passwordRef.current };
+        const body = JSON.stringify({
+                ...details,
+                ...passwordObj,
+                user: userRef.current
+        })
 
-       }).catch(console.error);
+        fetch(`/api/users/${id ?? ""}`, {
+                body,
+                method: id ? "PUT" : "POST"
+        }).then(res => {
+                setLoading(false);
+        }).catch(err => {
+                console.error(err);
+                setLoading(false)
+        });
 
-    }, [])
+    }, [ id ])
 
     const hasErrors = useMemo(() => {
-        return Boolean(confirmPassword.error.length, password.error.length + firstNameError.length + lastNameError.length + usernameError.length);
-    }, [ confirmPassword, firstNameError, lastNameError, password, usernameError ]);
-
+        return Boolean(confirmPassword.error.length + password.error.length + firstName.error.length + lastName.error.length + username.error.length);
+    }, [ confirmPassword, firstName, lastName, password, username ]);
+    
     const firstNameChangeHandler = useCallback((value) => {
         const nameErrors = [];
         
@@ -50,7 +69,10 @@ const SignUpContextProvider = ({ children }) => {
         Validation.hasNumbers({ min: 1, value, onError: () => {}, onSuccess: () => nameErrors.push({ name: "", message: "Must not contain numbers" })})
         Validation.hasSpecialChars({ value: value.trim(), onSuccess: (error) => nameErrors.push(error) });
 
-        setFirstNameError(nameErrors);
+        setFirstName({
+            error: nameErrors,
+            value
+        });
     }, []);
 
     const lastNameChangeHandler = useCallback((value) => {
@@ -60,7 +82,10 @@ const SignUpContextProvider = ({ children }) => {
         Validation.hasNumbers({ min: 1, value, onError: () => {}, onSuccess: () => nameErrors.push({ name: "", message: "Must not contain numbers" })})
         Validation.hasSpecialChars({ value: value.trim(), onSuccess: (error) => nameErrors.push(error) });
 
-        setLastNameError(nameErrors);
+        setLastName({
+            error: nameErrors,
+            value
+        });
     }, []);
 
     const usernameChangeHandler = useCallback((value) => {
@@ -70,7 +95,10 @@ const SignUpContextProvider = ({ children }) => {
         Validation.checkLength({ min: 8, value, onError: (error) => usernameErrors.push(error) });
         Validation.hasSpecialChars({ value, onSuccess: (error) => usernameErrors.push(error) });
 
-        setUserNameError(usernameErrors);
+        setUserName({
+            error: usernameErrors,
+            value
+        });
     }, [])
 
     const passwordChangeHandler = useCallback(value => {
@@ -133,13 +161,13 @@ const SignUpContextProvider = ({ children }) => {
         <SignUpContext.Provider
             value={{ 
                 confirmPassword, confirmPasswordChangeHandler,
-                firstNameError, firstNameChangeHandler,
+                firstName, firstNameChangeHandler,
                 hasErrors,
-                lastNameError, lastNameChangeHandler,
+                lastName, lastNameChangeHandler, loading,
                 onSubmit,
                 password, passwordChangeHandler,
-                setUser,
-                user, usernameError, usernameChangeHandler
+                setFirstName, setLastName, setUser, setUserName,
+                user, username, usernameChangeHandler
             }}>
             { childrenMemo }
         </SignUpContext.Provider>

@@ -3,7 +3,8 @@ import { Button, Checkbox, FormControlLabel, MenuItem, Typography } from "@mui/m
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Input from "src/components/default-input";
 import classNames from "classnames";
-import moment from "moment"
+import moment from "moment";
+import { useRouter } from "next/router";
 
 import classes from "./styles.module.css";
 
@@ -15,6 +16,14 @@ import Link from "src/components/link"
  *  w12 === w-1/2
  *  w13 === w-1/3
 */
+
+export const getServerSideProps = async ({ params }) => {
+    console.log(params)    
+    return {
+      props: {
+      }, // will be passed to the page component as props
+    }
+}
 
 const Container = () => {
     const [ available, setAvailable ] = useState(true);
@@ -28,7 +37,8 @@ const Container = () => {
     const [ sellPrice, setSellPrice ] = useState({ errors: [], price: "" });
     const [ sellVat, setSellVat ] = useState({ errors: [], value: "" });
 
-    const [ loading, setLoading ] = useState(false)
+    const [ loading, setLoading ] = useState(false);
+    const { query: { id, role } } = useRouter();
 
     const availableRef = useRef(false);
     const barCodeRef = useRef("");
@@ -47,22 +57,21 @@ const Container = () => {
 
         const options = {
             body: JSON.stringify({
-                available: availableRef.current,
-                barCode: barCodeRef.current,
-                category: categoryRef.current,
-                date: moment(dateRef.current).toDate().toISOString().slice(0, 19).replace('T', ' '),
-                name: nameRef.current,
-                purchasePrice: purchasePriceRef.current,
-                purchaseVat: purchaseVatRef.current,
-                sellPrice: sellPriceRef.current,
-                sellVat: sellVatRef.current 
+                available,
+                barCode: barCode.value,
+                category,
+                date: moment(date).toDate().toISOString().slice(0, 19).replace('T', ' '),
+                name: name.value,
+                purchasePrice: purchasePrice.value,
+                purchaseVat: purchaseVat.value,
+                sellPrice: sellPrice.value,
+                sellVat: sellVat.value 
             }),
-            method: "POST"
+            method: Boolean(id) && role === "edit" ? "PUT" : "POST"
         };
 
-        fetch("/api/products", options)
+        fetch(`/api/products${ Boolean(id) && role ? `/${id}` : "" }`, options)
             .then(res => {
-                console.log(res);
                 e.target.reset();
                 setLoading(false);
             })
@@ -70,7 +79,7 @@ const Container = () => {
                 console.error(err);
                 setLoading(false);
             })
-    }, []);
+    }, [ available, barCode, category, date, id, name, purchasePrice, purchaseVat, sellPrice, sellVat, role ]);
 
     const legendMemo = useMemo(() => (
         <Typography
@@ -172,8 +181,6 @@ const Container = () => {
         const errors = [];
         const { value } = e.target;
 
-        sellPriceRef.current = value;
-
         setSellPrice({
             errors, 
             value
@@ -189,7 +196,7 @@ const Container = () => {
             value={sellPrice.value}
             variant="outlined"
         />
-    ), [ sellPrice ]);
+    ), [ sellPrice, sellPriceChangeHandler ]);
 
     const purchasePriceChangeHandler = useCallback(e => {
         const { value } = e.target;
@@ -292,6 +299,31 @@ const Container = () => {
             .then(res => res.json())
             .then(data => setCategories(data))
             .catch(console.error)
+    }, []);
+
+    useEffect(() => {
+        console.log(id, role)
+        if(id && role === "edit") {
+            fetch(`/api/products/${id}`)
+                .then(res => res.json())
+                .then(data => {
+                    const product = data[0];
+
+                    setAvailable(Boolean(product.Estado));
+                    setBarCode({ errors: [], value: product.BarCod })
+                    setCategory(product.fk_grupo);
+                    setDate({ errors: [], value: product.Data });
+                    setName({ errors: [], value: product.Nome });
+                    setPurchasePrice({ errors: [], value: product.Preco_compra });
+                    setPurchaseVat({ errors: [], value: product.IVA_compra });
+                    setSellVat({ errors: [], value: product.Iva_venda });
+                    setSellPrice({ errors: [], value: product.Preco_venda });
+                })
+                .catch(err => {
+                    console.error(err);
+                    setLoading(false);
+                })
+        }
     }, [])
 
     return (
@@ -323,12 +355,20 @@ const Container = () => {
                 </fieldset>
                 <div className="flex justify-end px-5">
                     { cancelButton }
-                    <Button
-                        className={classNames("bg-blue-800 text-white hover:bg-blue-500 sm:py-2")}
-                        type="submit"
-                        variant="contained">
-                        { loading ? "Loading..." : "Submeter" }
-                    </Button>
+                    { !Boolean(id) && role !== "edit" && <Button
+                            className={classNames("bg-blue-800 text-white hover:bg-blue-500 sm:py-2")}
+                            type="submit"
+                            variant="contained">
+                            { loading ? "Loading..." : "Submeter" }
+                        </Button>
+                    }
+                    { Boolean(id) && role === "edit" && <Button
+                            className={classNames("bg-blue-800 text-white hover:bg-blue-500 sm:py-2")}
+                            type="submit"
+                            variant="contained">
+                            { loading ? "Loading..." : "Atualizar" }
+                        </Button>
+                    }
                 </div>
             </form>
         </main>

@@ -1,0 +1,9 @@
+.searchField, .categories {
+    width: 100%;
+}
+
+@media screen and (min-width: 600px) {
+    .searchField, .categories {
+        width: 48%;
+    }
+}

@@ -21,7 +21,7 @@ const Container = () => {
     const clickHandler = e => onOpen.current?.(e);
 
     const router = useRouter();
-    const logout = () => router.push("/login");
+    const profileClickHandler = () => router.push(`/profile/${loggedUser.Username}`)
 
     const logoutHandler = () => {
         logoutHelper();
@@ -42,7 +42,9 @@ const Container = () => {
                 id="user"
                 onClickRef={onOpen}>
                 <ul className={classes.list}>
-                    <ListItem classes={{ button: "capitalize" }}>
+                    <ListItem 
+                        classes={{ button: "capitalize" }}
+                        onClick={profileClickHandler}>
                         <PersonIcon />
                         Perfil
                     </ListItem>

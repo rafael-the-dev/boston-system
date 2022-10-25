@@ -8,9 +8,11 @@ import classes from "./styles.module.css";
 import Validation from "src/models/Validation";
 import { SignUpContext, SignUpContextProvider } from "src/context"
 
-import { Button, Input } from "src/components/signup-page";
+import { Button } from "src/components/signup-page";
 import DefaultInput from "src/components/default-input";
-import Link from "src/components/link"
+import Input from "src/components/default-input"
+import Link from "src/components/link";
+import Panel from "src/components/panel"
 
 const SignUpContainer = ({ children }) => (
     <SignUpContextProvider>
@@ -54,15 +56,12 @@ const SignUpContent = () => {
     const changeHandler = useCallback((e) => setUser(e.target.value), [])
 
     const legendMemo = useMemo(() => (
-        <Typography 
-            component="legend"
-            className="font-bold mb-8 text-center text-2xl uppercase  dark:text-slate-300">
-            Sign up
-        </Typography>
+        <Panel title="Perfil" />
     ), []);
 
     const firstNameMemo = useMemo(() => (
         <Input 
+            className="input w12"
             errors={firstName.error}
             id="name"
             onChange={firstNameChangeHandler}
@@ -74,17 +73,21 @@ const SignUpContent = () => {
 
     const lastNameMemo = useMemo(() => (
         <Input 
+            className="input w12"
             errors={lastName.error}
             id="name"
+            label="Apelido"
             onChange={lastNameChangeHandler}
             placeholder="Ultimo nome"
             ref={lastNameRef}
             value={lastName.value}
+            variant="outlined"
         />
     ), [ lastName, lastNameChangeHandler ])
 
     const usernameMemo = useMemo(() => (
         <Input 
+            className="input w12"
             errors={username.error}
             id="username"
             onChange={usernameChangeHandler}
@@ -173,36 +176,28 @@ const SignUpContent = () => {
     }, [ id ])
 
     return (
-        <div className="min-h-screen flex items-center justify-center w-full px-5 py-20 md:px-0 dark:bg-stone-500">
-            <Paper 
-                className={classNames(classes.loginContainer, `px-5 py-8 rounded-2xl w-full md:px-6 dark:bg-stone-900`)}
-                component="form"
-                elavation={0}
+        <div className="">
+            <form 
+                className={classNames(classes.loginContainer, ``)}
                 onSubmit={submitHandler}>
                 <fieldset>
                     { legendMemo }
-                    { firstNameMemo }
-                    { lastNameMemo }
+                    <div className="flex flex-wrap justify-between">
+                        { firstNameMemo }
+                        { lastNameMemo }
+                    </div>
                     { usernameMemo }
                     { userTypeMemo }
                     { !id && passwordMemo }
                     { !id && confirmPasswordMemo }
                     <div 
                         className={classNames("flex flex-col sm:items-center mt-6")}>
-                        { !id && signInMemo }
                         <Button disabled={hasErrors}>
-                            { loading ? "Loading..." : (
-                                id ? "Atualizar" : "Submeter"
-                            )}
+                            { loading ? "Loading..." : "Atualizar" }
                         </Button>
-                        {
-                            id && (
-                                <Link className="mt-3 text-red-500" href="/">Cancelar</Link>
-                            )
-                        }
                     </div>
                 </fieldset>
-            </Paper>
+            </form>
         </div>
     );
 };

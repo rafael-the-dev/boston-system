@@ -26,8 +26,10 @@ class Validation {
 
     static hasSpecialChars = ({ onError, onSuccess, value }) => {
         const isValid = /\W+/g.test(value);
-
-        if(isValid) {
+        const result = /\W+/g.exec(value);
+        const isWhitespace = result ? result[0].trim() === "" : false;
+        
+        if(isValid && !isWhitespace) {
             onSuccess({
                 message: "Must not contain special characters",
                 name: ""
