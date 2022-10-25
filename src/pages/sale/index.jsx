@@ -4,12 +4,23 @@ import classNames from "classnames"
 
 import classes from "./styles.module.css"
 
+import { getCategories, getProducts } from "src/helpers/queries"
 import { LoginContext } from "src/context";
 
-import Avatar from "src/components/header/components/avatar"
-import Panel from "src/components/panel"
+import { AddProductButton } from "src/components/sale-page"; 
 
-const Container = () => {
+export const getServerSideProps = async () => {
+    const [ categories, products ] = await Promise.all([ getCategories(), getProducts() ]);
+    
+    return {
+      props: {
+        categories, 
+        products
+      }, // will be passed to the page component as props
+    }
+}
+
+const Container = ({ categories, products }) => {
     const { loggedUser } = useContext(LoginContext);
 
     const [ loading, setLoading ] = useState(false);
@@ -41,7 +52,13 @@ const Container = () => {
                 <form
                     className="flex flex-col h-full items-stretch justify-between"
                     onSubmit={submitHandler}>
-                    <div></div>
+                    <div className="px-5">
+                        <div className="flex justify-end pt-4">
+                            <AddProductButton 
+                                categories={categories} 
+                            />
+                        </div>
+                    </div>
                     <div className="bg-gray-200 flex items-center justify-between">
                         <Typography>
                             { loggedUser.Username }
