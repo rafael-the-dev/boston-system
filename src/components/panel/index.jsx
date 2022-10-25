@@ -1,14 +1,12 @@
-import Typography from "@mui/material/Typography";
+import classNames from "classnames";
 
-const Panel = ({ children, title, titleComponent }) => {
+import Title from "../title"
+
+const Panel = ({ children, className, title, titleComponent }) => {
 
     return (
-        <div className="bg-blue-500 px-5 py-6 xl:py-8 ">
-            <Typography
-                component={ titleComponent ?? "h1" }
-                className="capitalize text-center text-xl text-white w-fullxl:text-2xl">
-                { title }
-            </Typography>
+        <div className={classNames("bg-blue-500 px-5 py-6 xl:py-8", className)}>
+            { title && <Title /> }
             { children }
         </div>
     );

@@ -13,12 +13,14 @@ const LayoutContainer = ({ children }) => {
     const { pathname } = useRouter();
 
     return (
-        <div className={classNames(classes.root, `xl:flex xl:h-screen`)}>
+        <div className={classNames(classes.root, `xl:flex xl:h-screen`,
+        { "h-screen": pathname === "/sale" })}>
             <Hidden lgDown>
                 <Menu />
             </Hidden>
             <div className={classNames("overflow-y-auto",
-                [ "/sign-up", "/login" ].includes(pathname) ? "w-full" : classes.main)}>
+                [ "/sign-up", "/login" ].includes(pathname) ? "w-full" : classes.main,
+                { "flex flex-col h-full items-stretch": pathname === "/sale" })}>
                 <Header />
                 { children }
             </div>
