@@ -1,23 +1,16 @@
-import { useCallback, useEffect, useRef, useMemo, useState } from "react"
-import { MenuItem, Typography } from "@mui/material";
+import { useCallback, useRef, useMemo, useState } from "react"
+import { TableCell, Typography } from "@mui/material";
 import classNames from "classnames";
+import { v4 as uuidV4 } from "uuid"
 
 import classes from "./styles.module.css";
+
+import { getCategories, getProducts } from "src/helpers/queries"
 
 import { CategoriesCombobox } from "src/components/products-page"
 import Input from "src/components/default-input";
 import Table from "src/components/table";
-
-const getCategories = () => {
-    return fetch('http://localhost:3000/api/categories')
-            .then(res => res.json())
-            .then(data => [ { Descricao: "Todos", idGrupo: -1 }, ...data ])
-};
-
-const getProducts = () => {
-    return fetch('http://localhost:3000/api/products')
-        .then(res => res.json())
-}; 
+import TableBodyRow from "src/components/products-page/table-row" 
 
 export const getServerSideProps = async () => {
     const [ categories, products ] = await Promise.all([ getCategories(), getProducts() ]);
@@ -31,9 +24,7 @@ export const getServerSideProps = async () => {
 }
 
 const Container = ({ categories, products }) => {
-    //const [ categories, setCategories ] = useState([]);
     const [ category, setCategory ] = useState(-1);
-    //const [ products, setProducts ] = useState([]);
     const [ value, setValue ] = useState("");
 
     const headers = useRef([
@@ -89,6 +80,29 @@ const Container = ({ categories, products }) => {
             
     }, [ category, setCategory ]);
 
+    const getBodyRows = useCallback(({ page, rowsPerPage }) => {
+        const list = rowsPerPage > 0 ? productsList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : productsList;
+
+        return (
+            <>
+                {
+                    list.map(row => (
+                        <TableBodyRow { ...row } key={uuidV4()}>
+                            {
+                                headers.current.map(header => (
+                                    <TableCell 
+                                        align="center"
+                                        key={uuidV4()}>
+                                        { row[header.key] }
+                                    </TableCell>
+                                ))
+                            }
+                        </TableBodyRow>
+                    ))
+                }
+            </>
+    )}, [ productsList ])
+
     return (
         <main>
             <section className="pb-8 xl:pb-12">
@@ -98,7 +112,11 @@ const Container = ({ categories, products }) => {
                     { categoriesMemo }
                 </div>
                 <div className="px-5 xl:px-8">
-                    <Table data={productsList} headers={headers} />
+                    <Table 
+                        data={productsList} 
+                        getBodyRows={getBodyRows}
+                        headers={headers} 
+                    />
                 </div>
             </section>
         </main>

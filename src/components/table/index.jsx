@@ -94,29 +94,6 @@ const Container = ({ data, getBodyRows, headers }) => {
         </TableHead>
     ), []);
 
-    const tableBody = useMemo(() => {
-        const list = rowsPerPage > 0 ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : data;
-
-        return (
-            <TableBody>
-                {
-                    list.map(row => (
-                        <TableBodyRow { ...row } key={uuidV4()}>
-                            {
-                                headers.current.map(header => (
-                                    <TableCell 
-                                        align="center"
-                                        key={uuidV4()}>
-                                        { row[header.key] }
-                                    </TableCell>
-                                ))
-                            }
-                        </TableBodyRow>
-                    ))
-                }
-            </TableBody>
-    )}, [ data, page, rowsPerPage ])
-
     return (
         <TableContainer>
             <Table className="border border-solid border-stone-300" sx={{ minWidth: 500 }} aria-label="custom pagination table">
