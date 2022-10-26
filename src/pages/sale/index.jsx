@@ -62,7 +62,9 @@ const Container = ({ categories, products }) => {
 
     const barCodeChangeHandler = useCallback(e => {
         setBarCode(e.target.value);
-    }, [])
+    }, []);
+
+    const resetHandler = useCallback(() => getCart().reset(), [])
 
     const submitHandler = useCallback((e) => {
         e.preventDefault();
@@ -124,8 +126,9 @@ const Container = ({ categories, products }) => {
                                 </Link>
                                 <Button
                                     className="border-red-600 ml-3 py-3 text-red-600 hover:bg-red-600 hover:border-red-600 hover:text-white"
+                                    onClick={resetHandler}
                                     variant="outlined">
-                                    Cancelar
+                                    Limpar carrinho
                                 </Button>
                             </div>
                             <div className="flex flex-col items-end">

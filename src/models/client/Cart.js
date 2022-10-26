@@ -65,6 +65,11 @@ class Cart {
         });
     }
 
+    reset() {
+        this.list = [];
+        this._setList([]);
+    }
+
     get total() {
         return this.list.reduce((previousValue, currentItem) => {
             return previousValue + currentItem.getTotal();
