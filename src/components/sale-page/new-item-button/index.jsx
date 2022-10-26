@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 
 import Dialog from "../dialog";
 
-const Container = ({ categories }) => {
+const Container = ({ categories, products }) => {
     const onOpen = React.useRef(null);
 
     const clickHandler = () => onOpen.current?.();
@@ -18,6 +18,7 @@ const Container = ({ categories }) => {
             </Button>
             <Dialog
                 categories={categories}
+                products={products}
                 onOpen={onOpen}
             />
         </div>

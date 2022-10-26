@@ -65,9 +65,9 @@ function TablePaginationActions(props) {
   );
 }
 
-const Container = ({ data, headers }) => {
+const Container = ({ data, getBodyRows, headers }) => {
     const [ page, setPage ] = useState(0);
-    const [ rowsPerPage, setRowsPerPage ] = useState(5);
+    const [ rowsPerPage, setRowsPerPage ] = useState(3);
 
     const handleChangePage = useCallback((event, newPage) => {
         setPage(newPage);
@@ -121,11 +121,13 @@ const Container = ({ data, headers }) => {
         <TableContainer>
             <Table className="border border-solid border-stone-300" sx={{ minWidth: 500 }} aria-label="custom pagination table">
                 { tableHeader }
-                { tableBody }
+                <TableBody>
+                    { getBodyRows({ page, rowsPerPage }) }
+                </TableBody>
                 <TableFooter>
                     <TableRow>
                         <TablePagination
-                            rowsPerPageOptions={[5, 7, 10, 15, 25, { label: 'All', value: -1 }]}
+                            rowsPerPageOptions={[2, 3, 5, 7, 10, 15, 25, { label: 'All', value: -1 }]}
                             colSpan={headers.current.length}
                             count={data.length}
                             rowsPerPage={rowsPerPage}

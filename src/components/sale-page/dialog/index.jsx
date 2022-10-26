@@ -7,7 +7,7 @@ import Dialog from "src/components/dialog";
 import DialogHeader from "src/components/dialog/components/dialog-header";
 import SearchForm from "../search-form";
 
-const Container = ({ categories, onOpen }) => {
+const Container = ({ categories, onOpen, products }) => {
     const onClose = React.useRef(null)
 
     const closeHandler = () => onClose.current?.();
@@ -22,7 +22,11 @@ const Container = ({ categories, onOpen }) => {
                 onClose={closeHandler}>
                 Adicionar novo produto
             </DialogHeader>
-            <SearchForm categories={categories} />
+            <SearchForm 
+                categories={categories} 
+                onClose={closeHandler}
+                products={products}
+            />
         </Dialog>
     );
 };
