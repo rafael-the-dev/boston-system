@@ -3,7 +3,10 @@ import { Button, Typography } from "@mui/material";
 import { v4 as uuidV4 } from "uuid";
 import classNames from "classnames";
 
-import classes from "./styles.module.css"
+import classes from "./styles.module.css";
+
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import { getCategories, getProducts } from "src/helpers/queries"
 import { LoginContext, SaleContext, SaleContextProvider } from "src/context";
@@ -56,6 +59,7 @@ const Container = ({ categories, products }) => {
         <Link href="/">
             <Button
                 className="border-blue-500 py-3 sm:px-8 text-blue-500 hover:bg-blue-500 hover:border-blue-500 hover:text-white"
+                startIcon={<ArrowBackIcon />}
                 variant="outlined">
                 Sair
             </Button>
@@ -107,6 +111,7 @@ const Container = ({ categories, products }) => {
                                         <Button
                                             className="border-red-600 ml-3 py-3 text-red-600 hover:bg-red-600 hover:border-red-600 hover:text-white"
                                             onClick={resetHandler}
+                                            startIcon={<DeleteIcon />}
                                             variant="outlined">
                                             Limpar carrinho
                                         </Button>
