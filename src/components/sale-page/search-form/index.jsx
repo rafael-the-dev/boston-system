@@ -58,6 +58,24 @@ const Container = ({ categories, onClose, products }) => {
 
     const changeHandler = React.useCallback(e => setValue(e.target.value), []);
 
+    const inputMemo = React.useMemo(() => (
+        <Input 
+            className="input w12"
+            label="Pesquisar por nome ou codigo de barra"
+            onChange={changeHandler}
+            value={value}
+        />
+    ), [ value, changeHandler ]);
+
+    const categoriesSelectMemo = React.useMemo(() => (
+        <CategoriesCombobox 
+            className="input w12"
+            categories={categories}
+            value={category}
+            setValue={setCategory}
+        />
+    ), [ category, categories ])
+
     const clickHandler = React.useCallback(() => {
         setSelectedProducts(list => {
             getCart().addItem(...list);
@@ -69,18 +87,8 @@ const Container = ({ categories, onClose, products }) => {
     return (
         <div className="px-4 py-6 md:px-6">
             <form className="flex flex-wrap justify-between">
-                <Input 
-                    className="input w12"
-                    label="Pesquisar por nome ou codigo de barra"
-                    onChange={changeHandler}
-                    value={value}
-                />
-                <CategoriesCombobox 
-                    className="input w12"
-                    categories={categories}
-                    value={category}
-                    setValue={setCategory}
-                />
+                { inputMemo }
+                { categoriesSelectMemo }
             </form>
             <div>
                 <Table 
