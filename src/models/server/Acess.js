@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
 const AuthorizationError = require("./errors/AuthorizationError");
+const LoginError = require("./errors/LoginError");
 const { query } = require("src/helpers/db")
 
 class Access {
@@ -47,7 +48,7 @@ class Access {
                     );
                 }
 
-                throw new Error("Login Error");
+                throw new LoginError();
             })
 
 

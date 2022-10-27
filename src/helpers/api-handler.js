@@ -1,4 +1,4 @@
-const AuthorizationError = require("src/models/server/errors/AuthorizationError");
+const DefaultError = require("src/models/server/errors/DefaultError");
 
 const Access = require("src/models/server/Acess");
 const { createDBConnection } = require("src/connections/mysql");
@@ -36,7 +36,7 @@ const apiHandler = (handler) => {
 
             await handler(req, res, user);
         } catch(err) {
-            if(err instanceof AuthorizationError) res.status(err.status).json(err.getResponse());
+            if(err instanceof DefaultError) res.status(err.status).json(err.getResponse());
             
             console.error("handler error", err);
             res.status(500).json({ message: "Internal server error", err });

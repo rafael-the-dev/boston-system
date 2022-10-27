@@ -63,9 +63,9 @@ const Container = () => {
 
         fetch('/api/login', options)
             .then((res) => {
-                if(res.status === 500) throw new Error();
+                if(res.status === 200) return res.json();
 
-                return res.json();
+                throw new Error();
             })
             .then(data => {
                 addUser(data);
