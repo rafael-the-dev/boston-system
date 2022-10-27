@@ -1,7 +1,8 @@
 const bcrypt = require("bcrypt");
 
 const { apiHandler } = require("src/helpers/api-handler")
-const { query } = require("src/helpers/db")
+const { query } = require("src/helpers/db");
+const Acess = require("src/models/server/Acess")
 
 const requestHandler = async (req, res) => {
 
@@ -9,18 +10,11 @@ const requestHandler = async (req, res) => {
 
     switch(method) {
         case "PUT": {
-            const { body } = req; 
-            const { loginId, username } = JSON.parse(body);
+            const { authorization } = req.headers;
 
-            return query(`SELECT * FROM user WHERE username=?`, [ username ])
-                .then(users => {
-                    const user = users[0];
+            if(Boolean(authorization)) return Acess.logout({ res, token: authorization });
 
-                    return query(`UPDATE userlog SET Logout=now() WHERE idUserLog=? AND user=?;`, [ loginId, user.idUser ])
-                        .then(() => {
-                            res.send()
-                        });
-                })
+            res.status(401).json({ message: "Not Unauthorized " });
         }
         default: {
             return;

@@ -8,20 +8,22 @@ const Loading = () => {
     const [ loading, setLoading ] = React.useState(true);
     const isFirstRender = React.useRef(true);
 
-    const { addUser } = React.useContext(LoginContext);
+    const { addUser, saveUserInfo } = React.useContext(LoginContext);
 
     const router = useRouter();
 
     React.useEffect(() => {
-        if(isFirstRender.current) {
-            try {
-                const data = JSON.parse(localStorage.getItem("__cybersys-stock-management-app__"));
-                const { accessToken } = data.user;
+        try {
+            const data = JSON.parse(localStorage.getItem("__cybersys-stock-management-app__"));
+            const { token } = data.user;
+
+            if(isFirstRender.current && Boolean(token)) {
+                isFirstRender.current = false;
 
                 const options = {
                     body: JSON.stringify({ role: "VALIDATE_TOKEN" }),
                     headers: {
-                        "Authorization": `${accessToken}` //Bearer  
+                        "Authorization": `${token}` //Bearer  
                     },
                     method: "PUT"
                 };
@@ -30,16 +32,22 @@ const Loading = () => {
                     .then(res => res.json())
                     .then(data => {
                         addUser(data);
-                        router.push('/')
+                        router.push('/');
+                        setLoading(false);
                     })
-            } catch(e) {
+            } else {
+                isFirstRender.current = false;
                 setLoading(false);
-                router.push('/login')
+                router.push('/login');
             }
+        } catch(e) {
+            isFirstRender.current = false;
+            setLoading(false);
+            router.push('/login');
         }
 
         isFirstRender.current = false;
-    }, [ router ])
+    }, [ addUser ])
 
     if(!loading) return <></>;
 

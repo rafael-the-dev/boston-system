@@ -1,10 +1,12 @@
 import { createContext, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/router"
 
 const LoginContext = createContext();
 LoginContext.displayName = "LoginContext";
 
 const LoginContextProvider = ({ children }) => {
     const [ user, setUser ] = useState(null);
+    const [ isValidatingToken, setIsValidatingToken ] = useState(false);
     const isFirstRender = useRef(true);
 
     const loggedUser = useMemo(() => {
@@ -25,45 +27,62 @@ const LoginContextProvider = ({ children }) => {
 
     const addUser = useCallback((newUser) => setUser(newUser), []);
 
+    const getLocalStorageData = useCallback(() => {
+        return JSON.parse(localStorage.getItem(process.env.LOCAL_STORAGE));
+    }, [])
+
     const logoutHelper = useCallback(async () => {
+        const { token } = getLocalStorageData().user;
+
         const options = {
-            body: JSON.stringify({
-                loginId: loggedUser.access.loginId,
-                username: loggedUser.username
-            }),
+            body: JSON.stringify({}),
+            headers: {
+                "Authorization": token
+            },
             method: "PUT"
         };
 
         await fetch("/api/logout", options);
         return;
-    }, [ loggedUser ]);
+    }, [ getLocalStorageData ]);
 
-    useEffect(() => {
-        if(isFirstRender.current) isFirstRender.current = false;
+    const saveUserInfo = useCallback(() => {
+        let savedData = getLocalStorageData();
 
-        try {
-            let savedData = JSON.parse(localStorage.getItem("__cybersys-stock-management-app__"));
-
-            if(user) {
-                savedData = { ...savedData, user: user.access }
-            } else {
-                savedData = { ...savedData, user: {} }
-            }
-
-            localStorage.setItem("__cybersys-stock-management-app__", JSON.stringify(savedData))
-
-
-        } catch(e) {
-            localStorage.setItem("__cybersys-stock-management-app__", JSON.stringify({ user: {} }))
+        if(user) {
+            savedData = { ...savedData, user: user.access }
+        } else {
+            savedData = { ...savedData, user: {} }
         }
-    }, [ user ])
+
+        localStorage.setItem(process.env.LOCAL_STORAGE, JSON.stringify(savedData))
+    }, [ getLocalStorageData, user ]);
+
+    const router = useRouter();
+
+    useEffect(() => { 
+        if(!isFirstRender.current)
+            saveUserInfo(); 
+
+        isFirstRender.current = false;
+    }, [ saveUserInfo ]);
+    
+    useEffect(() => {
+        try {
+            JSON.parse(localStorage.getItem(process.env.LOCAL_STORAGE));
+        } catch(e) {
+            localStorage.setItem(process.env.LOCAL_STORAGE, JSON.stringify({ user: {} }))
+        }
+    }, []);
 
     return (
         <LoginContext.Provider
             value={{ 
                 addUser,
+                isValidatingToken,
                 logoutHelper,
                 loggedUser,
+                saveUserInfo,
                 user
             }}>
             { children }

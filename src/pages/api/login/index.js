@@ -14,7 +14,7 @@ const requestHandler = async (req, res) => {
             const { password, username } = JSON.parse(body);
             const { authorization } = req.headers;
 
-            if(Boolean(authorization)) return Access.revalidateToken({ token: authorization })
+            if(Boolean(authorization)) return Access.revalidateToken({ res, token: authorization })
             
             return Access.login({ password, res, username });
         }

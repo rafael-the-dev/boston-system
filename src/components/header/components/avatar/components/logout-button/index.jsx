@@ -24,6 +24,8 @@ const Container = () => {
             .catch(err => {
                 console.error(err);
                 setLoading(false);
+                addUser(null);
+                router.push('/login');
             })
     }, [ logoutHelper ])
 
