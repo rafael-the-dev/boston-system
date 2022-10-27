@@ -52,6 +52,17 @@ class Payment {
         })
     }
 
+    clearRemaingAmount(id) {
+        this._setPayment(currentMethods => {
+            const listTemp = [ ...currentMethods ];
+
+            const method = listTemp.find(item => item.id === id);
+            method.amount += this.amountRemaining();
+
+            return listTemp;
+        })
+    }
+
     changeMethod(id, newMethod) {
         this._setPayment(currentMethods => {
             const listTemp = [ ...currentMethods ];

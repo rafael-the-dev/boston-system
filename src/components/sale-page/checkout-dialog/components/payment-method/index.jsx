@@ -3,6 +3,7 @@ import { IconButton, MenuItem } from "@mui/material"
 import { v4 as uuidV4 } from "uuid";
 import classNames from "classnames"
 
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import classes from "./styles.module.css";
@@ -40,6 +41,10 @@ const PaymentMethodContainer = ({ id, value, amount }) => {
         getPaymentMethods().changeMethod(id, newMethod);
     };
 
+    const clearRemaingAmount = () => {
+        getPaymentMethods().clearRemaingAmount(id);
+    };
+
     const removeHandler = () => getPaymentMethods().remove(id);
 
     return (
@@ -70,11 +75,18 @@ const PaymentMethodContainer = ({ id, value, amount }) => {
                     value={amount}
                     variant="outlined"
                 />
-                <IconButton 
-                    className="hover:text-red-600" 
-                    onClick={removeHandler}>
-                    <DeleteIcon />
-                </IconButton>
+                <div className="flex">
+                    <IconButton 
+                        className="text-blue-500 hover:text-blue-700"
+                        onClick={clearRemaingAmount}>
+                        <CheckCircleIcon />
+                    </IconButton>
+                    <IconButton 
+                        className="hover:text-red-600" 
+                        onClick={removeHandler}>
+                        <DeleteIcon />
+                    </IconButton>
+                </div>
             </form>
         </li>
     );
