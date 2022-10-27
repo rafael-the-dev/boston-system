@@ -1,3 +1,4 @@
+import currency from "currency.js"
 import { v4 as uuidV4 } from "uuid";
 
 class Payment {
@@ -16,6 +17,9 @@ class Payment {
     add() {
         const list = [
             { value: "cash", label: "Cash" },
+            { value: "m-pesa", label: "M-pesa" },
+            { value: "e-mola", label: "E-mola" },
+            { value: "m-kesh", label: "M-kesh" },
             { value: "credit-cart", label: "Credit Card" }
         ];
 
@@ -36,9 +40,9 @@ class Payment {
     }
 
     amountRemaining() {
-        return this.cart.total - this.methods.reduce((previousValue, currentMethod) => {
-            return previousValue + currentMethod.amount;
-        }, 0)
+        return currency(this.cart.total).subtract(currency(this.methods.reduce((previousValue, currentMethod) => {
+            return currency(currentMethod.amount).add(previousValue);
+        }, 0))).value;
     }
 
     addAmout(id, amount) {
@@ -57,7 +61,7 @@ class Payment {
             const listTemp = [ ...currentMethods ];
 
             const method = listTemp.find(item => item.id === id);
-            method.amount += this.amountRemaining();
+            method.amount = currency(method.amount).add(this.amountRemaining());
 
             return listTemp;
         })

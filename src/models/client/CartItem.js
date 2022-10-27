@@ -1,3 +1,4 @@
+import currency from "currency.js";
 
 class CartItem {
     constructor(product, quantity) {
@@ -13,15 +14,15 @@ class CartItem {
 
     getSubTotal() {
         const quantity = Boolean(this.quantity) ? this.quantity : 0;
-        return this.product.sellPrice * quantity;
+        return currency(this.product.sellPrice).multiply(quantity).value;
     }
 
     getTotalVAT() {
-        return (this.getSubTotal() * this.product.sellVAT) / 100;
+        return currency(this.getSubTotal()).multiply(this.product.sellVAT).divide(100).value;
     }
 
     getTotal() {
-        return this.getSubTotal() + this.getTotalVAT();
+        return currency(this.getSubTotal()).add(this.getTotalVAT()).value;
     }
 
     toLiteral() {

@@ -7,7 +7,7 @@ import EmptyCart from "../empty-cart";
 import Table from "src/components/table";
 import TableRow from "../table-row"; 
 
-const CartTable = React.memo(() => {
+const CartTable = () => {
     const { cart } = React.useContext(SaleContext);
 
     const headers = React.useRef([
@@ -21,7 +21,7 @@ const CartTable = React.memo(() => {
         { key: "delete", label: "Remover Item" },
     ]);
 
-    const getBodyRows = ({ page , rowsPerPage }) => {
+    const getBodyRows = React.useCallback(({ page , rowsPerPage }) => {
         const list = rowsPerPage > 0 ? cart.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : cart;
         
         return (
@@ -31,25 +31,29 @@ const CartTable = React.memo(() => {
                         <TableRow 
                             cartItem={row}
                             headers={headers}
-                            key={uuidV4()}
+                            key={row.product.id}
                         />
                     ))
                 }
             </>
         );
-    };
+    }, [ cart ]);
+
+    const tableMemo = React.useMemo(() => (
+        <Table 
+            data={[]}
+            getBodyRows={getBodyRows}
+            headers={headers}
+        />
+    ), [ getBodyRows ])
 
     if(cart.length === 0) return <EmptyCart />
 
     return (
         <div className="mt-8">
-            <Table 
-                data={[]}
-                getBodyRows={getBodyRows}
-                headers={headers}
-            />
+            { tableMemo }
         </div>
     );
-});
+};
 
 export default CartTable;

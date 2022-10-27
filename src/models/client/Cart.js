@@ -1,3 +1,4 @@
+import currency from "currency.js";
 
 class Cart {
     constructor(setList) {
@@ -94,9 +95,9 @@ class Cart {
     }
 
     get total() {
-        return this.list.reduce((previousValue, currentItem) => {
-            return previousValue + currentItem.getTotal();
-        }, 0)
+        return currency(this.list.reduce((previousValue, currentItem) => {
+            return currency(currentItem.getTotal()).add(previousValue);
+        }, 0)).value;
     }
 }
 

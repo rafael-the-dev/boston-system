@@ -8,16 +8,19 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 import classes from "./styles.module.css";
 
-import { SaleContext } from "src/context"
+import { CheckoutContext } from "src/context"
 
 import Input from "src/components/default-input";
 
 const PaymentMethodContainer = ({ id, value, amount }) => {
 
-    const { getPaymentMethods } = React.useContext(SaleContext);
+    const { getPaymentMethods } = React.useContext(CheckoutContext);
 
     const methods = [
         { value: "cash", label: "Cash" },
+        { value: "m-pesa", label: "M-pesa" },
+        { value: "e-mola", label: "E-mola" },
+        { value: "m-kesh", label: "M-kesh" },
         { value: "credit-cart", label: "Credit Card" }
     ];
     
@@ -76,11 +79,13 @@ const PaymentMethodContainer = ({ id, value, amount }) => {
                     variant="outlined"
                 />
                 <div className="flex">
-                    <IconButton 
-                        className="text-blue-500 hover:text-blue-700"
-                        onClick={clearRemaingAmount}>
-                        <CheckCircleIcon />
-                    </IconButton>
+                    { getPaymentMethods().amountRemaining() > 0 && (
+                        <IconButton 
+                            className="text-blue-500 hover:text-blue-700"
+                            onClick={clearRemaingAmount}>
+                            <CheckCircleIcon />
+                        </IconButton>
+                    )}
                     <IconButton 
                         className="hover:text-red-600" 
                         onClick={removeHandler}>

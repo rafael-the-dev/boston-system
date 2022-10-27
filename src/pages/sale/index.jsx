@@ -9,7 +9,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import { getCategories, getProducts } from "src/helpers/queries"
-import { LoginContext, SaleContext } from "src/context";;
+import { CheckoutContextProvider, LoginContext, SaleContext } from "src/context";;
 import Product from "src/models/Product"
 
 import Checkout from "src/components/sale-page/checkout-dialog"
@@ -57,7 +57,9 @@ const Container = ({ categories, productsList }) => {
     const cartTableMemo = useMemo(() => <CartTable />, [])
 
     const checkoutDialogMemo = useMemo(() => (
-        <Checkout onOpen={onOpenDialog} />
+        <CheckoutContextProvider>
+            <Checkout onOpen={onOpenDialog} />
+        </CheckoutContextProvider>
     ), [])
 
     const homeLinkMemo = useMemo(() => (
@@ -80,6 +82,8 @@ const Container = ({ categories, productsList }) => {
         </Button>
     ), [ cart, getCart, loading ])
 
+    const resetHandler = useCallback(() => getCart().reset(), [])
+
     const resetCartButtonMemo = useMemo(() => (
         <Button
             className="border-red-600 ml-3 py-3 text-red-600 hover:bg-red-600 hover:border-red-600 hover:text-white"
@@ -98,8 +102,6 @@ const Container = ({ categories, productsList }) => {
             </Typography>
         </div>
     ), [ cart, getCart ])
-
-    const resetHandler = useCallback(() => getCart().reset(), [])
 
     const submitHandler = useCallback((e) => {
         e.preventDefault();
