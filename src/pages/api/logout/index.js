@@ -1,5 +1,4 @@
-const bcrypt = require("bcrypt");
-
+const AuthorizationError = require("src/models/server/errors/AuthorizationError");
 const { apiHandler } = require("src/helpers/api-handler")
 const { query } = require("src/helpers/db");
 const Acess = require("src/models/server/Acess")
@@ -14,7 +13,7 @@ const requestHandler = async (req, res) => {
 
             if(Boolean(authorization)) return Acess.logout({ res, token: authorization });
 
-            res.status(401).json({ message: "Not Unauthorized " });
+            throw new AuthorizationError()
         }
         default: {
             return;

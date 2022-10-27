@@ -1,9 +1,19 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
+const AuthorizationError = require("./errors/AuthorizationError");
 const { query } = require("src/helpers/db")
 
 class Access {
+    static getUser(token) {
+        try {
+            const user = jwt.verify(token, process.env.JWT_SECRET_KEY);
+            return user;
+        } catch(e) {
+            throw new AuthorizationError();
+        }
+    }
+
     static login = async ({ password, res, username }) => {
         return query(`SELECT * FROM user WHERE username=?`, [ username ])
             .then(async users => {
@@ -55,7 +65,7 @@ class Access {
                 })
                 .catch(e => res.status(500).json({ message: e.message }));
         } catch(e) {
-            res.status(401).json({ message: "Not Unauthorized " });
+            throw new AuthorizationError();
         }
     }
 

@@ -1,3 +1,6 @@
+const AuthorizationError = require("src/models/server/errors/AuthorizationError");
+
+const Access = require("src/models/server/Acess");
 const { createDBConnection } = require("src/connections/mysql");
 
 let dbConfig = { 
@@ -11,6 +14,8 @@ const apiHandler = (handler) => {
             await createDBConnection(dbConfig);
         }
 
+        const { authorization } = req.headers;
+
         try {
             res.setHeader("Access-Control-Allow-Origin", "*");
             res.setHeader(
@@ -23,8 +28,16 @@ const apiHandler = (handler) => {
                 return res.status(200).json({});
             }
 
-            await handler(req, res, dbConfig.db);
+            let user = null;
+            
+            if(![ "/api/login" ].includes(req.url)) {
+                user = Access.getUser(authorization);
+            } 
+
+            await handler(req, res, user);
         } catch(err) {
+            if(err instanceof AuthorizationError) res.status(err.status).json(err.getResponse());
+            
             console.error("handler error", err);
             res.status(500).json({ message: "Internal server error", err });
         }
