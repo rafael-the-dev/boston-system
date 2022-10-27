@@ -3,6 +3,7 @@ class Cart {
     constructor(setList) {
         this._list = [];
         this._setList = setList;
+        this._paymentMethods = [];
     }
 
     get list() { return this._list; }
@@ -10,6 +11,10 @@ class Cart {
     set list(list) {
         this._list = list;
     }
+
+    get paymentMethods() { return this._paymentMethods; }
+
+    set paymentMethods(paymentMethods) { this._paymentMethods = paymentMethods; }
 
     addItem(...items) {
         this._setList(list => {
@@ -35,6 +40,10 @@ class Cart {
         });
     }
 
+    addPaymentMethod(method, amount) {
+        //this.paymentMethods
+    }
+
     decrementQuantity(id) {
         this._setList(list => {
             const data = [ ...list];
@@ -48,6 +57,10 @@ class Cart {
 
             return data;
         });
+    }
+
+    hasProduct(id) {
+        return Boolean(this.list.find(cartItem => cartItem.product.id === id))
     }
 
     incrementQuantity(id) {
@@ -68,6 +81,16 @@ class Cart {
     reset() {
         this.list = [];
         this._setList([]);
+    }
+
+    remove(id) {
+        this._setList(list => {
+            const data = [ ...list.filter(item => item.product.id !== id)];
+
+            this.list = data;
+
+            return data;
+        });
     }
 
     get total() {

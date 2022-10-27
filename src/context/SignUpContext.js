@@ -36,7 +36,7 @@ const SignUpContextProvider = ({ children }) => {
 
     const { query: { id } } = useRouter();
 
-    const onSubmit = useCallback((details) => {
+    const onSubmit = useCallback(async (details) => {
         setLoading(true);
 
         const passwordObj  = id ? {} : { password: passwordRef.current };
@@ -46,15 +46,15 @@ const SignUpContextProvider = ({ children }) => {
                 user: userRef.current
         })
 
-        fetch(`/api/users/${id ?? ""}`, {
-                body,
-                method: id ? "PUT" : "POST"
-        }).then(res => {
-                setLoading(false);
-        }).catch(err => {
-                console.error(err);
-                setLoading(false)
-        });
+        try {
+            await fetch(`/api/users/${id ?? ""}`, { body, method: id ? "PUT" : "POST" });
+            setLoading(false);
+            return;
+        } catch(e) {
+            console.error(e);
+            setLoading(false);
+            throw e;
+        }
 
     }, [ id ])
 

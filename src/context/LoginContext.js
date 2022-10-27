@@ -1,10 +1,11 @@
-import { createContext, useCallback, useContext, useMemo, useState } from "react";
+import { createContext, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 const LoginContext = createContext();
 LoginContext.displayName = "LoginContext";
 
 const LoginContextProvider = ({ children }) => {
     const [ user, setUser ] = useState(null);
+    const isFirstRender = useRef(true);
 
     const loggedUser = useMemo(() => {
         if(user) return user;
@@ -35,7 +36,27 @@ const LoginContextProvider = ({ children }) => {
 
         await fetch("/api/logout", options);
         return;
-    }, [ loggedUser ])
+    }, [ loggedUser ]);
+
+    useEffect(() => {
+        if(isFirstRender.current) isFirstRender.current = false;
+
+        try {
+            let savedData = JSON.parse(localStorage.getItem("__cybersys-stock-management-app__"));
+
+            if(user) {
+                savedData = { ...savedData, user: user.access }
+            } else {
+                savedData = { ...savedData, user: {} }
+            }
+
+            localStorage.setItem("__cybersys-stock-management-app__", JSON.stringify(savedData))
+
+
+        } catch(e) {
+            localStorage.setItem("__cybersys-stock-management-app__", JSON.stringify({ user: {} }))
+        }
+    }, [ user ])
 
     return (
         <LoginContext.Provider

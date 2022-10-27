@@ -7,7 +7,7 @@ import { SaleContext } from "src/context"
 import { CategoriesCombobox } from "src/components/products-page"
 import Input from "src/components/default-input";
 import Table from "src/components/table";
-import TableRow from "./components/TableRow"
+import TableRow from "./components/TableRow";
 
 const Container = ({ categories, onClose, products }) => {
     const { getCart } = React.useContext(SaleContext);
@@ -18,19 +18,24 @@ const Container = ({ categories, onClose, products }) => {
 
     const headers = React.useRef([
         { key: "Selecionado", label: "Selecionado" },
-        { key: "Nome", label: "Nome" },
-        { key: "Preco_venda", label: "Preco" }
+        { key: "name", label: "Nome" },
+        { key: "sellPrice", label: "Preco" }
     ]);
 
     const data = React.useMemo(() => {
         let list = products;
-
+        
         if(category && category !== -1) {
-            list = list.filter(item => item.fk_grupo === category);
+            list = list.filter(item => item.categoryId === category);
         }
 
         if(value.trim() !== "") {
-            return list.filter(item => item.Nome.toLowerCase().includes(value.toLowerCase()));
+            return list.filter(item => {
+                const hasName = item.name.toLowerCase().includes(value.toLowerCase());
+                const hasBarCode = item.barCode.includes(value);
+
+                return hasName || hasBarCode;
+            });
         }
 
         return list;

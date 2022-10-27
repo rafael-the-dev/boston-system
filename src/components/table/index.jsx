@@ -92,7 +92,7 @@ const Container = ({ data, getBodyRows, headers }) => {
                 }
             </TableRow>
         </TableHead>
-    ), []);
+    ), [ headers ]);
 
     return (
         <TableContainer>

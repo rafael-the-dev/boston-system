@@ -1,5 +1,5 @@
 import { useCallback, useRef, useMemo, useState } from "react"
-import { TableCell, Typography } from "@mui/material";
+import { Button, TableCell, Typography } from "@mui/material";
 import classNames from "classnames";
 import { v4 as uuidV4 } from "uuid"
 
@@ -9,6 +9,7 @@ import { getCategories, getProducts } from "src/helpers/queries"
 
 import { CategoriesCombobox } from "src/components/products-page"
 import Input from "src/components/default-input";
+import Link from "src/components/link"
 import Table from "src/components/table";
 import TableBodyRow from "src/components/products-page/table-row" 
 
@@ -105,20 +106,31 @@ const Container = ({ categories, products }) => {
 
     return (
         <main>
-            <section className="pb-8 xl:pb-12">
-                { title }
-                <div className="flex flex-wrap justify-between px-5 py-6 xl:px-8">
-                    { searchMemo }
-                    { categoriesMemo }
+            <div className={classNames(classes.container, "flex flex-col h-full items-stretch justify-between pb-8")}>
+                <div>
+                    { title }
+                    <div className="flex flex-wrap justify-between px-5 py-6">
+                        { searchMemo }
+                        { categoriesMemo }
+                    </div>
+                    <div className="px-5">
+                        <Table 
+                            data={productsList} 
+                            getBodyRows={getBodyRows}
+                            headers={headers} 
+                        />
+                    </div>
                 </div>
-                <div className="px-5 xl:px-8">
-                    <Table 
-                        data={productsList} 
-                        getBodyRows={getBodyRows}
-                        headers={headers} 
-                    />
+                <div className="flex justify-end px-5">
+                    <Link href="register-product">
+                        <Button
+                            className="border-blue-500 text-blue-500 md:py-3 hover:bg-blue-500 hover:text-white"
+                            variant="outlined">
+                            Add new product
+                        </Button>
+                    </Link>
                 </div>
-            </section>
+            </div>
         </main>
     );
 };

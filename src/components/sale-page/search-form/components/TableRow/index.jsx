@@ -11,19 +11,19 @@ import Product from "src/models/Product";
 const TableRowContainer = ({ headers, row, selectedProducts, setSelectedProducts }) => {
     const { getCart } = React.useContext(SaleContext);
 
-    const isSelected = () => Boolean(selectedProducts.find(item => item.product.id === row.idProduto));
+    const isSelected = () => Boolean(selectedProducts.find(item => item.product.id === row.id));
 
     const added = () => {
-        return Boolean(getCart().list.find(item => item.product.id === row.idProduto));
+        return Boolean(getCart().list.find(item => item.product.id === row.id));
     };
 
     const changeHandler = () => {
         setSelectedProducts(list => {
-            if(Boolean(list.find(item => item.product.id === row.idProduto))) {
-                return [ ...list.filter(item => item.product.id !== row.idProduto) ]
+            if(Boolean(list.find(item => item.product.id === row.id))) {
+                return [ ...list.filter(item => item.product.id !== row.id) ]
             }
 
-            return [ ...list, new CartItem(new Product(row), 1) ];
+            return [ ...list, new CartItem(row, 1) ];
         })
     };
 

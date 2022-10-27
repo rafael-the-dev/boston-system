@@ -18,6 +18,7 @@ const CartTable = React.memo(() => {
         { key: "quantity", label: "Quantidade" },
         { key: "vatSubTotal", label: "IVA SubTotal" },
         { key: "subTotal", label: "SubTotal" },
+        { key: "delete", label: "Remover Item" },
     ]);
 
     const getBodyRows = ({ page , rowsPerPage }) => {

@@ -4,8 +4,10 @@ import classNames from "classnames"
 
 import classes from "./styles.module.css";
 
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import GroupIcon from '@mui/icons-material/Group';
 import LiquorIcon from '@mui/icons-material/Liquor';
+import Person2Icon from '@mui/icons-material/Person2';
 
 import { LoginContext } from "src/context";
 
@@ -43,9 +45,9 @@ const Home = () => {
                 </div>
             </section>
             <div className={classNames(classes.highlightsContainer, "flex flex-wrap items-stretch justify-between px-5")}>
+                <HightlightCard color="#fecaca" href="sale" icon={<AddShoppingCartIcon />} title="Venda"/>
                 <HightlightCard color="#fde68a" href="products" icon={<LiquorIcon />} title="Produtos" />
-                <HightlightCard color="#fecaca" href="sale" icon title="Home"/>
-                <HightlightCard color="#e9d5ff" href="sign-up?id=rafaeltivane" icon title="Home"/>
+                <HightlightCard color="#e9d5ff" href="profile/rafaeltivane" icon={<Person2Icon />} title="Perfil"/>
                 <HightlightCard color="#a5f3fc" href="/" icon={<GroupIcon />} title="Usuarios"/>
             </div>
         </main>

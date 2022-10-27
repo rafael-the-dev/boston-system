@@ -1,26 +1,35 @@
-import { Alert, AlertTitle, MenuItem, Paper, Typography } from '@mui/material';
+import { Button, MenuItem, Paper, Typography } from '@mui/material';
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from "next/router"
 
 import classNames from 'classnames'
 import classes from "./styles.module.css";
 
+import SaveIcon from '@mui/icons-material/Save';
+
 import Validation from "src/models/Validation";
 import { SignUpContext, SignUpContextProvider } from "src/context"
 
-import { Button } from "src/components/signup-page";
 import DefaultInput from "src/components/default-input";
 import Input from "src/components/default-input"
 import Link from "src/components/link";
-import Panel from "src/components/panel"
+import MessageDialog from "src/components/message-dialog";
+import Panel from "src/components/panel";
 
-const SignUpContainer = ({ children }) => (
-    <SignUpContextProvider>
-        { children }
-    </SignUpContextProvider>
-);
+export const getServerSideProps = async ({ params }) => {
+    const { id } = params;
 
-const SignUpContent = () => {
+    const res = await fetch(`http://localhost:3000/api/users/${id}`);
+    const users = await res.json();
+
+    return {
+        props: {
+            profile: users[0]
+        }
+    }
+};
+
+const Container = ({ profile }) => {
     const { 
         confirmPassword, confirmPasswordChangeHandler,
         firstName, firstNameChangeHandler,
@@ -32,7 +41,9 @@ const SignUpContent = () => {
         user, username, usernameChangeHandler
      } = useContext(SignUpContext);
 
-     const { query: { id } } = useRouter()
+     const [ message, setMessage ] = useState({ description: "", title: "", type: "" })
+
+    const { query: { id } } = useRouter();
 
     const users = useRef([
         {
@@ -51,6 +62,7 @@ const SignUpContent = () => {
     const firstNameRef = useRef(null)
     const passwordRef = useRef(null);
     const lastNameRef = useRef(null);
+    const onOpen = useRef(null);
     const userNameRef = useRef(null);
 
     const changeHandler = useCallback((e) => setUser(e.target.value), [])
@@ -59,14 +71,23 @@ const SignUpContent = () => {
         <Panel title="Perfil" />
     ), []);
 
+    const messageDialog = useMemo(() => (
+        <MessageDialog 
+            description={ message.description }
+            onOpen={onOpen}
+            title={ message.title }
+            type={ message.type }
+        />
+    ), [ message ])
+
     const firstNameMemo = useMemo(() => (
         <Input 
             className="input w12"
             errors={firstName.error}
             id="name"
-            onChange={firstNameChangeHandler}
+            onChange={e => firstNameChangeHandler(e.target.value)}
             placeholder="Primeiro nome"
-            ref={firstNameRef}
+            inputRef={firstNameRef}
             value={firstName.value}
         />
     ), [ firstName, firstNameChangeHandler ])
@@ -77,9 +98,9 @@ const SignUpContent = () => {
             errors={lastName.error}
             id="name"
             label="Apelido"
-            onChange={lastNameChangeHandler}
+            onChange={e => lastNameChangeHandler(e.target.value)}
             placeholder="Ultimo nome"
-            ref={lastNameRef}
+            inputRef={lastNameRef}
             value={lastName.value}
             variant="outlined"
         />
@@ -90,16 +111,17 @@ const SignUpContent = () => {
             className="input w12"
             errors={username.error}
             id="username"
-            onChange={usernameChangeHandler}
+            onChange={e => usernameChangeHandler(e.target.value)}
             placeholder="Nome do usuario"
-            ref={userNameRef}
+            inputRef={userNameRef}
             value={username.value}
         />
     ), [ username, usernameChangeHandler ]);
 
     const userTypeMemo = useMemo(() => (
         <DefaultInput 
-            classes={{ root: "mt-1 sign-up-select" }}
+            classes={{ root: "input w12" }}
+            className="input w12"
             fullWidth
             label="Tipo de usuario"
             onChange={changeHandler}
@@ -149,50 +171,59 @@ const SignUpContent = () => {
         </Typography>
     ), []);
 
-    const submitHandler = useCallback(e => {
+    const submitHandler = useCallback(async e => {
         e.preventDefault();
 
-        onSubmit({
-            firstName: firstNameRef.current.value,
-            lastName: lastNameRef.current.value,
-            username: userNameRef.current.value
-        })
+        try {
+            await onSubmit({
+                firstName: firstNameRef.current.value,
+                lastName: lastNameRef.current.value,
+                username: userNameRef.current.value
+            })
+            setMessage({ description: "Dados atualizados com successo", type: "success" });
+            onOpen.current?.();
+        } catch(e) {
+            setMessage({ description: "Erro ao atualizar os dados", title: "Error", type: "error" });
+            onOpen.current?.();
+        }
     }, [ onSubmit ]);
 
     useEffect(() => {
-        if(Boolean(id)) {
-            fetch(`/api/users/${id}`)
-                .then(res => res.json())
-                .then(res => {
-                    const data = res[0];
-                    
-                    setFirstName({ error: [], value: data.Nome });
-                    setLastName({ error: [], value: data.Apelido });
-                    setUser(data.Categoria);
-                    setUserName({ error: [], value: data.Username })
-                })
-                .catch(console.error)
+        if(Boolean(profile)) {
+            setFirstName({ error: [], value: profile.Nome });
+            setLastName({ error: [], value: profile.Apelido });
+            setUser(profile.Categoria);
+            setUserName({ error: [], value: profile.Username })
         }
-    }, [ id ])
+    }, [ profile ])
 
     return (
         <div className="">
+            { messageDialog }
             <form 
-                className={classNames(classes.loginContainer, ``)}
+                className={classNames(classes.form, ``)}
                 onSubmit={submitHandler}>
-                <fieldset>
-                    { legendMemo }
-                    <div className="flex flex-wrap justify-between">
-                        { firstNameMemo }
-                        { lastNameMemo }
+                <fieldset className="flex flex-col h-full items-stretch justify-between">
+                    <div>
+                        { legendMemo }
+                        <div className="flex flex-wrap justify-between pt-6 px-5">
+                            { firstNameMemo }
+                            { lastNameMemo }
+                        </div>
+                        <div className="flex flex-wrap justify-between px-5">
+                            { usernameMemo }
+                            { userTypeMemo }
+                        </div>
+                        { !id && passwordMemo }
+                        { !id && confirmPasswordMemo }
                     </div>
-                    { usernameMemo }
-                    { userTypeMemo }
-                    { !id && passwordMemo }
-                    { !id && confirmPasswordMemo }
                     <div 
-                        className={classNames("flex flex-col sm:items-center mt-6")}>
-                        <Button disabled={hasErrors}>
+                        className={classNames("flex justify-end px-5 pb-6")}>
+                        <Button 
+                            className="bg-blue-700 px-6 py-3 ro text-white hover:bg-blue-500 hover:border-blue-500"
+                            disabled={hasErrors}
+                            startIcon={<SaveIcon />}
+                            type="submit">
                             { loading ? "Loading..." : "Atualizar" }
                         </Button>
                     </div>
@@ -201,11 +232,5 @@ const SignUpContent = () => {
         </div>
     );
 };
-
-const Container = () => (
-    <SignUpContainer>
-        <SignUpContent />
-    </SignUpContainer>
-);
 
 export default Container;

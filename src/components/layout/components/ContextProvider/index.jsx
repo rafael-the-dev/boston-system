@@ -1,6 +1,6 @@
 import { useRouter } from "next/router"
 
-import { SaleContextProvider } from "src/context"
+import { SignUpContextProvider, SaleContextProvider } from "src/context"
 
 const ContextProvider = ({ children }) => {
     const { pathname } = useRouter();
@@ -11,6 +11,14 @@ const ContextProvider = ({ children }) => {
             { children }
         </SaleContextProvider>
     )}
+
+    if((pathname === "/sign-up") || ( pathname === '/profile/[id]')) {
+        return (
+            <SignUpContextProvider>
+                { children }
+            </SignUpContextProvider>
+        );
+    }
     
     return (
         <>{ children }</>

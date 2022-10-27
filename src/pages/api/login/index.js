@@ -1,7 +1,8 @@
 const bcrypt = require("bcrypt");
 
 const { apiHandler } = require("src/helpers/api-handler")
-const { query } = require("src/helpers/db")
+const { query } = require("src/helpers/db");
+const Access = require("src/models/server/Acess")
 
 const requestHandler = async (req, res) => {
 
@@ -11,30 +12,11 @@ const requestHandler = async (req, res) => {
         case "PUT": {
             const { body } = req; 
             const { password, username } = JSON.parse(body);
+            const { authorization } = req.headers;
 
-            return query(`SELECT * FROM user WHERE username=?`, [ username ])
-                .then(async users => {
-                    const user = users[0];
-
-                    if(await bcrypt.compare(password, user.Password)) {                        
-                        return query(`INSERT INTO userlog (login, user, data) value (now(), ?, now());`, [ user.idUser ])
-                            .then((response) => {
-                                res.json({
-                                    access: {
-                                        loginId: response.insertId,
-                                        token: "",
-
-                                    },
-                                    category: user.Categoria,
-                                    firstName: user.Nome,
-                                    lastName: user.Apelido,
-                                    username: user.Username
-                                });
-                            })
-                    }
-
-                    throw new Error();
-                })
+            if(Boolean(authorization)) return Access.revalidateToken({ token: authorization })
+            
+            return Access.login({ password, res, username });
         }
         default: {
             return;

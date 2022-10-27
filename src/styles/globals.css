@@ -3,6 +3,9 @@ a {
     text-decoration: none;
 }
 
+main {
+    min-height: calc(100vh - 56px);
+}
 
 .sign-up-select .MuiOutlinedInput-root {
     border-radius: .5rem !important;

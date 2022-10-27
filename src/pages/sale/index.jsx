@@ -9,31 +9,37 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import { getCategories, getProducts } from "src/helpers/queries"
-import { LoginContext, SaleContext, SaleContextProvider } from "src/context";
+import { LoginContext, SaleContext } from "src/context";;
+import Product from "src/models/Product"
 
+import Checkout from "src/components/sale-page/checkout-dialog"
 import Input from "src/components/default-input";
 import Link from "src/components/link"
-import Table from "src/components/table"
-import { AddProductButton, CartTable } from "src/components/sale-page";  
+import Table from "src/components/table";
+import { AddProductButton, CartTable, SearchField } from "src/components/sale-page";  
 
 export const getServerSideProps = async () => {
-    const [ categories, products ] = await Promise.all([ getCategories(), getProducts() ]);
-    
+    const [ categories, productsList ] = await Promise.all([ getCategories(), getProducts() ]);
+
     return {
         props: {
             categories, 
-            products
+            productsList
         }, // will be passed to the page component as props
     }
 };
 
 
-const Container = ({ categories, products }) => {
+const Container = ({ categories, productsList }) => {
     const { loggedUser } = useContext(LoginContext);
     const { cart, getCart } = useContext(SaleContext);
 
     const [ barCode, setBarCode ] = useState("")
     const [ loading, setLoading ] = useState(false);
+
+    const onOpenDialog = useRef(null);
+
+    const products = useMemo(() => productsList.map(product => new Product(product)), [ productsList ])
 
     const addProductButtonMemo = useMemo(() => (
         <AddProductButton 
@@ -42,18 +48,17 @@ const Container = ({ categories, products }) => {
         />
     ), [ categories, products ])
     
-    const barCodeChangeHandler = useCallback(e => {
-        setBarCode(e.target.value);
-    }, []);
-
     const barCodeInputMemo = useMemo(() => (
-        <Input 
-            className="input w12"
-            label="codigo de barra"
-            onChange={barCodeChangeHandler}
-            value={barCode}
+        <SearchField
+            products={products}
         />
-    ), [ barCode, barCodeChangeHandler ])
+    ), [ products ]);
+
+    const cartTableMemo = useMemo(() => <CartTable />, [])
+
+    const checkoutDialogMemo = useMemo(() => (
+        <Checkout onOpen={onOpenDialog} />
+    ), [])
 
     const homeLinkMemo = useMemo(() => (
         <Link href="/">
@@ -66,12 +71,43 @@ const Container = ({ categories, products }) => {
         </Link>
     ), []);
 
+    const paymentButtonMemo = useMemo(() => (
+        <Button
+            className={classNames(classes.paymentButton, `bg-gray-700 font-bold rounded-none 
+            md:text-lg xl:text-xl text-white hover:bg-blue-500`)}
+            type="submit">
+            {loading ? "Loading..." : `Pagar ${  getCart() ? getCart().total : 0}MT` }
+        </Button>
+    ), [ cart, getCart, loading ])
+
+    const resetCartButtonMemo = useMemo(() => (
+        <Button
+            className="border-red-600 ml-3 py-3 text-red-600 hover:bg-red-600 hover:border-red-600 hover:text-white"
+            onClick={resetHandler}
+            startIcon={<DeleteIcon />}
+            variant="outlined">
+            Limpar carrinho
+        </Button>
+    ), [ resetHandler ]);
+
+    const totalPanel = useMemo(() => (
+        <div className="flex flex-col items-end">
+            <Typography>
+                Total
+                <span className="font-bold ml-3 text-3xl">{ getCart() ? getCart().total : 0 }MT</span>
+            </Typography>
+        </div>
+    ), [ cart, getCart ])
+
     const resetHandler = useCallback(() => getCart().reset(), [])
 
     const submitHandler = useCallback((e) => {
         e.preventDefault();
 
-        setLoading(true);
+        if(cart.length === 0) return;
+
+        onOpenDialog.current?.();
+        /*setLoading(true);
 
         const options = {
             body: JSON.stringify({
@@ -86,8 +122,8 @@ const Container = ({ categories, products }) => {
             .catch(err => {
                 console.log(err);
                 setLoading(false);
-            })
-    }, [ loggedUser ])
+            })*/
+    }, [ cart, loggedUser ])
 
     return (
         <main className={classNames(classes.main, `bg-stone-100 grow`)}>
@@ -100,43 +136,26 @@ const Container = ({ categories, products }) => {
                             { barCodeInputMemo }
                             { addProductButtonMemo }
                         </div>
-                        <CartTable />
+                        { cartTableMemo }
                     </div>
                     <div>
                         <div className="flex items-end justify-between px-5 py-4">
                             <div>
                                 { homeLinkMemo }
                                 {
-                                    cart.length > 0 && (
-                                        <Button
-                                            className="border-red-600 ml-3 py-3 text-red-600 hover:bg-red-600 hover:border-red-600 hover:text-white"
-                                            onClick={resetHandler}
-                                            startIcon={<DeleteIcon />}
-                                            variant="outlined">
-                                            Limpar carrinho
-                                        </Button>
-                                    )
+                                    cart.length > 0 && resetCartButtonMemo
                                 }
                             </div>
-                            <div className="flex flex-col items-end">
-                                <Typography>
-                                    Total
-                                    <span className="font-bold ml-3 text-3xl">{ getCart() ? getCart().total : 0 }MT</span>
-                                </Typography>
-                            </div>
+                            { totalPanel }
                         </div>
                         <div className="bg-gray-200 flex items-center justify-between">
                             <Typography>
                                 { loggedUser.Username }
                             </Typography>
-                            <Button
-                                className={classNames(classes.paymentButton, `bg-gray-700 font-bold rounded-none 
-                                md:text-lg xl:text-xl text-white hover:bg-blue-500`)}
-                                type="submit">
-                                {loading ? "Loading..." : `Pagar ${  getCart() ? getCart().total : 0}MT` }
-                            </Button>
+                            { paymentButtonMemo }
                         </div>
                     </div>
+                    { checkoutDialogMemo }
                 </form>
             </section>
         </main>

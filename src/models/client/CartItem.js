@@ -11,13 +11,17 @@ class CartItem {
 
     set quantity(quantity) { this._quantity = quantity; }
 
-    getTotal() {
+    getSubTotal() {
         const quantity = Boolean(this.quantity) ? this.quantity : 0;
         return this.product.sellPrice * quantity;
     }
 
     getTotalVAT() {
-        return (this.getTotal() * this.product.sellVAT) / 100;
+        return (this.getSubTotal() * this.product.sellVAT) / 100;
+    }
+
+    getTotal() {
+        return this.getSubTotal() + this.getTotalVAT();
     }
 
     toLiteral() {

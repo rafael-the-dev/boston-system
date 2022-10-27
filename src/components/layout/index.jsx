@@ -8,6 +8,7 @@ import classes from "./styles.module.css";
 import ContextProvider from "./components/ContextProvider"
 import Header from "../header";
 //import Footer from "../footer";
+//import Loading from "./components/loading";
 import Menu from "../menu"
 
 const LayoutContainer = ({ children }) => {
