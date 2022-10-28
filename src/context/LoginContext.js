@@ -50,6 +50,7 @@ const LoginContextProvider = ({ children }) => {
         let savedData = getLocalStorageData();
 
         if(user) {
+            document.cookie = `token=${user.access?.token}`
             savedData = { ...savedData, user: user.access }
         } else {
             savedData = { ...savedData, user: {} }

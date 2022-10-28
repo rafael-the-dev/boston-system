@@ -12,7 +12,11 @@ import Loading from "./components/loading";
 import Menu from "../menu"
 
 const LayoutContainer = ({ children }) => {
+    const [ loading, setLoading ] = React.useState(true);
+
     const { pathname } = useRouter();
+
+    if(loading) return <Loading loading={loading} setLoading={setLoading} />
 
     return (
         <div className={classNames(classes.root, `xl:flex xl:h-screen`,
@@ -29,7 +33,6 @@ const LayoutContainer = ({ children }) => {
 
                 </ContextProvider>
             </div>
-            <Loading />
         </div>
     );
 };

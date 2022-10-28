@@ -12,16 +12,17 @@ import { CheckoutContext } from "src/context"
 
 import Input from "src/components/default-input";
 
-const PaymentMethodContainer = ({ id, value, amount }) => {
+const PaymentMethodContainer = ({ amount, id, value, receivedAmount }) => {
 
     const { getPaymentMethods } = React.useContext(CheckoutContext);
 
     const methods = [
-        { value: "cash", label: "Cash" },
-        { value: "m-pesa", label: "M-pesa" },
-        { value: "e-mola", label: "E-mola" },
-        { value: "m-kesh", label: "M-kesh" },
-        { value: "credit-cart", label: "Credit Card" }
+        { value: 100, label: "Cash" },
+        { value: 200, label: "M-pesa" },
+        { value: 300, label: "E-mola" },
+        { value: 400, label: "M-kesh" },
+        { value: 500, label: "POS" },
+        { value: 600, label: "P24" }
     ];
     
     const filter = (item) => {
@@ -49,6 +50,10 @@ const PaymentMethodContainer = ({ id, value, amount }) => {
     };
 
     const removeHandler = () => getPaymentMethods().remove(id);
+    
+    const receivedAmountChangeHandler = (e) => {
+        getPaymentMethods().addReceivedAmount(id, parseFloat(e.target.value));
+    };
 
     return (
         <li>
@@ -76,6 +81,13 @@ const PaymentMethodContainer = ({ id, value, amount }) => {
                     label="Insere o valor"
                     onChange={changeHandler}
                     value={amount}
+                    variant="outlined"
+                />
+                <Input 
+                    className={classes.input}
+                    label="Valor recebido"
+                    onChange={receivedAmountChangeHandler}
+                    value={receivedAmount}
                     variant="outlined"
                 />
                 <div className="flex">

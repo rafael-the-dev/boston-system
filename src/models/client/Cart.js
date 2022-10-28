@@ -99,6 +99,13 @@ class Cart {
             return currency(currentItem.getTotal()).add(previousValue);
         }, 0)).value;
     }
+
+    toLiteral() {
+        return {
+            products: this.list.map(product => product.toLiteral()),
+            total: this.total
+        }
+    }
 }
 
 export default Cart;

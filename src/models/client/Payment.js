@@ -16,11 +16,12 @@ class Payment {
 
     add() {
         const list = [
-            { value: "cash", label: "Cash" },
-            { value: "m-pesa", label: "M-pesa" },
-            { value: "e-mola", label: "E-mola" },
-            { value: "m-kesh", label: "M-kesh" },
-            { value: "credit-cart", label: "Credit Card" }
+            { value: 100, label: "Cash" },
+            { value: 200, label: "M-pesa" },
+            { value: 300, label: "E-mola" },
+            { value: 400, label: "M-kesh" },
+            { value: 500, label: "POS" },
+            { value: 600, label: "P24" }
         ];
 
         this._setPayment(currentMethods => {
@@ -28,7 +29,7 @@ class Payment {
 
             for(let i = 0; i < list.length; i++) {
                 if(!Boolean(listTemp.find(item =>  item.value === list[i].value))) {
-                    listTemp.push({ ...list[i], id: uuidV4(), amount: 0 });
+                    listTemp.push({ ...list[i], id: uuidV4(), amount: 0, receivedAmount: 0 });
                     break;
                 }
             }
@@ -51,6 +52,17 @@ class Payment {
 
             const method = listTemp.find(item => item.id === id);
             method.amount = amount;
+
+            return listTemp;
+        })
+    }
+
+    addReceivedAmount(id, receivedAmount) {
+        this._setPayment(currentMethods => {
+            const listTemp = [ ...currentMethods ];
+
+            const method = listTemp.find(item => item.id === id);
+            method.receivedAmount = receivedAmount;
 
             return listTemp;
         })
@@ -83,6 +95,13 @@ class Payment {
         })
     }
 
+    parseMethod({ amount, value }) {
+        return {
+            amount: currency(amount).value,
+            id: value
+        }
+    }
+
     remove(id) {
         this._setPayment(currentMethods => {
             const listTemp = [ ...currentMethods.filter(item => item.id !== id) ];
@@ -91,6 +110,13 @@ class Payment {
 
             return listTemp;
         })
+    }
+
+    toLiteral() {
+        return {
+            ...this.cart?.toLiteral(),
+            paymentMethods: this.methods.map(method => this.parseMethod(method))
+        }
     }
     
 }

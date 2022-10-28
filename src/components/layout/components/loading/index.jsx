@@ -4,17 +4,17 @@ import { useRouter } from "next/router";
 
 import { LoginContext } from "src/context"
 
-const Loading = () => {
-    const [ loading, setLoading ] = React.useState(true);
+const Loading = ({ loading, setLoading }) => {
+    //const [ loading, setLoading ] = React.useState(true);
     const isFirstRender = React.useRef(true);
 
-    const { addUser, saveUserInfo } = React.useContext(LoginContext);
+    const { addUser } = React.useContext(LoginContext);
 
     const router = useRouter();
 
     React.useEffect(() => {
         try {
-            const data = JSON.parse(localStorage.getItem("__cybersys-stock-management-app__"));
+            const data = JSON.parse(localStorage.getItem(process.env.LOCAL_STORAGE));
             const { token } = data.user;
 
             if(isFirstRender.current && Boolean(token)) {
@@ -48,8 +48,6 @@ const Loading = () => {
 
         isFirstRender.current = false;
     }, [ addUser ])
-
-    if(!loading) return <></>;
 
     return (
         <div className="bg-white flex fixed h-screen items-center justify-center left-0 top-0 w-full z-10">

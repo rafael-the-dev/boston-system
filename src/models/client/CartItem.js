@@ -27,8 +27,11 @@ class CartItem {
 
     toLiteral() {
         return {
-            product: this.product,
-            quantity: this.quantity
+            id: this.product.id,
+            quantity: this.quantity,
+            subTotal: this.getSubTotal(),
+            totalVAT: this.getTotalVAT(),
+            total: this.getTotal()
         }
     }
 }

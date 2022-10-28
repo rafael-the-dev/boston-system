@@ -1,11 +1,12 @@
-const getCategories = () => {
-    return fetch('http://localhost:3000/api/categories')
+
+const getCategories = ({ options }) => {
+    return fetch('http://localhost:3000/api/categories', options)
             .then(res => res.json())
             .then(data => [ { Descricao: "Todos", idGrupo: -1 }, ...data ])
 };
 
-const getProducts = () => {
-    return fetch('http://localhost:3000/api/products')
+const getProducts = ({ options }) => {
+    return fetch('http://localhost:3000/api/products', options)
         .then(res => res.json())
 };
 

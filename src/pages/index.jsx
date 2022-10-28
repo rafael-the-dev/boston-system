@@ -11,7 +11,26 @@ import Person2Icon from '@mui/icons-material/Person2';
 
 import { LoginContext } from "src/context";
 
-import { HightlightCard } from "src/components/dashboard-page"
+import { HightlightCard } from "src/components/dashboard-page";
+
+export const getServerSideProps = async () => {
+    const options = {
+        headers: {
+          'X-RapidAPI-Key': 'SIGN-UP-FOR-KEY',
+          'X-RapidAPI-Host': 'timshim-quotes-v1.p.rapidapi.com'
+        },
+        method: 'GET'
+    };
+
+    const res = await fetch("https://timshim-quotes-v1.p.rapidapi.com/quotes", options);
+    const data = await res.json();
+    console.log(data)
+    return {
+        props: {
+            quote: []
+        }
+    }
+};
 
 const Home = () => {
     const { loggedUser } = React.useContext(LoginContext);

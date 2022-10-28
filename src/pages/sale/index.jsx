@@ -11,6 +11,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { getCategories, getProducts } from "src/helpers/queries"
 import { CheckoutContextProvider, LoginContext, SaleContext } from "src/context";;
 import Product from "src/models/Product"
+import * as cookie from "cookie"
 
 import Checkout from "src/components/sale-page/checkout-dialog"
 import Input from "src/components/default-input";
@@ -18,8 +19,27 @@ import Link from "src/components/link"
 import Table from "src/components/table";
 import { AddProductButton, CartTable, SearchField } from "src/components/sale-page";  
 
-export const getServerSideProps = async () => {
-    const [ categories, productsList ] = await Promise.all([ getCategories(), getProducts() ]);
+export const getServerSideProps = async ({ req }) => {
+    const parsedCookies = cookie.parse(req.headers.cookie); 
+    const { token } = parsedCookies;
+    
+    const options = {
+        headers: {
+            "Authorization": token
+        }
+    }
+
+    let categories = [];
+    let productsList = [];
+
+    try {
+        const [ categoriesResutlt, productsListResult ] = await Promise.all([ getCategories({ options }), getProducts({ options }) ]);
+
+        categories = categoriesResutlt;
+        productsList = productsListResult;
+    } catch(e) {
+
+    }
 
     return {
         props: {

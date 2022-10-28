@@ -12,7 +12,7 @@ const Container = ({ children, href }) => {
     console.log(pathname, href)
 
     return (
-        <ListItem classes={{ button: classNames(classes.listItem, 
+        <ListItem classes={{ button: classNames(classes.listItem, "hover:text-blue-800",
         { [classNames(classes.listItemSelected, "bg-stone-300")]: pathname === href },
         pathname === href ? "text-blue-800" : "text-stone-300" ) }}>
             { children }

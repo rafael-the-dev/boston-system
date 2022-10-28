@@ -15,6 +15,8 @@ import PaymentMethod from "./components/payment-method"
 
 const CheckoutContainer = ({ onOpen }) => {
     const { getPaymentMethods } = React.useContext(CheckoutContext);
+    const [ loading, setLoading ] = React.useState(false);
+
     const onClose = React.useRef(null);
 
     const closeHandler = React.useCallback(() => onClose.current?.(), []);
@@ -37,7 +39,7 @@ const CheckoutContainer = ({ onOpen }) => {
 
     const heaaderMemo = React.useMemo(() => (
         <DialogHeader
-            classes={{ root: "bg-blue-700 pl-4 text-white" }}
+            classes={{ paper: classes.paper, root: "bg-blue-700 pl-4 text-white" }}
             onClose={closeHandler}>
             Checkout
         </DialogHeader>
@@ -47,6 +49,27 @@ const CheckoutContainer = ({ onOpen }) => {
 
     const methodsLength = getPaymentMethods().methods?.length;
     const restAmout = getPaymentMethods().amountRemaining();
+
+    const submitHandler = async () => {
+        setLoading(true);
+
+        const options = {
+            body: JSON.stringify(getPaymentMethods().toLiteral()),
+            headers: {
+                "Authorization": JSON.parse(localStorage.getItem(process.env.LOCAL_STORAGE)).user.token
+            },
+            method: "POST"
+        };
+
+        try {
+            const res = await fetch("/api/sales", options);
+            console.log(res)
+        } catch(e) {
+            console.error(e);
+        }
+
+        setLoading(false);
+    };
 
     return (
         <Dialog
@@ -94,9 +117,10 @@ const CheckoutContainer = ({ onOpen }) => {
                     { backButtonMemo }
                     <Button
                         className="bg-blue-700 py-2 px-4 text-white hover:bg-blue-500"
+                        onClick={submitHandler}
                         startIcon={<DoneIcon />}
                         variant="contained">
-                        Concluir
+                        { loading ? "Loading..." : "Concluir" }
                     </Button>
                 </div> }
             </div>
