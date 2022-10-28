@@ -24,7 +24,7 @@ export const getServerSideProps = async () => {
 
     const res = await fetch("https://timshim-quotes-v1.p.rapidapi.com/quotes", options);
     const data = await res.json();
-    console.log(data)
+    
     return {
         props: {
             quote: []
