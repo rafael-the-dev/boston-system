@@ -19,6 +19,17 @@ const Header = () => {
     const router = useRouter();
     const { pathname } = router;
 
+    const isDynamicTitlePaths = () => {
+        return [ "/sale", "/reports" ].includes(pathname);
+    };
+
+    const dynamicTitle = () => {
+        return {
+            "/reports": "Sales Reports",
+            "/sale": "New sale"
+        }[pathname]
+    };
+
     if([ "/sign-up", "/login" ].includes(pathname)) return <></>;
 
     return (
@@ -27,7 +38,7 @@ const Header = () => {
                 <Hidden lgUp>
                     <Menu />
                 </Hidden>
-                { pathname === "/sale" && <Title className={classNames('ml-3', classes.salesTitle)}>Nova venda</Title> }
+                { isDynamicTitlePaths() && <Title className={classNames('ml-3', classes.salesTitle)}>{ dynamicTitle() }</Title> }
                 <Hidden xlDown>
                     <IconButton className="p-0 hover:bg-transparent">
                         <ArrowBackIcon />
