@@ -49,6 +49,7 @@ const CheckoutContainer = ({ onOpen }) => {
 
     const methodsLength = getPaymentMethods().methods?.length;
     const restAmout = getPaymentMethods().amountRemaining();
+    const clientChange = getPaymentMethods().getClientChange();
 
     const submitHandler = async () => {
         setLoading(true);
@@ -96,13 +97,19 @@ const CheckoutContainer = ({ onOpen }) => {
                             )
                         }
                         <div>
-                            <Typography 
-                                component="h3"
+                            { restAmout > 0 && <Typography 
+                                component="div"
                                 className={classNames("font-semibold uppercase",
                                 methodsLength === 0 ? "text-center" : "text-right")}>
                                 { restAmout > 0 ? (methodsLength === 0 ? "Total" : "falta") : "" }
                                 <span className="ml-2 text-red-500 md:text-2xl">{ restAmout }MT</span>
-                            </Typography>
+                            </Typography> }
+                            { clientChange > 0 && <Typography
+                                component="div"
+                                className={classNames("font-semibold text-right uppercase")}>
+                                Trocos
+                                <span className="ml-2 text-yellow-500 md:text-2xl">{ clientChange }MT</span>
+                            </Typography>}
                         </div>
                         { restAmout > 0 && (<div className="flex justify-center mt-4">
                             <Button

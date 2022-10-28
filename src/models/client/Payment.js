@@ -95,6 +95,16 @@ class Payment {
         })
     }
 
+    totalReceivedAmount() {
+        return currency(this.methods.reduce((previousValue, currentMethod) => {
+            return currency(currentMethod.receivedAmount).add(previousValue)
+        }, 0)).value;
+    }
+
+    getClientChange() {
+        return currency(this.totalReceivedAmount()).subtract(this.cart.total).value;
+    }
+
     parseMethod({ amount, value }) {
         return {
             amount: currency(amount).value,
