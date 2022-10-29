@@ -10,6 +10,7 @@ import classes from "./styles.module.css"
 
 import { SalesContext, SalesTabContext } from "src/context"
 
+import Filters from "./components/filters"
 import Highlight from "../highlight";
 import Resizeable from "src/components/resizeable"
 import Table from "src/components/table";
@@ -26,6 +27,8 @@ const TabContainer = ({ tabId }) => {
         { label: "Total VAT", value: "totalVAT" },
         { label: "Total", value: "total" }
     ]);
+
+    const onToggle = React.useRef(null);
 
     const getSalesDate = React.useCallback(() => {
         return getSales().list.sort((a, b) => {
@@ -70,13 +73,18 @@ const TabContainer = ({ tabId }) => {
         ));
     }; 
 
+    const toggleHandler = React.useCallback(() => onToggle.current?.(), [])
+
     const filtersButtonMemo = React.useMemo(() => (
         <Button
             className={classNames(classes.filtersButton, "bg-white rounded-xl text-black hover:bg-stone-400")}
+            onClick={toggleHandler}
             startIcon={<FilterAltIcon />}>
             Filters
         </Button>
-    ), [])
+    ), []);
+
+    const filtersMemo = React.useMemo(() => <Filters onToggle={onToggle} />, []);
 
     const highlightsMemo = React.useMemo(() => (
         <div className={classNames(classes.hightlightsContainer, "flex flex-wrap items-stretch justify-between")}>
@@ -107,6 +115,7 @@ const TabContainer = ({ tabId }) => {
                 { highlightsMemo }
                 { filtersButtonMemo }
             </div>
+            { filtersMemo }
             <div className="flex flex-wrap px-5">
                 <div className="mb-6 mr-6">
                     { salesTableMemo }
