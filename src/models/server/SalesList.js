@@ -4,11 +4,23 @@ class SalesList {
     constructor(list) {
         this._list = list;
         this._subTotal = 0;
+        this._stats = {};
         this._total = 0;
         this._totalVAT = 0;
     }
 
     get list() { return this._list; }
+
+    get stats() { return this._stats; }
+
+    set stats({ Iva, Montante, Total }) {
+        this._stats = {
+            total: currency(Total).value,
+            totalAmount: currency(Montante).value,
+            subTotal: currency(this.subTotal).value,
+            totalVAT: currency(Iva).value
+        };
+    }
 
     get totalAmount() {
         return currency(this.list.reduce((previousValue, currentSale) => {
@@ -38,10 +50,7 @@ class SalesList {
         return {
             list: this.list,
             statistics: {
-                total: this.total,
-                totalAmount: this.totalAmount,
-                subTotal: this.subTotal,
-                totalVAT: this.totalVAT
+                ...this.stats
             }
         }
     }

@@ -11,6 +11,7 @@ import { CheckoutContext } from "src/context";
 
 import Dialog from "src/components/dialog";
 import DialogHeader from "src/components/dialog/components/dialog-header";
+import MessageDialog from "src/components/message-dialog"
 import PaymentMethod from "./components/payment-method"
 
 const CheckoutContainer = ({ onOpen }) => {
@@ -18,6 +19,7 @@ const CheckoutContainer = ({ onOpen }) => {
     const [ loading, setLoading ] = React.useState(false);
 
     const onClose = React.useRef(null);
+    const onOpenErrorDialog = React.useRef(null);
 
     const closeHandler = React.useCallback(() => onClose.current?.(), []);
 
@@ -43,7 +45,16 @@ const CheckoutContainer = ({ onOpen }) => {
             onClose={closeHandler}>
             Checkout
         </DialogHeader>
-    ), [ closeHandler ])
+    ), [ closeHandler ]);
+
+    const errorMessageDialog = React.useMemo(() => (
+        <MessageDialog 
+            description="Error ao fazer o pagamento"
+            onOpen={onOpenErrorDialog}
+            title="Message"
+            type="error"
+        />
+    ), [])
 
     const clickHandler = React.useCallback(() => getPaymentMethods().add() , []);
 
@@ -63,10 +74,10 @@ const CheckoutContainer = ({ onOpen }) => {
         };
 
         try {
-            const res = await fetch("/api/sales", options);
-            console.log(res)
+            await fetch("/api/sales", options);
         } catch(e) {
             console.error(e);
+            onOpenErrorDialog.current?.();
         }
 
         setLoading(false);
@@ -131,6 +142,7 @@ const CheckoutContainer = ({ onOpen }) => {
                     </Button>
                 </div> }
             </div>
+            { errorMessageDialog }
         </Dialog>
     );
 };

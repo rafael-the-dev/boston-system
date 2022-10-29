@@ -1,0 +1,17 @@
+.hightlightsContainer {
+    width: 100%;
+}
+
+@media screen and (min-width: 600px) {
+    .hightlightsContainer {
+        width: 74.5%;
+    }
+
+    .filtersButton {
+        width: 23.5%;
+    }
+
+    .date {
+        top: 70px;
+    }
+}

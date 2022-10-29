@@ -18,8 +18,8 @@ const requestHandler = async (req, res, user ) => {
             const { body } = req; 
             const { products, paymentMethods, state, total } = JSON.parse(body);
 
-            await Promise.all([query(`INSERT INTO SalesSeries(Data, Estado, User) VALUES(now(),?,?)`, [ "CONCLUIDO", user.idUser  ])
-                .then((result) => {
+            return query(`INSERT INTO SalesSeries(Data, Estado, User) VALUES(now(),?,?)`, [ "CONCLUIDO", user.idUser  ])
+                .then(async (result) => {
                     const { insertId } = result;
 
                     const totalVAT = currency(products.reduce((previousValue, currentProduct) => {
@@ -30,11 +30,11 @@ const requestHandler = async (req, res, user ) => {
                         return currency(currentProduct.subTotal).add(previousValue);
                     }, 0)).value;
 
-                    return query("INSERT INTO Sales(SalesSerie, Montante, Iva, Subtotal, Total, Status, Data) VALUES(?,?,?,?,?,?,now())", [ insertId, totalAmount, totalVAT, total, total, "CONCLUIDO" ])
-                        .then(async salesResult => {
-                            const salesId = salesResult.insertId;
+                    await Promise.all([
+                        query("INSERT INTO Sales(SalesSerie, Montante, Iva, Subtotal, Total, Status, Data) VALUES(?,?,?,?,?,?,now())", [ insertId, totalAmount, totalVAT, total, total, "CONCLUIDO" ])
+                            .then(async salesResult => {
+                                const salesId = salesResult.insertId;
 
-                            //try {
                                 return await Promise.all(
                                     products.map(product => {
                                         const { id, quantity, subTotal, total, totalVAT } = product;
@@ -42,25 +42,22 @@ const requestHandler = async (req, res, user ) => {
                                     })
                                 );
 
-                            //} catch(e) {
-
-                            //}
-                        })
-                }),
-                query('INSERT INTO PaymentSeries(status, fk_user, data) VALUES(?,?, now())', [ "CONCLUIDO", user.idUser ])
-                    .then(async result => {
-                        const { insertId } = result;
-
-                        await Promise.all(
-                            paymentMethods.map(method => {
-                                const { amount, id } = method;
-                                return query("INSERT INTO PaymentMethodUsed(fk_payment_mode, fk_payment_serie, amount, status, Received, data) VALUES(?,?,?,?,?,now())", [ id, insertId, amount, "CONCLUIDO", amount ])
+                            }),
+                        query('INSERT INTO PaymentSeries(status, fk_user, fk_salesserie, data) VALUES(?,?,?, now())', [ "CONCLUIDO", user.idUser, insertId ])
+                            .then(async result => {
+                                const { insertId } = result;
+        
+                                await Promise.all(
+                                    paymentMethods.map(method => {
+                                        const { amount, id } = method;
+                                        return query("INSERT INTO PaymentMethodUsed(fk_payment_mode, fk_payment_serie, amount, status, Received, data) VALUES(?,?,?,?,?,now())", [ id, insertId, amount, "CONCLUIDO", amount ])
+                                    })
+                                )
                             })
-                        )
-                    })
-            ]);
-            
-            res.json({ message: "Venda feita com successo" })
+                    ]);
+
+                    res.json({ message: "Venda feita com successo" });
+                });
         }
         default: {
             return;

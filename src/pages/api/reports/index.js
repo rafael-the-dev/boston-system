@@ -18,7 +18,11 @@ const requestHandler = async (req, res, user ) => {
                     const list = result.map(item => new Sale(item).toLiteral());
                     const salesList = new SalesList(list);
 
-                    res.json(salesList.toLiteral());
+                    return query("SELECT SUM(Montante) as Montante, SUM(Iva) as Iva, SUM(Total) as Total FROM sales WHERE DATE(Sales.data)=curdate();")
+                        .then(statsResult => {
+                            salesList.stats = statsResult[0];
+                            res.json(salesList.toLiteral());
+                        })
                 })
         }
         default: {

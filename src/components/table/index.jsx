@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from "react"
 import { Box, IconButton, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow } from "@mui/material";
 import { v4 as uuidV4 } from "uuid";
+import classNames from "classnames"
 
 import { useTheme } from '@mui/material/styles';
 
@@ -65,7 +66,7 @@ function TablePaginationActions(props) {
   );
 }
 
-const Container = ({ data, getBodyRows, headers }) => {
+const Container = ({ classes, data, getBodyRows, headers }) => {
     const [ page, setPage ] = useState(0);
     const [ rowsPerPage, setRowsPerPage ] = useState(3);
 
@@ -80,7 +81,7 @@ const Container = ({ data, getBodyRows, headers }) => {
 
     const tableHeader = useMemo(() => (
         <TableHead>
-            <TableRow>
+            <TableRow className={classNames(classes?.tableHeaderRow)}>
                 {
                     headers.current.map(header => (
                         <TableCell 
@@ -95,8 +96,8 @@ const Container = ({ data, getBodyRows, headers }) => {
     ), [ headers ]);
 
     return (
-        <TableContainer>
-            <Table className="border border-solid border-stone-300" sx={{ minWidth: 500 }} aria-label="custom pagination table">
+        <TableContainer className={classNames(classes?.root)}>
+            <Table className={classNames(classes?.table, "border border-solid border-stone-300")} sx={{ minWidth: 500 }} aria-label="custom pagination table">
                 { tableHeader }
                 <TableBody>
                     { getBodyRows({ page, rowsPerPage }) }
