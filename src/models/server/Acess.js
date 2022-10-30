@@ -71,7 +71,12 @@ class Access {
     }
 
     static revalidateToken({ res, token }) {
-        const loggedUser = jwt.verify(token, process.env.JWT_SECRET_KEY);
+        let loggedUser;
+        try {
+            loggedUser = jwt.verify(token, process.env.JWT_SECRET_KEY);
+        } catch(e) {
+            throw new AuthorizationError();
+        }
         
         return query(`SELECT * FROM user WHERE username=?`, [ loggedUser.username ])
             .then(async users => {

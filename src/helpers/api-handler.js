@@ -37,9 +37,13 @@ const apiHandler = (handler) => {
 
             await handler(req, res, user);
         } catch(err) {
-            if(err instanceof DefaultError) res.status(err.status).json(err.getResponse());
-            
             console.error("handler error", err);
+
+            if(err instanceof DefaultError) {
+                res.status(err.status).json(err.getResponse());
+                return;
+            }
+            
             res.status(500).json({ message: "Internal server error", err });
         }
     }
