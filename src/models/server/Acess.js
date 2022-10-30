@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
 const AuthorizationError = require("./errors/AuthorizationError");
+const Error404 = require("./errors/404Error")
 const LoginError = require("./errors/LoginError");
 const { query } = require("src/helpers/db")
 
@@ -18,6 +19,9 @@ class Access {
     static login = async ({ password, res, username }) => {
         return query(`SELECT * FROM user WHERE username=?`, [ username ])
             .then(async users => {
+
+                if(users.length === 0) throw new LoginError();
+
                 const user = users[0];
 
                 if(await bcrypt.compare(password, user.Password)) {                        
