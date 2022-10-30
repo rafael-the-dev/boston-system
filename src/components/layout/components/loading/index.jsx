@@ -14,6 +14,8 @@ const Loading = ({ loading, setLoading }) => {
     const router = useRouter();
 
     React.useEffect(() => {
+        const currentPathname = router.pathname;
+
         const func = async () => {
             try {
                 const data = JSON.parse(localStorage.getItem(process.env.LOCAL_STORAGE));
@@ -33,7 +35,7 @@ const Loading = ({ loading, setLoading }) => {
                     await fetchHelper({ url: "/api/login", options })
                         .then(data => {
                             addUser(data);
-                            router.push('/');
+                            router.push(currentPathname);
                             setLoading(false);
                         });
                 } else {
