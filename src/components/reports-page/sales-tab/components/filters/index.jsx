@@ -35,7 +35,7 @@ const FiltersContainer = ({ onToggle }) => {
                         controls.current.map(item => (
                             <FormControlLabel 
                                 value={item.value} 
-                                control={<Radio check={ value === item.value} onChange={changeHandler} />} 
+                                control={<Radio checked={value === item.value} onChange={changeHandler} />} 
                                 label={item.label} 
                             />
                         ))

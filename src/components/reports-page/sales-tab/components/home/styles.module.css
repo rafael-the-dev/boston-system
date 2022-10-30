@@ -1,0 +1,30 @@
+.hightlightsContainer {
+    width: 100%;
+}
+
+
+.filtersButton {
+    height: 70px;
+    margin-top: 1rem;
+    width: 31.3333%;
+}
+
+.tableContainer {
+    height: calc(100% - 60px);
+}
+
+@media screen and (min-width: 600px) {
+    .hightlightsContainer {
+        width: 74.5%;
+    }
+
+    .filtersButton {
+        height: auto;
+        margin-top: 0;
+        width: 23.5%;
+    }
+
+    .date {
+        top: 70px;
+    }
+}

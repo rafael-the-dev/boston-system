@@ -11,7 +11,7 @@ const ContextProvider = ({ children }) => {
             "/sale": <SaleContextProvider>{ children }</SaleContextProvider>,
             "/sign-up": <SignUpContextProvider>{ children }</SignUpContextProvider>,
             "/profile/[id]": <SignUpContextProvider>{ children }</SignUpContextProvider>,
-            "/reports": <SalesContextProvider>{ children }</SalesContextProvider>
+            "/sales": <SalesContextProvider>{ children }</SalesContextProvider>
         }[pathname]
     };
 

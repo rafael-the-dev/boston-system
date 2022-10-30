@@ -3,6 +3,7 @@ import classNames from "classnames";
 
 import classes from "./styles.module.css";
 
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import HomeIcon from '@mui/icons-material/Home';
 import PaidIcon from '@mui/icons-material/Paid';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
@@ -25,14 +26,17 @@ const Container = () => {
                 <ListItem href="/">
                     <HomeIcon /> Home
                 </ListItem>
-                <ListItem href="/payments">
-                    <PaidIcon /> Pagamentos
+                <ListItem href="/sales">
+                    <ShoppingCartIcon /> Sales
                 </ListItem>
                 <ListItem href="/reports">
-                    <ReceiptLongIcon /> Relatorios
+                    <ReceiptLongIcon /> Reports
+                </ListItem>
+                <ListItem href="/payments">
+                    <PaidIcon /> Payments
                 </ListItem>
                 <ListItem href="/management">
-                    <TimelineIcon /> Gerenciamento
+                    <TimelineIcon /> Management
                 </ListItem>
             </ul>
         </aside>

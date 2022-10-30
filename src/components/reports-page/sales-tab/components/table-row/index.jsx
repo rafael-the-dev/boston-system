@@ -6,22 +6,20 @@ import moment from "moment";
 
 import { SalesTabContext } from "src/context"
 
-const TableRowContainer = ({ headers, row }) => {
-    const { selectedSale, setSelectedSale } = React.useContext(SalesTabContext);
-
-    const getId = () => {
-        return Boolean(selectedSale.find(item => item.id === row.id))
-    };
+const TableRowContainer = ({ headers, isClickable, row }) => {
+    const { setSelectedSale } = React.useContext(SalesTabContext);
 
     const getCellLabel = (header) => {
-        if(header.value === "data") {
-            return moment(row[header.value]).format("DD-MM-YYYY HH:mm:ss")
+        if(header.value === "date") {
+            return moment(row[header.value]).format("DD-MM-YYYY HH:mm:ss");
         }
 
         return row[header.value];
     };
 
     const clickHandler = () => {
+        if(!Boolean(isClickable)) return;
+        
         const { token } = JSON.parse(localStorage.getItem(process.env.LOCAL_STORAGE)).user;
 
         const options = {
@@ -45,7 +43,7 @@ const TableRowContainer = ({ headers, row }) => {
 
     return (
         <TableRow
-            className={classNames("cursor-pointer", { "bg-stone-200": getId() })}
+            className={classNames("cursor-pointer")}
             onClick={clickHandler}>
             {
                 headers.current.map(header => (

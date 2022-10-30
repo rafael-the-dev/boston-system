@@ -7,7 +7,7 @@ import classes from "./styles.module.css";
 import { SalesContext } from "src/context"
 
 const TabButton = ({ id, index, }) => {
-    const { addTab, addCurrentVisibleTab, currentTab, tabs } = React.useContext(SalesContext);
+    const { addTab, addCurrentVisibleTab, currentTab } = React.useContext(SalesContext);
 
     const clickHandler = () => {
         return id === -1 ? addTab() : addCurrentVisibleTab(id);

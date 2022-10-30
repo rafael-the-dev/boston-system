@@ -95,6 +95,11 @@ class Payment {
         })
     }
 
+    reset() {
+        this.methods = [];
+        this._setPayment([]);
+    }
+
     totalReceivedAmount() {
         return currency(this.methods.reduce((previousValue, currentMethod) => {
             return currency(currentMethod.receivedAmount).add(previousValue)

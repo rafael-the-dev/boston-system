@@ -10,6 +10,7 @@ let dbConfig = {
 
 const apiHandler = (handler) => {
     return async (req, res) => {
+        
         if(!dbConfig.isConnected) {
             await createDBConnection(dbConfig);
         }

@@ -1,11 +1,6 @@
 const { createConnection } = require("mysql2");
 
-const connection = createConnection({
-    host     : 'localhost',
-    user     : 'root',
-    password : "40260101",
-    database : 'mydb'
-});
+const connection = createConnection(process.env.DB);
 
 
 const createDBConnection = (dbConfig) => {
@@ -17,6 +12,8 @@ const createDBConnection = (dbConfig) => {
                 dbConfig.db = null;
                 dbConfig.isConnected = false;
 
+                connection.destroy();
+                
                 reject(err)
                 return;
             }

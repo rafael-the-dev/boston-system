@@ -14,7 +14,7 @@ const CheckoutContextProvider = ({ children }) => {
     
     const paymentMethodsRef = useRef( new Payment(setPaymentMethods))
 
-    const getPaymentMethods = useCallback(() => paymentMethodsRef.current, []);
+    const getPaymentMethods = useCallback(() => paymentMethodsRef.current, [ paymentMethods ]);
 
     useEffect(() => {
         getPaymentMethods().cart = getCart();

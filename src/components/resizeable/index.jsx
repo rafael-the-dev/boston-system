@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 import styles from "./styles.module.css";
 
-const Container = ({ children, classes, minHeight, minWidth }) => {
+const Container = ({ children, classes, helper, minHeight, minWidth }) => {
     let startX, startY, startWidth, startHeight;
     const paperRef = React.useRef(null);
 
@@ -29,7 +29,9 @@ const Container = ({ children, classes, minHeight, minWidth }) => {
     React.useEffect(() => {
         const { height } = paperRef.current.firstChild.getBoundingClientRect();
         paperRef.current.style.height = `${height}px`;
-    }, [])
+
+        helper && helper(paperRef);
+    }, [ helper ])
 
     return (
         <div 

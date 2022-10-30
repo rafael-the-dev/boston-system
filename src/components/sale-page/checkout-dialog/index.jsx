@@ -75,6 +75,10 @@ const CheckoutContainer = ({ onOpen }) => {
 
         try {
             await fetch("/api/sales", options);
+            setLoading(false);
+            getPaymentMethods().cart.reset();
+            getPaymentMethods().reset();
+            closeHandler();
         } catch(e) {
             console.error(e);
             onOpenErrorDialog.current?.();

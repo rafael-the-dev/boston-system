@@ -13,6 +13,7 @@ import Menu from "../menu"
 
 const LayoutContainer = ({ children }) => {
     const [ loading, setLoading ] = React.useState(true);
+    const isFirstRender = React.useRef(true);
 
     const { pathname } = useRouter();
 
