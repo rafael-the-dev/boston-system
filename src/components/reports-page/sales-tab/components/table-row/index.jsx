@@ -9,12 +9,30 @@ import { SalesTabContext } from "src/context"
 const TableRowContainer = ({ headers, isClickable, row }) => {
     const { setSelectedSale } = React.useContext(SalesTabContext);
 
-    const getCellLabel = (header) => {
-        if(header.value === "date") {
-            return moment(row[header.value]).format("DD-MM-YYYY HH:mm:ss");
+    const getCellLabel = ({ key, value }) => {
+        if(Boolean(key)) {
+            if(value === "methodId") {
+                return [
+                    { value: 100, label: "Cash" },
+                    { value: 200, label: "M-pesa" },
+                    { value: 300, label: "E-mola" },
+                    { value: 400, label: "M-kesh" },
+                    { value: 500, label: "POS" },
+                    { value: 600, label: "P24" }
+                ].find(item => item.value === row[key][value]).label;
+            }
+            
+            return row[key][value];
         }
 
-        return row[header.value];
+        if(value === "date") {
+            return moment(row[value]).format("DD-MM-YYYY HH:mm:ss");
+        } 
+        else if(value === "user") {
+            return `${row[value]["firstName"]} ${row[value]["lastName"]}`;
+        } 
+
+        return row[value];
     };
 
     const clickHandler = () => {

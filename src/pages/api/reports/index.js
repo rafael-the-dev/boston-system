@@ -32,8 +32,8 @@ const requestHandler = async (req, res, user ) => {
             const filterDate = getDate();
             const dateResult =  Boolean(filterDate) ? filterDate : "=curdate()";
 
-            return query(`SELECT * FROM salesseries INNER JOIN sales ON sales.SalesSerie=SalesSeries.idSalesSeries WHERE 
-                DATE(sales.data)${dateResult};`)
+            return query(`SELECT * FROM salesseries INNER JOIN sales ON sales.SalesSerie=SalesSeries.idSalesSeries 
+                INNER JOIN user ON user.idUser=salesseries.user WHERE DATE(sales.data)${dateResult};`)
                 .then(result => {
                     const list = result.map(item => new Sale(item).toLiteral());
                     const salesList = new SalesList(list);

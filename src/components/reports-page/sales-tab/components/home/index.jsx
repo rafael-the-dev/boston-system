@@ -10,7 +10,6 @@ import classes from "./styles.module.css"
 
 import { SalesContext, SalesTabContext } from "src/context"
 
-import DateHighlight from "../date-highlight";
 import Filters from "../filters"
 import Highlights from "../../../highlights";
 import Resizeable from "src/components/resizeable"
@@ -18,12 +17,12 @@ import Table from "src/components/table";
 import TableRow from "../table-row"
 
 const TabContainer = ({ tabId }) => {
-    const { currentTab } = React.useContext(SalesContext)
-    const { getSales, selectedSale } = React.useContext(SalesTabContext);
+    const { getSales } = React.useContext(SalesTabContext);
     
     const headers = React.useRef([
         { label: "id", value: "id" },
         { label: "Date", value: "date" },
+        { label: "Sold by", value: "user" },
         { label: "Amount", value: "amount" },
         { label: "Total VAT", value: "totalVAT" },
         { label: "Total", value: "total" }
@@ -120,7 +119,9 @@ const TabContainer = ({ tabId }) => {
             { filtersMemo }
             <div className="px-5">
                 <Resizeable classes={{ root: "bg-white rounded-t-xl" }} helper={resizeHelper} key={uuidV4()}>
-                    <Paper className="flex flex-col h-full overflow-y-auto rounded-t-xl w-full">
+                    <Paper 
+                        className="flex flex-col h-full overflow-y-auto rounded-t-xl w-full"
+                        elevation={0}>
                         <div>
                             <Typography
                                 component="h2"

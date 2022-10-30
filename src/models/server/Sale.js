@@ -1,6 +1,6 @@
 
 class Sale {
-    constructor({ idSalesSeries, Estado, User, Data, idSales, SalesSerie, Montante, Iva, Subtotal, Total, Status}) {
+    constructor({ Apelido, Categoria, idSalesSeries, Estado, Nome, User, Data, idSales, SalesSerie, Montante, Iva, Subtotal, Total, Status}) {
         this._amount = Montante;
         this._date = Data;
         this._id = idSalesSeries;
@@ -10,7 +10,12 @@ class Sale {
         this._subTotal = Subtotal;
         this._total = Total;
         this._totalVAT = Iva;
-        this._userId = User;
+        this._user = {
+            category: Categoria,
+            firstName: Nome,
+            id: User,
+            lastName: Apelido
+        };
     }
 
     get amount() { return this._amount; }
@@ -31,7 +36,7 @@ class Sale {
 
     get totalVAT() { return this._totalVAT; }
 
-    get userId() { return this._userId; }
+    get user() { return this._user; }
 
     toLiteral() {
         return {
@@ -44,7 +49,7 @@ class Sale {
             subTotal: this.Ssbtotal,
             total: this.total,
             totalVAT: this.totalVAT,
-            userId: this.userId
+            user: this.user
         }
     }
 

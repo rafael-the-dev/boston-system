@@ -1,3 +1,4 @@
+const cookie = require("cookie");
 const DefaultError = require("src/models/server/errors/DefaultError");
 
 const Access = require("src/models/server/Acess");
@@ -16,6 +17,8 @@ const apiHandler = (handler) => {
         }
 
         const { authorization } = req.headers;
+        
+        const { token } = cookie.parse(req.headers.cookie ?? "");
 
         try {
             res.setHeader("Access-Control-Allow-Origin", "*");
@@ -32,7 +35,7 @@ const apiHandler = (handler) => {
             let user = null;
             
             if(![ "/api/login" ].includes(req.url)) {
-                user = Access.getUser(authorization);
+                user = Access.getUser(authorization ?? token);
             } 
 
             await handler(req, res, user);

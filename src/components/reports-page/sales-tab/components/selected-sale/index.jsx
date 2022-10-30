@@ -8,7 +8,7 @@ import moment from "moment"
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 
-//import classes from "./styles.module.css"
+import classes from "./styles.module.css"
 
 import { SalesTabContext } from "src/context"
 
@@ -22,12 +22,25 @@ const SelectedSaleContaienr = () => {
     const { selectedSale, setSelectedSale } = React.useContext(SalesTabContext);
 
     const headers = React.useRef([
-        { label: "id", value: "id" },
-        { label: "Date", value: "date" },
+        { label: "Name", key: "product", value: "name" },
+        { label: "Price", key: "product", value: "price" },
         { label: "Amount", value: "amount" },
         { label: "Total VAT", value: "totalVAT" },
         { label: "Total", value: "total" }
     ]);
+
+    const paymentMethodsHeaders = React.useRef([
+        { label: "Payment Method", value: "description" },
+        { label: "Amount", value: "amount" },
+        { label: "Received", value: "received" },
+        { label: "Changes", value: "changes" },
+    ])
+    /**
+     * 
+        { label: "Received", value: "received" },
+        { label: "Change", value: "change" },
+        { label: "Paid via", value: "methodId" },
+     */
 
     const getDate = React.useCallback(() => {
         if(selectedSale.length > 0) return moment(selectedSale[0].date).format("DD/MM/YYYY");
@@ -40,15 +53,15 @@ const SelectedSaleContaienr = () => {
     const saleStats = React.useMemo(() => {
         const stats = {};
 
-        stats.total = currency(selectedSale.reduce((previousValue, currentSale) => {
+        stats.total = currency(selectedSale.products.reduce((previousValue, currentSale) => {
             return currency(currentSale.total).add(previousValue)
         }, 0)).value;
 
-        stats.totalAmount = currency(selectedSale.reduce((previousValue, currentSale) => {
+        stats.totalAmount = currency(selectedSale.products.reduce((previousValue, currentSale) => {
             return currency(currentSale.amount).add(previousValue)
         }, 0)).value;
 
-        stats.totalVAT = currency(selectedSale.reduce((previousValue, currentSale) => {
+        stats.totalVAT = currency(selectedSale.products.reduce((previousValue, currentSale) => {
             return currency(currentSale.totalVAT).add(previousValue)
         }, 0)).value;
 
@@ -63,12 +76,11 @@ const SelectedSaleContaienr = () => {
         />
     ), [ saleStats ]);
 
-    const getSelectedSaleBodyRows = React.useCallback(({ page, rowsPerPage }) => {
-        const list = selectedSale;
-        const result = rowsPerPage > 0 ? list.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : list;
+    const getSelectedSaleBodyRows = React.useCallback(( tableHeaders, tableList) => ({ page, rowsPerPage }) => {
+        const result = rowsPerPage > 0 ? tableList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : tableList;
         
         return result.map(row => (
-            <TableRow headers={headers} row={row} key={row.id} />
+            <TableRow headers={tableHeaders} row={row} key={row.salesDetailsId} />
         ));
     }, [ selectedSale ]); 
 
@@ -80,14 +92,27 @@ const SelectedSaleContaienr = () => {
         <div className="mb-6 px-5 w-full">
             <Resizeable classes={{ root: "bg-white" }} helper={resizeHelper} key={uuidV4()}>
                 <Table 
-                    classes={{ tableHeaderRow: "bg-stone-200", root: "h-full", table: "h-full" }}
-                    data={selectedSale}
-                    getBodyRows={getSelectedSaleBodyRows}
+                    classes={{ tableHeaderRow: classes.tableHeadRow, tableHeadCell: "text-white", root: "h-full", table: "h-full" }}
+                    data={selectedSale.products}
+                    getBodyRows={getSelectedSaleBodyRows(headers, selectedSale.products)}
                     headers={headers}
                 />
             </Resizeable>
         </div>
-    ), []);
+    ), [ getSelectedSaleBodyRows, selectedSale ]);
+
+    const paymentMethodsTableMemo = React.useMemo(() => (
+        <div className="mb-6 px-5 w-full">
+            <Resizeable classes={{ root: "bg-white" }} helper={resizeHelper} key={uuidV4()}>
+                <Table 
+                    classes={{ tableFooter: "hidden", tableHeaderRow: "bg-stone-300", tableHeadCell: "text-white", root: "h-full", table: "h-full" }}
+                    data={selectedSale.paymentMethods}
+                    getBodyRows={getSelectedSaleBodyRows(paymentMethodsHeaders, selectedSale.paymentMethods)}
+                    headers={paymentMethodsHeaders}
+                />
+            </Resizeable>
+        </div>
+    ), [ getSelectedSaleBodyRows, selectedSale ]);
 
     const clickHandler = React.useCallback(() => setSelectedSale([]), [setSelectedSale ])
 
@@ -105,6 +130,7 @@ const SelectedSaleContaienr = () => {
                 { highlightsMemo }
             </div>
             { tableMemo }
+            { paymentMethodsTableMemo }
         </>
     );
 };

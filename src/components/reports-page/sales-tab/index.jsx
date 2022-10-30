@@ -16,7 +16,7 @@ const TabContainer = ({ tabId }) => {
     return (
         <div className={classNames("pb-12", { "hidden": currentTab !== tabId })}>
             {
-                Boolean(selectedSale.length) ? selectedSaleMemo : homeMemo
+                Object.keys(selectedSale).length > 0 ? selectedSaleMemo : homeMemo
             }
         </div>
     );

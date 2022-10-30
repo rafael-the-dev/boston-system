@@ -1,6 +1,7 @@
 import { Button, MenuItem, Paper, Typography } from '@mui/material';
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
-import { useRouter } from "next/router"
+import { useRouter } from "next/router";
+import * as cookie from "cookie";
 
 import classNames from 'classnames'
 import classes from "./styles.module.css";
@@ -8,7 +9,8 @@ import classes from "./styles.module.css";
 import SaveIcon from '@mui/icons-material/Save';
 
 import Validation from "src/models/Validation";
-import { SignUpContext, SignUpContextProvider } from "src/context"
+import { fetchHelper } from "src/helpers/queries"
+import { SignUpContext } from "src/context";
 
 import DefaultInput from "src/components/default-input";
 import Input from "src/components/default-input"
@@ -16,15 +18,29 @@ import Link from "src/components/link";
 import MessageDialog from "src/components/message-dialog";
 import Panel from "src/components/panel";
 
-export const getServerSideProps = async ({ params }) => {
+export const getServerSideProps = async ({ params, req: { headers } }) => {
     const { id } = params;
+    
+    const { token } = cookie.parse(headers.cookie);
 
-    const res = await fetch(`http://localhost:3000/api/users/${id}`);
-    const users = await res.json();
+    const options = {
+        headers: {
+            Authorization: token
+        }
+    };
 
+    let user = {};
+
+    try {
+        const users = await fetchHelper({ options, url: `${process.env.SERVER}/api/users/${id}` });
+        user = users[0];
+    } catch(e) {
+
+    }
+    
     return {
         props: {
-            profile: users[0]
+            profile: user
         }
     }
 };

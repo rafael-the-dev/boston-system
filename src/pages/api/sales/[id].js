@@ -10,11 +10,21 @@ const requestHandler = async (req, res, user ) => {
 
     switch(method) {
         case "GET": {
-            return query(`SELECT * FROM salesdetail inner join  sales on sales.idSales=salesdetail.FKSales inner join salesseries on salesseries.idSalesSeries
-            =sales.SalesSerie where SalesSeries.idsalesseries=?`, [ id ])
-                .then(result => {
-                    res.json(result.map(item => new SaleDetails(item).toLiteral()));
-                })
+            const [ products, paymentMethods ] = await Promise.all([
+                query(`
+                    SELECT * FROM salesdetail INNER JOIN  sales ON sales.idSales=salesdetail.FKSales 
+                    INNER JOIN salesseries ON salesseries.idSalesSeries=sales.SalesSerie 
+                    INNER JOIN produto ON produto.idProduto=salesdetail.Product
+                    WHERE SalesSeries.idsalesseries=?`, [ id ]),
+                query(`
+                    SELECT paymentmethod.idPaymentMethod as id, paymentmethod.description, paymentmethodused.amount, paymentmethodused.Received as received, paymentmethodused.Change as changes FROM salesseries
+                    INNER JOIN PaymentSeries ON salesseries.idSalesSeries=PaymentSeries.fk_salesserie
+                    INNER JOIN PaymentMethodUsed ON PaymentSeries.idPaymentSeries=PaymentMethodUsed.fk_payment_serie
+                    INNER JOIN paymentmethod ON paymentmethod.idPaymentMethod=paymentmethodused.fk_payment_mode
+                    WHERE SalesSeries.idsalesseries=?;`, [ id ])
+            ]);
+
+            res.json(new SaleDetails({ id, products, paymentMethods }).toLiteral());
         }
     }
 };

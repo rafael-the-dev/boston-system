@@ -84,6 +84,7 @@ const Container = ({ classes, data, getBodyRows, headers }) => {
                     headers.current.map(header => (
                         <TableCell 
                             align="center"
+                            className={classes?.tableHeadCell}
                             key={uuidV4()}>
                             { header.label }
                         </TableCell>
@@ -100,7 +101,7 @@ const Container = ({ classes, data, getBodyRows, headers }) => {
                 <TableBody>
                     { getBodyRows({ page, rowsPerPage }) }
                 </TableBody>
-                <TableFooter>
+                <TableFooter className={classNames(classes?.tableFooter)}>
                     <TableRow>
                         <TablePagination
                             rowsPerPageOptions={[2, 3, 5, 7, 10, 15, 25, { label: 'All', value: -1 }]}
