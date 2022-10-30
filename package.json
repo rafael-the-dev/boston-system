@@ -19,6 +19,7 @@
     "@mui/icons-material": "^5.10.9",
     "@mui/material": "^5.10.9",
     "@mui/x-date-pickers": "^5.0.5",
+    "apexcharts": "^3.36.0",
     "bcrypt": "^5.1.0",
     "classnames": "^2.3.2",
     "cookie": "^0.5.0",
