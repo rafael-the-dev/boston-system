@@ -39,7 +39,7 @@ const Container = () => {
             className="font-bold text-xl">
             Sales list { formatDates(getSalesDate()) }
         </Typography>
-    ), []);
+    ), [ getSalesDate ]);
 
     const resizeHelper = React.useCallback((el) => {
         el.current.style.width = "100%";

@@ -74,6 +74,7 @@ class Payment {
 
             const method = listTemp.find(item => item.id === id);
             method.amount = currency(method.amount).add(this.amountRemaining());
+            method.receivedAmount = currency(method.amount).value;
 
             return listTemp;
         })

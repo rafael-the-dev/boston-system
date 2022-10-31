@@ -12,7 +12,7 @@ import { SalesTabContext } from "src/context"
 
 import Input from "src/components/default-input"
 
-const DateFilters = () => {
+const DateFilters = ({ onClose }) => {
     const [ loading, setLoading ] = React.useState(false);
     const [ date, setDate ] = React.useState({
         end: "",
@@ -40,10 +40,12 @@ const DateFilters = () => {
         fetchHelper({ options, url: `/api/reports?${date.start && `startDate=${date.start}&` }${date.end && `endDate=${date.end}` }` })
             .then(data => {
                 setLoading(false);
+                onClose();
                 getSales().update(data);
             })
             .catch(err => {
-                console.error(err)
+                console.error(err);
+                setLoading(false);
             })
     };
 
@@ -72,7 +74,7 @@ const DateFilters = () => {
                 onClick={fetchHandler}
                 startIcon={<SearchIcon />}
                 variant="contained">
-                Search
+                { loading ? "Loading..." : "Search" }
             </Button>
         </div>
     );

@@ -34,15 +34,28 @@ const requestHandler = async (req, res, user ) => {
 
             return query(`SELECT * FROM salesseries INNER JOIN sales ON sales.SalesSerie=SalesSeries.idSalesSeries 
                 INNER JOIN user ON user.idUser=salesseries.user WHERE DATE(sales.data)${dateResult};`)
-                .then(result => {
+                .then(async result => {
                     const list = result.map(item => new Sale(item).toLiteral());
                     const salesList = new SalesList(list);
 
-                    return query(`SELECT SUM(Montante) as Montante, SUM(Iva) as Iva, SUM(Total) as Total FROM sales WHERE DATE(Sales.data)${dateResult};`)
-                        .then(statsResult => {
-                            salesList.stats = statsResult[0];
-                            res.json(salesList.toLiteral());
-                        })
+                    await Promise.all([
+                        query(`SELECT SUM(Montante) as Montante, SUM(Iva) as Iva, SUM(Total) as Total FROM sales WHERE DATE(Sales.data)${dateResult};`)
+                            .then(statsResult => {
+                                salesList.stats = statsResult[0];
+                                return;
+                            }),
+                        query(`
+                            SELECT sum(salesdetail.Quantity*produto.profit) AS Profit FROM  sales INNER JOIN salesseries on salesseries.idSalesSeries=sales.salesserie 
+                            INNER JOIN salesdetail ON salesdetail.FKSales=sales.idsales 
+                            INNER JOIN produto ON salesdetail.product=produto.idproduto
+                            WHERE DATE(salesdetail.data)${dateResult};`)
+                            .then(profitResult => {
+                                salesList.profit = currency(profitResult[0].Profit).value;
+                                return;
+                            })
+                    ]);
+                    
+                    res.json(salesList.toLiteral());
                 })
         }
         default: {

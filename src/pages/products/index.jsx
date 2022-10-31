@@ -1,7 +1,8 @@
 import { useCallback, useRef, useMemo, useState } from "react"
 import { Button, TableCell, Typography } from "@mui/material";
 import classNames from "classnames";
-import { v4 as uuidV4 } from "uuid"
+import { v4 as uuidV4 } from "uuid";
+import * as cookie from "cookie";
 
 import classes from "./styles.module.css";
 
@@ -13,9 +14,23 @@ import Link from "src/components/link"
 import Table from "src/components/table";
 import TableBodyRow from "src/components/products-page/table-row" 
 
-export const getServerSideProps = async () => {
-    const [ categories, products ] = await Promise.all([ getCategories(), getProducts() ]);
-    
+export const getServerSideProps = async ({ req: { headers }}) => {
+    const { token } = cookie.parse(headers.cookie);
+
+    const options = {
+        headers: {
+            Authorization: token
+        }
+    };
+
+    let [ categories, products ] = [[], []];
+
+    try {
+        [ categories, products ] = await Promise.all([ getCategories({ options }), getProducts({ options }) ]);
+    } catch(e) {
+
+    }  
+
     return {
       props: {
         categories, 

@@ -1,13 +1,24 @@
 import * as React from "react";
+import dynamic from "next/dynamic"
+import currency from "currency.js";
+import moment from "moment";
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 
-import Button from "./components/button"
+import classes from "./styles.module.css"
+
+import { SalesTabContext } from "src/context"
+
+import Button from "./components/button";
+
+const LineChart = dynamic(() => import( "./components/line-chart"), { ssr: false })
 
 const ChartContainer = () => {
     const [ chart, setChart ] = React.useState("LINE");
     const [ open, setOpen ] = React.useState("");
-    const [ xAxe, setXAxe ] = React.useState([]);
+    const [ xAxe, setXAxe ] = React.useState([ "DAY" ]);
     const [ yAxe, setYAxe ] = React.useState([]);
+
+    const { getSales } = React.useContext(SalesTabContext);
 
     const chartsType = React.useRef([
         { label: "Bar", value: "BAR" },
@@ -71,8 +82,31 @@ const ChartContainer = () => {
         );
     }, []);
 
-    
+    const groupByDay = React.useMemo(() => {
+        const result = {};
 
+        getSales().list.forEach(item => {
+            const itemDay = moment(item.date).format("DD");
+
+            if(Boolean(result[itemDay])) {
+                
+                result[itemDay] = {
+                    total: currency(item.total).add(result[itemDay]['total']).value
+                }
+            } else {
+                result[itemDay] = {
+                    total: item.total
+                }
+            }
+        });
+
+        return result;
+    }, [ getSales ]);
+
+    const data = React.useMemo(() => {
+        if(xAxe.includes("DAY")) return groupByDay;
+    }, [ data, groupByDay, xAxe ])
+    
     return (
         <div className="h-full w-full">
             <div className="px-4">
@@ -90,6 +124,13 @@ const ChartContainer = () => {
                         }[open]
                     }
                 </div>
+            </div>
+            <div className={classes.chartContainer}>
+                {
+                    {
+                        "LINE": <LineChart data={data} />
+                    }[chart]
+                }
             </div>
         </div>
     );

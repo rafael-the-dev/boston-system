@@ -1,3 +1,9 @@
 .container {
     width: 31.3333%;
 }
+
+@media screen and (min-width: 600px) {
+    .container {
+        width:23.5%;
+    }
+}

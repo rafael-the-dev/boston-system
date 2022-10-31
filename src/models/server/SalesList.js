@@ -3,11 +3,14 @@ const currency = require("currency.js")
 class SalesList {
     constructor(list) {
         this._list = list;
+        this._profit = 0;
         this._subTotal = 0;
         this._stats = {};
         this._total = 0;
         this._totalVAT = 0;
     }
+    get profit() { return this._profit; }
+    set profit(newProfit) { this._profit = newProfit; }
 
     get list() { return this._list; }
 
@@ -50,7 +53,8 @@ class SalesList {
         return {
             list: this.list,
             statistics: {
-                ...this.stats
+                ...this.stats,
+                profit: this.profit
             }
         }
     }

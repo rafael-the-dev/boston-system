@@ -4,6 +4,14 @@
 
 @media screen and (min-width: 600px) {
     .hightlightsContainer {
-        width: 74.5%;
+        width: 79.5%;
+    }
+
+    .hightlightsContainerOthers {
+        width: 63%;
+    }
+
+    .hightlightsContainerOthers > div {
+        width: 31.3333% !important;
     }
 }

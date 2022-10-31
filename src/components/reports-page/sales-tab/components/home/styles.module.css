@@ -15,13 +15,13 @@
 
 @media screen and (min-width: 600px) {
     .hightlightsContainer {
-        width: 74.5%;
+        width: 79.5%;
     }
 
     .filtersButton {
         height: auto;
         margin-top: 0;
-        width: 23.5%;
+        width: 19%;
     }
 
     .date {

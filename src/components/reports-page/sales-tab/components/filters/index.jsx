@@ -14,7 +14,7 @@ const FiltersContainer = ({ onToggle }) => {
 
     const changeHandler = React.useCallback(e => setValue(e.target.value), []);
 
-    const datePickerMemo = React.useMemo(() => <DatePicker />, []);
+    const datePickerMemo = React.useMemo(() => <DatePicker onClose={() => setOpen(false)} />, []);
 
     const childrenList = React.useRef({
         "DATE": datePickerMemo
