@@ -9,11 +9,23 @@ const ChartContainer = () => {
     const [ xAxe, setXAxe ] = React.useState([]);
     const [ yAxe, setYAxe ] = React.useState([]);
 
+    const chartsType = React.useRef([
+        { label: "Bar", value: "BAR" },
+        { label: "Line", value: "LINE" },
+        { label: "Pie", value: "PIE" }
+    ]);
+
     const xAxeList = React.useRef([
         { label: "Day", value: "DAY" },
         { label: "Week", value: "WEEK" },
         { label: "Month", value: "MONTH" },
         { label: "Year", value: "YEAR" }
+    ]);
+
+    const yAxeList = React.useRef([
+        { label: "Total", value: "TOTAL" },
+        { label: "amount", value: "AMOUNT" },
+        { label: "VAT", value: "VAT" },
     ]);
 
     const clickHandler = React.useCallback(newValue => () => {
@@ -24,26 +36,31 @@ const ChartContainer = () => {
         })
     }, []);
 
-    const xAxeChangeHandler = React.useCallback(e => {
+    const chartChangeHandler = React.useCallback(e => setChart(e.target.value), [])
+
+    const axeChangeHandler = React.useCallback(func => e => {
         const { value } = e.target;
 
-        setXAxe(currentList => {
+        func(currentList => {
             if(currentList.includes(value)) return [ ...currentList.filter(item => item !== value)];
 
             return [ ...currentList, value ];
         })
-    }, [])
+    }, []);
 
-    const xAxeElementsListMemo = React.useMemo(() => {
+    const isAxeSelected = React.useCallback(list => (itemValue) => list.includes(itemValue), []);
+    const isChartSelected = React.useCallback((itemValue) => chart === itemValue, [ chart ])
+
+    const getElements = React.useCallback((labelList, isSelected, onChange) => {
         return (
             <FormGroup row>
                 {
-                    xAxeList.current.map(item => (
+                    labelList.current.map(item => (
                         <FormControlLabel 
                             control={
                                 <Checkbox 
-                                    checked={xAxe.includes(item.value)} 
-                                    onChange={xAxeChangeHandler}
+                                    checked={isSelected(item.value)} 
+                                    onChange={onChange}
                                     value={item.value}
                                 />} 
                             label={item.label} 
@@ -52,7 +69,9 @@ const ChartContainer = () => {
                 }
             </FormGroup>
         );
-    }, [ xAxe, xAxeChangeHandler ])
+    }, []);
+
+    
 
     return (
         <div className="h-full w-full">
@@ -65,8 +84,9 @@ const ChartContainer = () => {
                 <div className="pl-2">
                     {
                         {   
-                            "": <></>,
-                            "X_AXE": xAxeElementsListMemo
+                            "CHART_TYPE": getElements(chartsType, isChartSelected, chartChangeHandler),
+                            "X_AXE": getElements(xAxeList, isAxeSelected(xAxe), axeChangeHandler(setXAxe)),
+                            "Y_AXE": getElements(yAxeList, isAxeSelected(yAxe), axeChangeHandler(setYAxe))
                         }[open]
                     }
                 </div>

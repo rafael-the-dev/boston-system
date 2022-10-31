@@ -46,7 +46,7 @@ const Container = () => {
     }, [])
 
     return (
-        <Resizeable classes={{ root: "bg-white rounded-t-xl" }} helper={resizeHelper} key={uuidV4()}>
+        <Resizeable classes={{ root: "bg-white rounded-t-xl" }} helper={resizeHelper}>
             <Paper 
                 className="flex flex-col h-full overflow-y-auto rounded-t-xl w-full"
                 elevation={0}>
