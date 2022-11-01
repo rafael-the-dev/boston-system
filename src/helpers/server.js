@@ -4,6 +4,19 @@ const moment = require("moment")
 const path = require("path")
 const PDFDocument = require('pdfkit');
 
+const getInvoicePath = name => {
+    const { sep } = path;
+    return path.join(path.resolve("."), `${sep}public${sep}invoices${sep}sales${sep}${name}`);
+};
+
+const deleteInvoice = name => {
+    const pathname = getInvoicePath(name);
+
+    fs.unlink(pathname, error => {
+        if(error) console.error("error while deleting", error);
+    });
+}
+
 const generateHeader = (doc) => {
 	doc.image('logo.png', 50, 45, { width: 50 })
 		.fillColor('#444444')
@@ -81,12 +94,10 @@ const createInvoice = ({ information, products, paymentMethods, stats }) => {
 
             const time = moment().format("DDMMYYYY_HHmmss");
             const name = `sale_invoice_${time}.pdf`;
-            const { sep } = path;
 
-            const filePath = path.join(path.resolve("."), `${sep}public${sep}invoices${sep}sales${sep}${name}`);
-            doc.pipe(fs.createWriteStream(filePath));
-
-            resolve(name);
+            const filePath = getInvoicePath(name);
+            doc.pipe(fs.createWriteStream(filePath))
+                .on("finish", () => resolve(name));
         } catch(e) {
             reject(e)
         }
@@ -95,4 +106,6 @@ const createInvoice = ({ information, products, paymentMethods, stats }) => {
 
 module.exports = {
 	createInvoice,
+    deleteInvoice,
+    getInvoicePath
 };

@@ -1,8 +1,9 @@
-const moment = require("moment")
+const fileSystem = require("fs")
+const moment = require("moment");
 
 const { apiHandler } = require("src/helpers/api-handler")
 const { query } = require("src/helpers/db");
-const { createInvoice } = require("src/helpers/server")
+const { createInvoice, deleteInvoice, getInvoicePath } = require("src/helpers/server")
 
 const requestHandler = async (req, res, user ) => {
 
@@ -24,7 +25,7 @@ const requestHandler = async (req, res, user ) => {
                 `, [ id ])
             ]);
 
-            createInvoice({ 
+            const fileName = await createInvoice({ 
                 information: {
                     date: moment(new Date(paymentMethods[0].data)).format("DD-MM-YYYY")
                 }, 
@@ -36,13 +37,18 @@ const requestHandler = async (req, res, user ) => {
                 }
             });
 
-            res.json({ 
-                information: {
-                    date: moment(new Date(paymentMethods[0].data)).format("DD-MM-YYYY")
-                },
-                products, 
-                paymentMethods 
+            const filePath = getInvoicePath(fileName);
+            const stat = fileSystem.statSync(filePath);
+
+            res.writeHead(200, {
+                'Content-Type': 'application/pdf',
+                'Content-Length': stat.size
             });
+
+            const readStream = fileSystem.createReadStream(filePath);
+            
+            readStream.pipe(res);
+            readStream.on("close", () => deleteInvoice(fileName));
         }
         default: {
             return;
