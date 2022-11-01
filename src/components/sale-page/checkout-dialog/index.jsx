@@ -12,6 +12,7 @@ const CheckoutContainer = ({ onOpen }) => {
     const [ panel, setPanel ] = React.useState("PAYMENTMETHODS")
 
     const onClose = React.useRef(null);
+    const salesSerie = React.useRef(0);
 
     const closeHandler = React.useCallback(() => onClose.current?.(), []);
 
@@ -23,8 +24,8 @@ const CheckoutContainer = ({ onOpen }) => {
         </DialogHeader>
     ), [ closeHandler ]);
 
-    const paymentMethodMethodMemo = React.useMemo(() => <PaymentMethodHome onClose={closeHandler} setPanel={setPanel} />, [ closeHandler ])
-    const successfulPaymentPanel = React.useMemo(() => <SuccessfulPaymentPanel onClose={closeHandler} />, [ closeHandler ])
+    const paymentMethodMethodMemo = React.useMemo(() => <PaymentMethodHome onClose={closeHandler} salesSerie={salesSerie} setPanel={setPanel} />, [ closeHandler ])
+    const successfulPaymentPanel = React.useMemo(() => <SuccessfulPaymentPanel onClose={closeHandler} salesSerie={salesSerie}  setPanel={setPanel} />, [ closeHandler ])
 
     return (
         <Dialog

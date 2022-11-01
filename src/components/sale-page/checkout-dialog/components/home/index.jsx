@@ -7,10 +7,11 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DoneIcon from '@mui/icons-material/Done';
 
 import { CheckoutContext } from "src/context";
+import { fetchHelper } from "src/helpers/queries"
 
 import PaymentMethod from "../payment-method"
 
-const CheckoutContainer = ({ onClose, setPanel }) => {
+const CheckoutContainer = ({ onClose, setPanel, salesSerie }) => {
     const { getPaymentMethods } = React.useContext(CheckoutContext);
     const [ loading, setLoading ] = React.useState(false);
 
@@ -50,8 +51,9 @@ const CheckoutContainer = ({ onClose, setPanel }) => {
         };
 
         try {
-            await fetch("/api/sales", options);
+            const result = await fetchHelper({ options, url: "/api/sales" });
             setLoading(false);
+            salesSerie.current = result.salesserie;
             setPanel("SUCCESSFULPAYMENT")
         } catch(e) {
             console.error(e);

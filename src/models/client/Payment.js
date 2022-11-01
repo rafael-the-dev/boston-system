@@ -15,14 +15,7 @@ class Payment {
     set methods(methods) { this._methods = methods; }
 
     add() {
-        const list = [
-            { value: 100, label: "Cash" },
-            { value: 200, label: "M-pesa" },
-            { value: 300, label: "E-mola" },
-            { value: 400, label: "M-kesh" },
-            { value: 500, label: "POS" },
-            { value: 600, label: "P24" }
-        ];
+        const list = process.env.PAYMENT_METHODS;
 
         this._setPayment(currentMethods => {
             const listTemp = [ ...currentMethods ];

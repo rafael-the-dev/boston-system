@@ -1,7 +1,8 @@
-const currency = require("currency.js")
+const moment = require("moment")
 
 const { apiHandler } = require("src/helpers/api-handler")
-const { query } = require("src/helpers/db")
+const { query } = require("src/helpers/db");
+//const { createInvoice } = require("src/helpers/server")
 
 const requestHandler = async (req, res, user ) => {
 
@@ -9,30 +10,28 @@ const requestHandler = async (req, res, user ) => {
 
     switch(method) {
         case "GET": {
-            const [ paymentMethods, products ] = Promise.all([
+            const [ paymentMethods, products ] = await Promise.all([
                 query(`
-                    SELECT description, amount, Received as received, paymentmethodused.Change as client_change FROM paymentmethodused INNER JOIN paymentmethod ON paymentmethodused.fk_payment_mode=paymentmethod.idPaymentMethod
+                    SELECT description, amount, Received as received, paymentmethodused.Change as client_change, PaymentSeries.data FROM paymentmethodused INNER JOIN paymentmethod ON paymentmethodused.fk_payment_mode=paymentmethod.idPaymentMethod
                     INNER JOIN PaymentSeries ON PaymentSeries.idPaymentSeries=paymentmethodused.fk_payment_serie
                     WHERE PaymentSeries.idPaymentSeries=(SELECT MAX(idPaymentSeries) FROM paymentseries WHERE paymentseries.fk_user=?)
                 `, [ user.idUser ]),
                 query(`
-                    SELECT Montante as amount, BarCod AS barCode, Nome AS name, Preco_venda as price, Quantity as quantity  FROM sales INNER JOIN salesseries ON sales.SalesSerie=salesseries.idSalesSeries
+                    SELECT BarCod AS barCode, Iva as "tax-rate", Nome AS description, Preco_venda as price, Quantity as quantity  FROM sales INNER JOIN salesseries ON sales.SalesSerie=salesseries.idSalesSeries
                     INNER JOIN salesdetail ON sales.idSales=salesdetail.FKSales
                     INNER JOIN produto ON salesdetail.Product=produto.idProduto
                     WHERE salesseries.idSalesSeries=?
                 `, [ id ])
             ]);
 
-            
-            /*const totalVAT = currency(products.reduce((previousValue, currentProduct) => {
-                return currency(currentProduct.totalVAT).add(previousValue);
-            }, 0)).value;
-
-            const totalAmount = currency(products.reduce((previousValue, currentProduct) => {
-                return currency(currentProduct.subTotal).add(previousValue);
-            }, 0)).value;*/
-
-            res.json({ products, paymentMethods })
+            //createInvoice({ products, paymentMethods })
+            res.json({ 
+                information: {
+                    date: moment(new Date(paymentMethods[0].data)).format("DD-MM-YYYY")
+                },
+                products, 
+                paymentMethods 
+            });
         }
         default: {
             return;

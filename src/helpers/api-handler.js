@@ -34,7 +34,7 @@ const apiHandler = (handler) => {
 
             let user = null;
             
-            if(![ "/api/login" ].includes(req.url)) {
+            if(![ "/api/login", "/api/logout" ].includes(req.url)) {
                 user = Access.getUser(authorization ?? token);
             } 
 

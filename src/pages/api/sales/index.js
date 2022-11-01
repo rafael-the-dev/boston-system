@@ -56,7 +56,7 @@ const requestHandler = async (req, res, user ) => {
                             })
                     ]);
 
-                    res.json({ message: "Venda feita com successo" });
+                    res.json({ message: "Venda feita com successo", salesserie: insertId });
                 });
         }
         default: {
