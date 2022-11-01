@@ -16,6 +16,13 @@ const LayoutContainer = ({ children }) => {
     const isFirstRender = React.useRef(true);
 
     const { pathname } = useRouter();
+    
+    const printIframeMemo = React.useMemo(() => (
+        <iframe 
+            className="hidden" 
+            id="print-iframe">
+        </iframe>
+    ), []);
 
     if(loading) return <Loading loading={loading} setLoading={setLoading} />
 
@@ -31,7 +38,7 @@ const LayoutContainer = ({ children }) => {
                 <ContextProvider>
                     <Header />
                     { children }
-
+                    { printIframeMemo }
                 </ContextProvider>
             </div>
         </div>

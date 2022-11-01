@@ -129,22 +129,6 @@ const Container = ({ categories, productsList }) => {
         if(cart.length === 0) return;
 
         onOpenDialog.current?.();
-        /*setLoading(true);
-
-        const options = {
-            body: JSON.stringify({
-                state: "ATIVO",
-                username: loggedUser.username
-            }),
-            method: "POST"
-        };
-
-        fetch('api/sales', options)
-            .then(() => setLoading(false))
-            .catch(err => {
-                console.log(err);
-                setLoading(false);
-            })*/
     }, [ cart, loggedUser ])
 
     return (

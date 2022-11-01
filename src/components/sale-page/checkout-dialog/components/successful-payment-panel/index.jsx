@@ -1,14 +1,14 @@
 import * as React from "react";
+import axios from "axios"
 import Button from "@mui/material/Button";
 
 import classes from "./styles.module.css"
 
 import { CheckoutContext } from "src/context";
-import { createInvoice } from "src/helpers/server"
-import { fetchHelper } from "src/helpers/queries";
 
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PrintIcon from '@mui/icons-material/Print';
+
 
 const SuccessfulPaymentPanel = ({ onClose, salesSerie, setPanel }) => {
     const { getPaymentMethods } = React.useContext(CheckoutContext);
@@ -22,17 +22,37 @@ const SuccessfulPaymentPanel = ({ onClose, salesSerie, setPanel }) => {
 
     const fetchData = async () => {
         const options = {
+            baseURL: process.env.SERVER,
             headers: {
-                Authorization: JSON.parse(localStorage.getItem(process.env.LOCAL_STORAGE)).user.token
-            }
+                Accept: "application/pdf",
+                Authorization: JSON.parse(localStorage.getItem(process.env.LOCAL_STORAGE)).user.token,
+                "content-type": "application/pdf"
+            },
+            responseType: "blob"
         }
 
         try {
-            const result = await fetchHelper({ options, url: `http://localhost:3000/api/receipts/${salesSerie.current}` });
             closeHandler();
-            createInvoice(result);
-        } catch(e) {
 
+            const res = await axios(`/api/receipts/${salesSerie.current}`, options);
+            
+            if(res.status === 200) {
+                
+                const blob = new Blob([ res.data ], { type: 'application/pdf' }); 
+                const blobURL = URL.createObjectURL(blob);
+                
+                const iframeElement = document.querySelector("#print-iframe");
+                iframeElement.src = blobURL;
+
+                iframeElement.onload = () => {
+                    setTimeout(() => {
+                        iframeElement.focus();
+                        iframeElement.contentWindow.print();
+                    }, 1);
+                };
+            };
+        } catch(e) {
+            console.error(e)
         }
     };
 

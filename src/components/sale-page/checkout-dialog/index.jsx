@@ -23,7 +23,7 @@ const CheckoutContainer = ({ onOpen }) => {
             Checkout
         </DialogHeader>
     ), [ closeHandler ]);
-
+    
     const paymentMethodMethodMemo = React.useMemo(() => <PaymentMethodHome onClose={closeHandler} salesSerie={salesSerie} setPanel={setPanel} />, [ closeHandler ])
     const successfulPaymentPanel = React.useMemo(() => <SuccessfulPaymentPanel onClose={closeHandler} salesSerie={salesSerie}  setPanel={setPanel} />, [ closeHandler ])
 
