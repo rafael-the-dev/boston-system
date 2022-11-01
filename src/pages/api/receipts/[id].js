@@ -2,7 +2,7 @@ const moment = require("moment")
 
 const { apiHandler } = require("src/helpers/api-handler")
 const { query } = require("src/helpers/db");
-//const { createInvoice } = require("src/helpers/server")
+const { createInvoice } = require("src/helpers/server")
 
 const requestHandler = async (req, res, user ) => {
 
@@ -17,14 +17,25 @@ const requestHandler = async (req, res, user ) => {
                     WHERE PaymentSeries.idPaymentSeries=(SELECT MAX(idPaymentSeries) FROM paymentseries WHERE paymentseries.fk_user=?)
                 `, [ user.idUser ]),
                 query(`
-                    SELECT BarCod AS barCode, Iva as "tax-rate", Nome AS description, Preco_venda as price, Quantity as quantity  FROM sales INNER JOIN salesseries ON sales.SalesSerie=salesseries.idSalesSeries
+                    SELECT BarCod AS barCode, Iva as totalVAT, Nome AS description, Preco_venda as price, Quantity as quantity, Montante as totalAmount, Subtotal as subTotal  FROM sales INNER JOIN salesseries ON sales.SalesSerie=salesseries.idSalesSeries
                     INNER JOIN salesdetail ON sales.idSales=salesdetail.FKSales
                     INNER JOIN produto ON salesdetail.Product=produto.idProduto
-                    WHERE salesseries.idSalesSeries=?
+                    WHERE salesseries.idSalesSeries=?;
                 `, [ id ])
             ]);
 
-            //createInvoice({ products, paymentMethods })
+            createInvoice({ 
+                information: {
+                    date: moment(new Date(paymentMethods[0].data)).format("DD-MM-YYYY")
+                }, 
+                products, paymentMethods,
+                stats: {
+                    subTotal: products[0].subTotal,
+                    totalAmount: products[0].totalAmount,
+                    totalVAT: products[0].totalVAT
+                }
+            });
+
             res.json({ 
                 information: {
                     date: moment(new Date(paymentMethods[0].data)).format("DD-MM-YYYY")
