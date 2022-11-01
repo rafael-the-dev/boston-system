@@ -48,7 +48,7 @@ const requestHandler = async (req, res, user ) => {
             const readStream = fileSystem.createReadStream(filePath);
             
             readStream.pipe(res);
-            //readStream.on("close", () => deleteInvoice(fileName));
+            readStream.on("close", () => deleteInvoice(fileName));
         }
         default: {
             return;
