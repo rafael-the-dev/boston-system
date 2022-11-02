@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 import styles from "./styles.module.css";
 
-const Container = ({ children, classes, helper, minHeight, minWidth }) => {
+const Container = ({ children, classes, helper, minHeight, minWidth, onResize }) => {
     let startX, startY, startWidth, startHeight;
     const paperRef = React.useRef(null);
 
@@ -31,7 +31,21 @@ const Container = ({ children, classes, helper, minHeight, minWidth }) => {
         paperRef.current.style.height = `${height}px`;
 
         helper && helper(paperRef);
-    }, [ helper ])
+    }, [ helper ]);
+
+    const ResizeHandler = React.useCallback(() => onResize(paperRef), [ onResize ])
+
+    React.useEffect(() => {
+        if(!onResize) return;
+
+        const currentWindow = window;
+
+        currentWindow.addEventListener('resize', ResizeHandler);
+
+        return () => {
+            currentWindow.addEventListener('resize', ResizeHandler);   
+        };
+    }, [ ResizeHandler ])
 
     return (
         <div 

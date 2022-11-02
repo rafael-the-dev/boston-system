@@ -3,12 +3,12 @@ import dynamic from "next/dynamic"
 import currency from "currency.js";
 import lodash from "lodash";
 import moment from "moment";
-import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
+import { Checkbox, FormControlLabel, FormGroup, Radio } from "@mui/material";
 
 import classes from "./styles.module.css"
 
 import { SalesTabContext } from "src/context";
-import { getChartOptionsGroupedByDay } from "src/helpers/chart"
+import { getChartOptionsGroupedByDay, groupByMonth } from "src/helpers/chart"
 
 import Button from "./components/button";
 
@@ -17,7 +17,7 @@ const LineChart = dynamic(() => import( "./components/line-chart"), { ssr: false
 const ChartContainer = () => {
     const [ chart, setChart ] = React.useState("LINE");
     const [ open, setOpen ] = React.useState("");
-    const [ xAxe, setXAxe ] = React.useState([ "DAY" ]);
+    const [ xAxe, setXAxe ] = React.useState("DAY");
     const [ yAxe, setYAxe ] = React.useState("total");
 
     const { getSales } = React.useContext(SalesTabContext);
@@ -31,8 +31,7 @@ const ChartContainer = () => {
     const xAxeList = React.useRef([
         { label: "Day", value: "DAY" },
         { label: "Week", value: "WEEK" },
-        { label: "Month", value: "MONTH" },
-        { label: "Year", value: "YEAR" }
+        { label: "Month", value: "MONTH" }
     ]);
 
     const yAxeList = React.useRef([
@@ -67,7 +66,7 @@ const ChartContainer = () => {
                     labelList.current.map(item => (
                         <FormControlLabel 
                             control={
-                                <Checkbox 
+                                <Radio 
                                     checked={isSelected(item.value)} 
                                     onChange={onChange}
                                     value={item.value}
@@ -82,11 +81,18 @@ const ChartContainer = () => {
     }, []);
 
     const optionsByDay = React.useMemo(() => {
-        return getChartOptionsGroupedByDay({ 
-            data: getSales().list, 
-            isWeekly: xAxe !== "DAY", 
-            yAxis: yAxe 
-        })
+        const salesList = getSales().list;
+
+        if([ "DAY", "WEEK" ].includes(xAxe)) {
+            return getChartOptionsGroupedByDay({ 
+                data: salesList, 
+                isWeekly: xAxe !== "DAY", 
+                yAxis: yAxe 
+            })
+        }
+        else if(xAxe === "MONTH") {
+            return groupByMonth({ data: salesList, yAxis: yAxe });
+        }
     }, [ getSales,xAxe,  yAxe ]);
     
     return (

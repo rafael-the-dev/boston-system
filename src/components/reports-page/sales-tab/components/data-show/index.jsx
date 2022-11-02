@@ -37,16 +37,20 @@ const Container = () => {
         <Typography
             component="h2"
             className="font-bold text-xl">
-            Sales list { formatDates(getSalesDate()) }
+            Sales { value === "TABLE" ? "list" : "chart" } { formatDates(getSalesDate()) }
         </Typography>
-    ), [ getSalesDate ]);
+    ), [ getSalesDate, value ]);
 
     const resizeHelper = React.useCallback((el) => {
+        el.current.style.width = "100%";
+    }, []);
+
+    const resizeHandler = React.useCallback((el) => {
         el.current.style.width = "100%";
     }, [])
 
     return (
-        <Resizeable classes={{ root: "bg-white rounded-t-xl" }} helper={resizeHelper}>
+        <Resizeable classes={{ root: "bg-white rounded-t-xl" }} onResize={resizeHandler} helper={resizeHelper}>
             <Paper 
                 className="flex flex-col h-full overflow-y-auto rounded-t-xl w-full"
                 elevation={0}>

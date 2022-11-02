@@ -1,1 +1,2 @@
-export * from "./groupByDay"
+export * from "./groupByDay";
+export * from "./groupByMonth"
