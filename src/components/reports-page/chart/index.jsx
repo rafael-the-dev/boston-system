@@ -7,11 +7,12 @@ import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 
 import classes from "./styles.module.css"
 
-import { SalesTabContext } from "src/context"
+import { SalesTabContext } from "src/context";
+import { getChartOptionsGroupedByDay } from "src/helpers/chart"
 
 import Button from "./components/button";
 
-const LineChart = dynamic(() => import( "./components/line-chart"), { ssr: false })
+const LineChart = dynamic(() => import( "./components/line-chart"), { ssr: false });
 
 const ChartContainer = () => {
     const [ chart, setChart ] = React.useState("LINE");
@@ -84,29 +85,14 @@ const ChartContainer = () => {
         );
     }, []);
 
-    const groupByDay = React.useMemo(() => {
-        const groupedList = Object.entries(lodash.groupBy(getSales().list, item => moment(item.date).format("DD")));
-        
-        return lodash.map(groupedList
-            , item => {
-                const [ key, list ] = item;
-
-                const result = lodash.reduce(list, (previousValue, currentItem) => {
-                    return {
-                        subTotal: currency(previousValue.subTotal).add(currentItem.amount).value, 
-                        total: currency(previousValue.total).add(currentItem.total).value, 
-                        totalVAT: currency(previousValue.totalVAT).add(currentItem.totalVAT).value
-                    };
-                }, { subTotal: 0, total: 0, totalVAT: 0 });
-
-                return { [key]: result };
-            }
-        );
+    const optionsByDay = React.useMemo(() => {
+        return getChartOptionsGroupedByDay({ data: getSales().list })
     }, [ getSales ]);
-
-    const data = React.useMemo(() => {
+    console.log(optionsByDay)
+    
+    /*const data = React.useMemo(() => {
         if(xAxe.includes("DAY")) return groupByDay;
-    }, [ data, groupByDay, xAxe ])
+    }, [ data, groupByDay, xAxe ]);*/
     
     return (
         <div className="h-full w-full">
@@ -129,7 +115,7 @@ const ChartContainer = () => {
             <div className={classes.chartContainer}>
                 {
                     {
-                        "LINE": <LineChart data={data} />
+                        "LINE": <LineChart series={optionsByDay.series} xAxis={optionsByDay.xaxis} />
                     }[chart]
                 }
             </div>

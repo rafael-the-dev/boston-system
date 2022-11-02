@@ -1,21 +1,13 @@
 import Chart from "react-apexcharts";
 
-const LineChartContainer = ({ data }) => {
-
+const LineChartContainer = ({ data, series, xAxis }) => {
+    
     const options = {
         stroke: {
             curve: 'smooth',
         },
-        xaxis: {
-            categories: Object.keys(data)
-        }
+        xaxis: xAxis
     };
-
-    const series = [
-        {
-            data: Object.values(data).map(item => item.total)
-        }
-    ]
 
     return (
         <Chart
