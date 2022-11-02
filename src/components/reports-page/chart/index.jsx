@@ -18,7 +18,7 @@ const ChartContainer = () => {
     const [ chart, setChart ] = React.useState("LINE");
     const [ open, setOpen ] = React.useState("");
     const [ xAxe, setXAxe ] = React.useState([ "DAY" ]);
-    const [ yAxe, setYAxe ] = React.useState([]);
+    const [ yAxe, setYAxe ] = React.useState("total");
 
     const { getSales } = React.useContext(SalesTabContext);
 
@@ -36,9 +36,9 @@ const ChartContainer = () => {
     ]);
 
     const yAxeList = React.useRef([
-        { label: "Total", value: "TOTAL" },
-        { label: "amount", value: "AMOUNT" },
-        { label: "VAT", value: "VAT" },
+        { label: "Total", value: "total" },
+        { label: "amount", value: "subTotal" },
+        { label: "VAT", value: "totalVAT" },
     ]);
 
     const clickHandler = React.useCallback(newValue => () => {
@@ -51,17 +51,13 @@ const ChartContainer = () => {
 
     const chartChangeHandler = React.useCallback(e => setChart(e.target.value), [])
 
-    const axeChangeHandler = React.useCallback(func => e => {
+    const changeHandler = React.useCallback(func => e => {
         const { value } = e.target;
 
-        func(currentList => {
-            if(currentList.includes(value)) return [ ...currentList.filter(item => item !== value)];
-
-            return [ ...currentList, value ];
-        })
+        func(value);
     }, []);
 
-    const isAxeSelected = React.useCallback(list => (itemValue) => list.includes(itemValue), []);
+    const isAxeSelected = React.useCallback(currentValue => (itemValue) => currentValue === itemValue, []);
     const isChartSelected = React.useCallback((itemValue) => chart === itemValue, [ chart ])
 
     const getElements = React.useCallback((labelList, isSelected, onChange) => {
@@ -86,13 +82,12 @@ const ChartContainer = () => {
     }, []);
 
     const optionsByDay = React.useMemo(() => {
-        return getChartOptionsGroupedByDay({ data: getSales().list })
-    }, [ getSales ]);
-    console.log(optionsByDay)
-    
-    /*const data = React.useMemo(() => {
-        if(xAxe.includes("DAY")) return groupByDay;
-    }, [ data, groupByDay, xAxe ]);*/
+        return getChartOptionsGroupedByDay({ 
+            data: getSales().list, 
+            isWeekly: xAxe !== "DAY", 
+            yAxis: yAxe 
+        })
+    }, [ getSales,xAxe,  yAxe ]);
     
     return (
         <div className="h-full w-full">
@@ -106,8 +101,8 @@ const ChartContainer = () => {
                     {
                         {   
                             "CHART_TYPE": getElements(chartsType, isChartSelected, chartChangeHandler),
-                            "X_AXE": getElements(xAxeList, isAxeSelected(xAxe), axeChangeHandler(setXAxe)),
-                            "Y_AXE": getElements(yAxeList, isAxeSelected(yAxe), axeChangeHandler(setYAxe))
+                            "X_AXE": getElements(xAxeList, isAxeSelected(xAxe), changeHandler(setXAxe)),
+                            "Y_AXE": getElements(yAxeList, isAxeSelected(yAxe), changeHandler(setYAxe))
                         }[open]
                     }
                 </div>
