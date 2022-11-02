@@ -1,3 +1,7 @@
 .chartContainer {
-    height: calc(100% - 4rem)
+    height: calc(100% - 4rem);
+}
+
+.chartContainerOpen {
+    height: calc(100% - 4rem - 42px);
 }

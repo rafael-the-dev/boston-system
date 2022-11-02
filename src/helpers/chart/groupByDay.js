@@ -74,7 +74,7 @@ const getSerieData = (categories, list, yAxis, isWeekly ) => {
 const getCategories = (groups, isWeekly) => {
     const categories = [ ...new Set(groups.map(group => {
         return Object.keys(Object.values(group)[0])
-    }))].flatMap(item => item);
+    }).flatMap(item => item))];
 
     return isWeekly ? sortByWeek(categories) : categories.map(item => parseInt(item)).sort();
 };

@@ -107,7 +107,7 @@ const ChartContainer = () => {
                     }
                 </div>
             </div>
-            <div className={classes.chartContainer}>
+            <div className={Boolean(open) ? classes.chartContainerOpen : classes.chartContainer}>
                 {
                     {
                         "LINE": <LineChart series={optionsByDay.series} xAxis={optionsByDay.xaxis} />
