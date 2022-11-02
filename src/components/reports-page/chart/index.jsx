@@ -1,6 +1,7 @@
 import * as React from "react";
 import dynamic from "next/dynamic"
 import currency from "currency.js";
+import lodash from "lodash";
 import moment from "moment";
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 
@@ -75,6 +76,7 @@ const ChartContainer = () => {
                                     value={item.value}
                                 />} 
                             label={item.label} 
+                            key={item.value}
                         />
                     ))
                 }
@@ -83,24 +85,23 @@ const ChartContainer = () => {
     }, []);
 
     const groupByDay = React.useMemo(() => {
-        const result = {};
+        const groupedList = Object.entries(lodash.groupBy(getSales().list, item => moment(item.date).format("DD")));
+        
+        return lodash.map(groupedList
+            , item => {
+                const [ key, list ] = item;
 
-        getSales().list.forEach(item => {
-            const itemDay = moment(item.date).format("DD");
+                const result = lodash.reduce(list, (previousValue, currentItem) => {
+                    return {
+                        subTotal: currency(previousValue.subTotal).add(currentItem.amount).value, 
+                        total: currency(previousValue.total).add(currentItem.total).value, 
+                        totalVAT: currency(previousValue.totalVAT).add(currentItem.totalVAT).value
+                    };
+                }, { subTotal: 0, total: 0, totalVAT: 0 });
 
-            if(Boolean(result[itemDay])) {
-                
-                result[itemDay] = {
-                    total: currency(item.total).add(result[itemDay]['total']).value
-                }
-            } else {
-                result[itemDay] = {
-                    total: item.total
-                }
+                return { [key]: result };
             }
-        });
-
-        return result;
+        );
     }, [ getSales ]);
 
     const data = React.useMemo(() => {

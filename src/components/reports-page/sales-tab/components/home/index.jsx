@@ -34,7 +34,7 @@ const TabContainer = ({ tabId }) => {
     const highlightsMemo = React.useMemo(() => (
         <Highlights 
             isHome
-            totalProfit={getSales().stats?.profit}
+            totalProfit={getSales().stats?.profit ?? 0}
             total={getSales().stats?.total}
             totalAmount={getSales().stats?.totalAmount}
             totalVAT={getSales().stats?.totalVAT}
