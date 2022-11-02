@@ -1,9 +1,6 @@
 import * as React from "react";
 import dynamic from "next/dynamic"
-import currency from "currency.js";
-import lodash from "lodash";
-import moment from "moment";
-import { Checkbox, FormControlLabel, FormGroup, Radio } from "@mui/material";
+import { FormControlLabel, FormGroup, Radio } from "@mui/material";
 
 import classes from "./styles.module.css"
 
@@ -12,6 +9,7 @@ import { getChartOptionsGroupedByDay, groupByMonth } from "src/helpers/chart"
 
 import Button from "./components/button";
 
+const BarChart = dynamic(() => import( "./components/bar-chart"), { ssr: false });
 const LineChart = dynamic(() => import( "./components/line-chart"), { ssr: false });
 
 const ChartContainer = () => {
@@ -82,18 +80,18 @@ const ChartContainer = () => {
 
     const optionsByDay = React.useMemo(() => {
         const salesList = getSales().list;
+        const params = { data: salesList, isBarChart: chart === "BAR", yAxis: yAxe };
 
         if([ "DAY", "WEEK" ].includes(xAxe)) {
             return getChartOptionsGroupedByDay({ 
-                data: salesList, 
+                ...params,
                 isWeekly: xAxe !== "DAY", 
-                yAxis: yAxe 
             })
         }
         else if(xAxe === "MONTH") {
-            return groupByMonth({ data: salesList, yAxis: yAxe });
+            return groupByMonth(params);
         }
-    }, [ getSales,xAxe,  yAxe ]);
+    }, [ chart, getSales, xAxe,  yAxe ]);
     
     return (
         <div className="h-full w-full">
@@ -116,7 +114,8 @@ const ChartContainer = () => {
             <div className={Boolean(open) ? classes.chartContainerOpen : classes.chartContainer}>
                 {
                     {
-                        "LINE": <LineChart series={optionsByDay.series} xAxis={optionsByDay.xaxis} />
+                        "BAR": <BarChart { ...optionsByDay } />,
+                        "LINE": <LineChart { ...optionsByDay } />
                     }[chart]
                 }
             </div>

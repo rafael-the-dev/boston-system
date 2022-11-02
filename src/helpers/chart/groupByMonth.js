@@ -58,16 +58,43 @@ const getSerieData = (categories, list, yAxis) => {
     return data;
 };
 
+const getBarChartSeries = (categories, groups, yAxis) => {
+    return Object.entries(groups).map(groupTuple => {
+        const [ name, list ] = groupTuple;
+
+        return {
+            data: categories.map(category => {
+                    if(Object.keys(list).includes(category)) {
+                        return list[category][yAxis];
+                    }
+
+                    return 0;
+
+                }
+            ),
+            name
+        }
+    })
+};
+
 const getCategories = (groups) => {
     const categories = [ ...new Set(Object.values(groups).flatMap(item => Object.keys(item)))];
 
     return sortByMonth(categories);
 };
 
-const groupByMonth = ({ data, yAxis }) => {
+const groupByMonth = ({ data, isBarChart, yAxis }) => {
     const groups = group(data);
     
     const categories = getCategories(groups);
+    const xaxis = { categories };
+
+    if(isBarChart) {
+        return {
+            series: getBarChartSeries(categories, groups, yAxis),
+            xaxis
+        };
+    }
 
     return {
         series: Object.entries(groups).map(tuple => {
@@ -78,9 +105,7 @@ const groupByMonth = ({ data, yAxis }) => {
                 name
             }
         }),
-        xaxis:  {
-            categories
-        }
+        xaxis
     };
 };
 

@@ -78,7 +78,29 @@ const getCategories = (groups, isWeekly) => {
 
     return isWeekly ? sortByWeek(categories) : categories.map(item => parseInt(item)).sort();
 };
-const getChartOptionsGroupedByDay = ({ data, isWeekly, yAxis }) => {
+
+const getByChartSeries = ({ categories, groups, isWeekly, yAxis }) => {
+    return groups.map(group => {
+        const [ name, list ] = Object.entries(group)[0];
+
+        const data = categories.map(key => {
+            const stringifiedKey = isWeekly ? key : `${ key < 10 ? 0 : ""}${key}`;
+            
+            if(Object.keys(list).includes(stringifiedKey)) {
+                return list[stringifiedKey][yAxis];
+            } 
+                
+            return 0;
+        });
+        
+        return {
+            data,
+            name
+        }
+    })
+};
+
+const getChartOptionsGroupedByDay = ({ data, isBarChart, isWeekly, yAxis }) => {
     const groups = groupListByDay({ data, isWeekly, yAxis });
 
     const categories = getCategories(groups, isWeekly);
@@ -86,6 +108,13 @@ const getChartOptionsGroupedByDay = ({ data, isWeekly, yAxis }) => {
     const xaxis = {
         categories
     };
+
+    if(isBarChart ) {
+        return {
+            series: getByChartSeries({ categories, groups, isWeekly, yAxis }),
+            xaxis
+        }
+    }
 
     return {
         series: groups.map(group => {

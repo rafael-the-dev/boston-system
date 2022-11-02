@@ -1,10 +1,9 @@
 import Chart from "react-apexcharts";
 
-const LineChartContainer = ({ data, series, xaxis }) => {
-    
+const BarChartContainer = ({ series, xaxis }) => {
     const options = {
-        stroke: {
-            curve: 'smooth',
+        chart: {
+            stacked: false,
         },
         xaxis
     };
@@ -14,9 +13,10 @@ const LineChartContainer = ({ data, series, xaxis }) => {
             height="100%"
             options={options}
             series={series}
+            type='bar'
             width="100%"
         />
     );
 };
 
-export default LineChartContainer;
+export default BarChartContainer;
