@@ -1,7 +1,8 @@
 import * as React from "react";
 import { FormControl, FormControlLabel, Paper, Radio, RadioGroup, Typography } from "@mui/material";
 import classNames from "classnames";
-import { v4 as uuidV4 } from "uuid"
+import { v4 as uuidV4 } from "uuid";
+import moment from "moment";
 
 import classes from "./styles.module.css"
 
@@ -40,10 +41,28 @@ const Container = () => {
             Sales { value === "TABLE" ? "list" : "chart" } { formatDates(getSalesDate()) }
         </Typography>
     ), [ getSalesDate, value ]);
+    
+    const hasRange = React.useCallback(() => {
+        const list = getSalesDate();
+
+        const format = date => moment(date).format("DD/MM/YYYY");
+
+        if(list.length > 1) {
+            return format(list[0].date) !== format(list[list.length - 1].date);
+        }
+
+        return false;
+    }, [ getSalesDate ])
 
     const resizeHandler = React.useCallback((el) => {
         if(Boolean(el.current)) el.current.style.width = "100%";
-    }, [])
+    }, []);
+
+    React.useEffect(() => {
+        if(!hasRange()) {
+            setValue("TABLE")
+        }
+    }, [ hasRange ])
 
     return (
         <Resizeable classes={{ root: "bg-white rounded-t-xl" }} onResize={resizeHandler} helper={resizeHandler}>
@@ -63,6 +82,7 @@ const Container = () => {
                                     <FormControlLabel 
                                         { ...item }
                                         control={<Radio checked={value === item.value} onChange={changeHandler} />} 
+                                        disabled={ item.value === "CHART" && !hasRange() }
                                         key={item.value}
                                     />
                                 ))
