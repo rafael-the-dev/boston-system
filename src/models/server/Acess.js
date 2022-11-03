@@ -33,7 +33,7 @@ class Access {
                                 loginId: response.insertId, 
                                 username,
                                 idUser: user.idUser
-                            }, process.env.JWT_SECRET_KEY, { expiresIn: "25m" });
+                            }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
 
                             const verifiedToken = jwt.verify(acessToken, process.env.JWT_SECRET_KEY);
 
@@ -75,29 +75,37 @@ class Access {
     }
 
     static revalidateToken({ res, token }) {
-        let loggedUser;
         try {
-            loggedUser = jwt.verify(token, process.env.JWT_SECRET_KEY);
+            const loggedUser = jwt.verify(token, process.env.JWT_SECRET_KEY);
+            
+            return query(`SELECT * FROM user WHERE username=?`, [ loggedUser.username ])
+                .then(async users => {
+                    const user = users[0];
+                    
+                    const acessToken = jwt.sign({ 
+                        category: user.Categoria, 
+                        loginId: loggedUser.insertId, 
+                        username: user.Username,
+                        idUser: user.idUser
+                    }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
+
+                    const verifiedUser = jwt.verify(acessToken, process.env.JWT_SECRET_KEY);
+                    
+                    res.json({
+                        access: {
+                            expiresIn: verifiedUser.exp, 
+                            token: acessToken
+                        },
+                        category: user.Categoria,
+                        firstName: user.Nome,
+                        lastName: user.Apelido,
+                        username: user.Username
+                    });
+                })
+
         } catch(e) {
             throw new AuthorizationError();
         }
-        
-        return query(`SELECT * FROM user WHERE username=?`, [ loggedUser.username ])
-            .then(async users => {
-                const user = users[0];
-
-                res.json({
-                    access: {
-                        expiresIn: loggedUser.exp, 
-                        token: token
-
-                    },
-                    category: user.Categoria,
-                    firstName: user.Nome,
-                    lastName: user.Apelido,
-                    username: user.Username
-                });
-            })
     }
 }
 

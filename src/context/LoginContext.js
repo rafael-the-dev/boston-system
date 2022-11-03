@@ -80,6 +80,7 @@ const LoginContextProvider = ({ children }) => {
         <LoginContext.Provider
             value={{ 
                 addUser,
+                getLocalStorageData,
                 isValidatingToken,
                 logoutHelper,
                 loggedUser,

@@ -64,6 +64,7 @@ const getBarChartSeries = (categories, groups, yAxis) => {
 
         return {
             data: categories.map(category => {
+                
                     if(Object.keys(list).includes(category)) {
                         return list[category][yAxis];
                     }

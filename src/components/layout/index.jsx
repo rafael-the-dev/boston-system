@@ -9,7 +9,8 @@ import ContextProvider from "./components/ContextProvider"
 import Header from "../header";
 //import Footer from "../footer";
 import Loading from "./components/loading";
-import Menu from "../menu"
+import Menu from "../menu";
+import TokenDialog from "./components/TokenDialog"
 
 const LayoutContainer = ({ children }) => {
     const [ loading, setLoading ] = React.useState(true);
@@ -23,6 +24,8 @@ const LayoutContainer = ({ children }) => {
             id="print-iframe">
         </iframe>
     ), []);
+
+    const tokenDialogMemo = React.useMemo(() => <TokenDialog />, )
 
     if(loading) return <Loading loading={loading} setLoading={setLoading} />
 
@@ -41,6 +44,7 @@ const LayoutContainer = ({ children }) => {
                     { printIframeMemo }
                 </ContextProvider>
             </div>
+            { tokenDialogMemo }
         </div>
     );
 };

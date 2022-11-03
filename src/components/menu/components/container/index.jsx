@@ -29,13 +29,13 @@ const Container = () => {
                 <ListItem href="/sales">
                     <ShoppingCartIcon /> Sales
                 </ListItem>
-                <ListItem href="/reports">
+                <ListItem>
                     <ReceiptLongIcon /> Reports
                 </ListItem>
-                <ListItem href="/payments">
+                <ListItem>
                     <PaidIcon /> Payments
                 </ListItem>
-                <ListItem href="/management">
+                <ListItem>
                     <TimelineIcon /> Management
                 </ListItem>
             </ul>

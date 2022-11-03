@@ -12,7 +12,7 @@ const Container = ({ children, href }) => {
     const { pathname } = router;
 
     const clickHandler = () => {
-        router.push(href);
+        Boolean(href) && router.push(href);
     };
 
     return (
