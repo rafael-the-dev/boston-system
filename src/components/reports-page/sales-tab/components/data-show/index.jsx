@@ -41,16 +41,12 @@ const Container = () => {
         </Typography>
     ), [ getSalesDate, value ]);
 
-    const resizeHelper = React.useCallback((el) => {
-        el.current.style.width = "100%";
-    }, []);
-
     const resizeHandler = React.useCallback((el) => {
-        el.current.style.width = "100%";
+        if(Boolean(el.current)) el.current.style.width = "100%";
     }, [])
 
     return (
-        <Resizeable classes={{ root: "bg-white rounded-t-xl" }} onResize={resizeHandler} helper={resizeHelper}>
+        <Resizeable classes={{ root: "bg-white rounded-t-xl" }} onResize={resizeHandler} helper={resizeHandler}>
             <Paper 
                 className="flex flex-col h-full overflow-y-auto rounded-t-xl w-full"
                 elevation={0}>
@@ -65,9 +61,9 @@ const Container = () => {
                             {
                                 controls.current.map(item => (
                                     <FormControlLabel 
-                                        value={item.value} 
+                                        { ...item }
                                         control={<Radio checked={value === item.value} onChange={changeHandler} />} 
-                                        label={item.label} 
+                                        key={item.value}
                                     />
                                 ))
                             }

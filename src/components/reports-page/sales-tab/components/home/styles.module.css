@@ -4,9 +4,8 @@
 
 
 .filtersButton {
-    height: 70px;
-    margin-top: 1rem;
-    width: 31.3333%;
+    height: 80px;
+    width: 49%;
 }
 
 .tableContainer {
@@ -20,7 +19,6 @@
 
     .filtersButton {
         height: auto;
-        margin-top: 0;
         width: 19%;
     }
 

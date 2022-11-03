@@ -33,19 +33,19 @@ const Container = ({ children, classes, helper, minHeight, minWidth, onResize })
         helper && helper(paperRef);
     }, [ helper ]);
 
-    const ResizeHandler = React.useCallback(() => onResize(paperRef), [ onResize ])
+    const resizeHandler = React.useCallback(() => onResize(paperRef), [ onResize ])
 
     React.useEffect(() => {
         if(!onResize) return;
 
         const currentWindow = window;
 
-        currentWindow.addEventListener('resize', ResizeHandler);
+        currentWindow.addEventListener('resize', resizeHandler);
 
         return () => {
-            currentWindow.addEventListener('resize', ResizeHandler);   
+            currentWindow.addEventListener('resize', resizeHandler);   
         };
-    }, [ ResizeHandler ])
+    }, [ resizeHandler ])
 
     return (
         <div 

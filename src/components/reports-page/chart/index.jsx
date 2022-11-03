@@ -96,7 +96,7 @@ const ChartContainer = () => {
     return (
         <div className="h-full w-full">
             <div className="px-4">
-                <div className="flex">
+                <div className="flex flex-col items-start sm:flex-row">
                     <Button id="CHART_TYPE" onClick={clickHandler} selectedKey={open}>Type of chart</Button>
                     <Button id="X_AXE" onClick={clickHandler} selectedKey={open}>X axe</Button>
                     <Button id="Y_AXE" onClick={clickHandler} selectedKey={open}>Y axe</Button>
