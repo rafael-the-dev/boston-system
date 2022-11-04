@@ -79,10 +79,10 @@ const Home = () => {
                 </div>
             </section>
             <div className={classNames(classes.highlightsContainer, "flex flex-wrap items-stretch justify-between px-5")}>
-                <HightlightCard color="#fecaca" href="sale" icon={<AddShoppingCartIcon />} title="Venda"/>
-                <HightlightCard color="#fde68a" href="products" icon={<LiquorIcon />} title="Produtos" />
-                <HightlightCard color="#e9d5ff" href="profile/rafaeltivane" icon={<Person2Icon />} title="Perfil"/>
-                <HightlightCard color="#a5f3fc" href="/" icon={<GroupIcon />} title="Usuarios"/>
+                <HightlightCard color="#fecaca" href="sale" icon={<AddShoppingCartIcon />} title="Sale"/>
+                <HightlightCard color="#fde68a" href="products" icon={<LiquorIcon />} title="Products" />
+                <HightlightCard color="#e9d5ff" href="profile/rafaeltivane" icon={<Person2Icon />} title="Profile"/>
+                <HightlightCard color="#a5f3fc" href="/" icon={<GroupIcon />} title="Users"/>
             </div>
         </main>
     );

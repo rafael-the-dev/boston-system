@@ -12,11 +12,11 @@ const Card = ({ color, href, icon, title }) => {
             className={classNames(classes.card, "mb-4")}
             href={href}>
             <div 
-                className="flex h-full items-center justify-between px-4 relative"
-                style={{ backgroundColor: color }}>
+                className="bg-stone-100 flex flex-col h-full items-center justify-center px-4 relative hover:bg-stone-200"
+                style={{ backgroundcolor: color }}>
                 <Typography
                     component="h2"
-                    className="font-bold text-lg text-white sm:text-xl">
+                    className="font-bold text-lg text-neutral-700 sm:text-xl">
                     { title }
                 </Typography>
                 { icon }
@@ -26,3 +26,16 @@ const Card = ({ color, href, icon, title }) => {
 };
 
 export default Card;
+
+/**
+ * <div 
+                className="flex h-full items-center justify-between px-4 relative"
+                style={{ backgroundColor: color }}>
+                <Typography
+                    component="h2"
+                    className="font-bold text-lg text-white sm:text-xl">
+                    { title }
+                </Typography>
+                { icon }
+            </div>
+ */
