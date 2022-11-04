@@ -13,27 +13,42 @@ import { LoginContext } from "src/context";
 
 import { HightlightCard } from "src/components/dashboard-page";
 
-export const getServerSideProps = async () => {
-    const options = {
-        headers: {
-          'X-RapidAPI-Key': 'SIGN-UP-FOR-KEY',
-          'X-RapidAPI-Host': 'timshim-quotes-v1.p.rapidapi.com'
-        },
-        method: 'GET'
-    };
-
-    //const res = await fetch("https://timshim-quotes-v1.p.rapidapi.com/quotes", options);
-    //const data = await res.json();
-    
-    return {
-        props: {
-            quote: []
-        }
-    }
-};
 
 const Home = () => {
     const { loggedUser } = React.useContext(LoginContext);
+
+    const quoteRef = React.useRef(null);
+
+    const fetchData = React.useCallback(async (props) => {
+        try {
+            const res = await fetch('https://api.quotable.io/quotes?limit=90');
+            
+            if(![ 0 , 200 ].includes(res.status)) throw new Error("Quote request error");
+
+            const data = await res.json();
+            const quotes =  data.results;
+
+            const interval = setInterval(() => {
+                if(props.isMounted && quoteRef.current) {
+                    quoteRef.current.innerHTML = quotes[Math.floor(Math.random() * quotes.length)].content;
+                } else {
+                    clearInterval(interval)
+                }
+            }, 7000);
+        } catch(e) {
+            console.error(e);
+        }
+    }, []);
+
+    React.useEffect(() => {
+        const props = { isMounted: true };
+        fetchData(props);
+
+        return () => {
+            props.isMounted = false;
+        };
+
+    }, [ fetchData ])
 
     return (
         <main>
@@ -55,7 +70,7 @@ const Home = () => {
                         <div className="border-l-4 border-solid border-blue-500 bg-gray-200 mt-4 py-3 px-2 md:py-4 md:px-3">
                             <Typography>
                                 <span className="font-medium">Hello, { loggedUser.firstName } { loggedUser.lastName }</span><br/>
-                                <span className={classes.quote}>
+                                <span className={classes.quote} ref={quoteRef}>
                                     A vida e feita de escolhas...
                                 </span>
                             </Typography>

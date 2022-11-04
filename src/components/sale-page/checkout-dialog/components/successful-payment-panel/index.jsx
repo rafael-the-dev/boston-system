@@ -13,8 +13,6 @@ import PrintIcon from '@mui/icons-material/Print';
 const SuccessfulPaymentPanel = ({ onClose, salesSerie, setPanel }) => {
     const { getPaymentMethods } = React.useContext(CheckoutContext);
 
-    const blobRef = React.useRef(null);
-
     const closeHandler = () => {
         getPaymentMethods().cart.reset();
         getPaymentMethods().reset();
@@ -27,14 +25,13 @@ const SuccessfulPaymentPanel = ({ onClose, salesSerie, setPanel }) => {
 
         const iframeElement = document.querySelector("#print-iframe");
 
-        while(!Boolean(blobRef.current)){};
-        //iframeElement.onload = () => {
+        iframeElement.onload = () => {
            // setTimeout(() => {
                 iframeElement.focus();
                 iframeElement.contentWindow.print();
                 blobRef.current = null;
            // }, 1);
-        //};
+        };
     };
 
     const fetchData = React.useCallback(async () => {
@@ -56,7 +53,6 @@ const SuccessfulPaymentPanel = ({ onClose, salesSerie, setPanel }) => {
                 const blob = new Blob([ res.data ], { type: 'application/pdf' }); 
                 const blobURL = URL.createObjectURL(blob);
                 
-                blobRef.current = blobUrl;
                 const iframeElement = document.querySelector("#print-iframe");
                 iframeElement.src = blobURL;
             };

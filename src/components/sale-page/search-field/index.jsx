@@ -30,6 +30,15 @@ const Container = ({ products }) => {
 
     const handleClickAway = React.useCallback(() => setBarCode(""), []);
 
+    const inputMemo = React.useMemo(() => (
+        <Input 
+            className="w-full"
+            label="codigo de barra"
+            onChange={barCodeChangeHandler}
+            value={barCode}
+        />
+    ), [ barCode, barCodeChangeHandler ])
+
     React.useEffect(() => {
         if(barCode.trim()) {
             const product = products.find(item => item.barCode === barCode);
@@ -43,12 +52,7 @@ const Container = ({ products }) => {
 
     return (
         <div className="input relative w12">
-            <Input 
-                className="w-full"
-                label="codigo de barra"
-                onChange={barCodeChangeHandler}
-                value={barCode}
-            />
+            { inputMemo }
             { Boolean(barCode) && (
                 <ClickAwayListener onClickAway={handleClickAway}>
                     <Paper 
