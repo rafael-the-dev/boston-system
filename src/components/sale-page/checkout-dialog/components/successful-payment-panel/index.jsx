@@ -20,7 +20,20 @@ const SuccessfulPaymentPanel = ({ onClose, salesSerie, setPanel }) => {
         onClose();
     };
 
-    const fetchData = async () => {
+    const printHandler = () => {
+        closeHandler();
+
+        const iframeElement = document.querySelector("#print-iframe");
+
+        //iframeElement.onload = () => {
+           // setTimeout(() => {
+                iframeElement.focus();
+                iframeElement.contentWindow.print();
+           // }, 1);
+        //};
+    };
+
+    const fetchData = React.useCallback(async () => {
         const options = {
             baseURL: process.env.SERVER,
             headers: {
@@ -32,8 +45,6 @@ const SuccessfulPaymentPanel = ({ onClose, salesSerie, setPanel }) => {
         }
 
         try {
-            closeHandler();
-
             const res = await axios(`/api/receipts/${salesSerie.current}`, options);
             
             if(res.status === 200) {
@@ -43,18 +54,15 @@ const SuccessfulPaymentPanel = ({ onClose, salesSerie, setPanel }) => {
                 
                 const iframeElement = document.querySelector("#print-iframe");
                 iframeElement.src = blobURL;
-
-                iframeElement.onload = () => {
-                    setTimeout(() => {
-                        iframeElement.focus();
-                        iframeElement.contentWindow.print();
-                    }, 1);
-                };
             };
         } catch(e) {
             console.error(e)
         }
-    };
+    }, [ salesSerie ]);
+
+    React.useEffect(() => {
+        fetchData();
+    }, [ fetchData ])
 
     return (
         <div className="flex flex-col h-full">
@@ -64,7 +72,7 @@ const SuccessfulPaymentPanel = ({ onClose, salesSerie, setPanel }) => {
             <div className="flex justify-end p-4">
                 <Button 
                     className='border-blue-500 text-blue-500 mr-3 hover:bg-blue-500 hover:text-white'
-                    onClick={fetchData}
+                    onClick={printHandler}
                     variant="outlined"
                     startIcon={<PrintIcon />}>
                     Print
