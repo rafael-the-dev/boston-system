@@ -11,16 +11,19 @@ const SalesTabContextProvider = ({ children }) => {
     const [ sales, setSales ] = useState({});
     const [ selectedSale, setSelectedSale ] = useState([])
 
+    const isFirstRender = useRef(true);
     const salesRef = useRef(new Sales(setSales));
 
     const getSales = useCallback(() => {
-        console.log(sales);
+        if(sales){}
         return salesRef.current;
     }, [ sales ]);
 
     useEffect(() => {
-        if(Object.keys(globalSales).length > 0)
+        if(isFirstRender.current && Object.keys(globalSales).length > 0)
             getSales().update(globalSales);
+        
+        isFirstRender.current = false;
     }, [ globalSales, getSales ])
 
     return (

@@ -15,7 +15,7 @@ const CheckoutContextProvider = ({ children }) => {
     const paymentMethodsRef = useRef( new Payment(setPaymentMethods))
 
     const getPaymentMethods = useCallback(() => {
-        console.log(paymentMethods);
+        if(paymentMethods){}
         return paymentMethodsRef.current;
     }, [ paymentMethods ]);
 
