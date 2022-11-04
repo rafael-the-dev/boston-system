@@ -18,4 +18,6 @@ const Input = forwardRef(({ autoComplete, className, onChange, placeholder, requ
     );
 });
 
+Input.displayName = "Input";
+
 export default Input;

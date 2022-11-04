@@ -14,11 +14,14 @@ const CheckoutContextProvider = ({ children }) => {
     
     const paymentMethodsRef = useRef( new Payment(setPaymentMethods))
 
-    const getPaymentMethods = useCallback(() => paymentMethodsRef.current, [ paymentMethods ]);
+    const getPaymentMethods = useCallback(() => {
+        console.log(paymentMethods);
+        return paymentMethodsRef.current;
+    }, [ paymentMethods ]);
 
     useEffect(() => {
         getPaymentMethods().cart = getCart();
-    }, [ getCart ]);
+    }, [ getCart, getPaymentMethods ]);
 
     return (
         <CheckoutContext.Provider

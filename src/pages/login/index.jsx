@@ -31,9 +31,9 @@ const Container = () => {
     const passwordRef = useRef(null);
     const userNameRef = useRef(null);
 
-    const handleMouseDownPassword = (event) => {
+    const handleMouseDownPassword = useCallback((event) => {
         event.preventDefault();
-    };
+    }, []);
 
     const handleClickShowPassword = useCallback(() => {
         setValues(currentValues => ({
@@ -76,7 +76,7 @@ const Container = () => {
                 onOpen.current?.();
                 setLoading(false);
             })
-    }, [ router ]);
+    }, [ addUser, router ]);
 
     const legendMemo = useMemo(() => (
         <Typography className="font-bold mb-8 text-center text-2xl uppercase  dark:text-slate-300">
@@ -127,11 +127,11 @@ const Container = () => {
                 value={values.password}
             />
         </div>
-    ), [ handleClickShowPassword, handleMouseDownPassword, values ]);
+    ), [ handleChange, handleClickShowPassword, handleMouseDownPassword, values ]);
 
     const signUpMemo = useMemo(() => (
         <Typography component="p" className="ml-4 text-sm dark:text-slate-400">
-            don't you have an account? 
+            don&apos;t you have an account? 
             <Link href="/sign-up">
                 <a 
                     className={classNames(classes.signUpLink, 

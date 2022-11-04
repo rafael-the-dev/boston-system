@@ -100,9 +100,9 @@ const Container = ({ categories, productsList }) => {
             type="submit">
             {loading ? "Loading..." : `Pagar ${  getCart() ? getCart().total : 0}MT` }
         </Button>
-    ), [ cart, getCart, loading ])
+    ), [ getCart, loading ]);
 
-    const resetHandler = useCallback(() => getCart().reset(), [])
+    const resetHandler = useCallback(() => getCart().reset(), [ getCart ])
 
     const resetCartButtonMemo = useMemo(() => (
         <Button
@@ -121,7 +121,7 @@ const Container = ({ categories, productsList }) => {
                 <span className="font-bold ml-3 text-3xl">{ getCart() ? getCart().total : 0 }MT</span>
             </Typography>
         </div>
-    ), [ cart, getCart ])
+    ), [ getCart ])
 
     const submitHandler = useCallback((e) => {
         e.preventDefault();
@@ -129,7 +129,7 @@ const Container = ({ categories, productsList }) => {
         if(cart.length === 0) return;
 
         onOpenDialog.current?.();
-    }, [ cart, loggedUser ])
+    }, [ cart ])
 
     return (
         <main className={classNames(classes.main, `bg-stone-100 grow`)}>

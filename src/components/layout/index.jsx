@@ -25,7 +25,7 @@ const LayoutContainer = ({ children }) => {
         </iframe>
     ), []);
 
-    const tokenDialogMemo = React.useMemo(() => <TokenDialog />, )
+    const tokenDialogMemo = React.useMemo(() => <TokenDialog />, [])
 
     if(loading) return <Loading loading={loading} setLoading={setLoading} />
 

@@ -46,7 +46,7 @@ const FiltersContainer = ({ onToggle }) => {
                 { childrenList.current[value] }
             </div>
         </Paper>
-    ), [ value ])
+    ), [ changeHandler, value ])
 
     React.useEffect(() => {
         onToggle.current = () => setOpen(b => !b);

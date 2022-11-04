@@ -92,7 +92,7 @@ const Container = ({ classes, data, getBodyRows, headers }) => {
                 }
             </TableRow>
         </TableHead>
-    ), [ headers ]);
+    ), [ classes, headers ]);
 
     return (
         <TableContainer className={classNames(classes?.root)}>

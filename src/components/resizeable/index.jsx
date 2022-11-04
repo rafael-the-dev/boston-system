@@ -45,7 +45,7 @@ const Container = ({ children, classes, helper, minHeight, minWidth, onResize })
         return () => {
             currentWindow.addEventListener('resize', resizeHandler);   
         };
-    }, [ resizeHandler ])
+    }, [ onResize, resizeHandler ])
 
     return (
         <div 

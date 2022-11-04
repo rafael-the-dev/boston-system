@@ -48,7 +48,7 @@ const SelectedSaleContaienr = () => {
         return "";
     }, [ selectedSale ])
 
-    const dateHighlight = React.useMemo(() => <DateHighlight>{ getDate() }</DateHighlight>, []);
+    const dateHighlight = React.useMemo(() => <DateHighlight>{ getDate() }</DateHighlight>, [ getDate ]);
 
     const saleStats = React.useMemo(() => {
         const stats = {};
@@ -82,7 +82,7 @@ const SelectedSaleContaienr = () => {
         return result.map(row => (
             <TableRow headers={tableHeaders} row={row} key={row.salesDetailsId} />
         ));
-    }, [ selectedSale ]); 
+    }, [ ]); 
 
     const resizeHelper = React.useCallback((el) => {
         el.current.style.width = "100%";
@@ -99,7 +99,7 @@ const SelectedSaleContaienr = () => {
                 />
             </Resizeable>
         </div>
-    ), [ getSelectedSaleBodyRows, selectedSale ]);
+    ), [ getSelectedSaleBodyRows, resizeHelper, selectedSale ]);
 
     const paymentMethodsTableMemo = React.useMemo(() => (
         <div className="mb-6 px-5 w-full">
@@ -112,7 +112,7 @@ const SelectedSaleContaienr = () => {
                 />
             </Resizeable>
         </div>
-    ), [ getSelectedSaleBodyRows, selectedSale ]);
+    ), [ getSelectedSaleBodyRows, resizeHelper, selectedSale ]);
 
     const clickHandler = React.useCallback(() => setSelectedSale([]), [setSelectedSale ])
 

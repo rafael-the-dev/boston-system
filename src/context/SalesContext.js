@@ -37,7 +37,7 @@ const SalesContextProvider = ({ children }) => {
             return tempList;
         });
         setCurrentTab(id);
-    }, []);
+    }, [ getElement ]);
 
     const addCurrentVisibleTab = useCallback((id) => {
         setCurrentTab(id);
@@ -59,7 +59,7 @@ const SalesContextProvider = ({ children }) => {
             ]
         );
         setCurrentTab(id);
-    }, [])
+    }, [ getElement ])
 
     return (
         <SalesContext.Provider

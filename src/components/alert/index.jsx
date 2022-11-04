@@ -10,7 +10,7 @@ const Container = ({ className, description, onClose, onOpen, severity, title })
             <AlertTitle>{ title }</AlertTitle>
             { description }
         </Alert>
-    ), [ description, severity, title ])
+    ), [ className, description, severity, title ])
 
     React.useEffect(() => {
         onOpen.current = () => setOpen(true);

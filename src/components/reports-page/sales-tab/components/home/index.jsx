@@ -26,7 +26,7 @@ const TabContainer = ({ tabId }) => {
             startIcon={<FilterAltIcon />}>
             Filters
         </Button>
-    ), []);
+    ), [ toggleHandler ]);
     
     const dataContainer = React.useMemo(() => <DataContainer />, []);
     const filtersMemo = React.useMemo(() => <Filters onToggle={onToggle} />, []);

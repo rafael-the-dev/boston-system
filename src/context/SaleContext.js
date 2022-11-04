@@ -10,7 +10,10 @@ const SaleContextProvider = ({ children }) => {
 
     const cartRef = useRef( new Cart(setCart));
     
-    const getCart = useCallback(() => cartRef.current, [ cart ]);
+    const getCart = useCallback(() => {
+        console.log(cart);
+        return cartRef.current;
+    }, [ cart ]);
 
     return (
         <SaleContext.Provider 

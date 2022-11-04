@@ -37,7 +37,7 @@ const Container = ({ sales }) => {
 
     React.useEffect(() => {
         setGlobalSales(sales);
-    }, [ sales ]);
+    }, [ sales, setGlobalSales ]);
 
     return (
         <main className={classNames(classes.main, `bg-stone-100 grow`)}>

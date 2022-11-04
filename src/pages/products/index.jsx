@@ -82,7 +82,7 @@ const Container = ({ categories, products }) => {
             value={value}
             variant="outlined"
         />
-    ), [ value ]);
+    ), [ changeHandler, value ]);
 
     const categoriesMemo = useMemo(() => {
         return ( 
@@ -94,7 +94,7 @@ const Container = ({ categories, products }) => {
             />
         )
             
-    }, [ category, setCategory ]);
+    }, [ category, categories, setCategory ]);
 
     const getBodyRows = useCallback(({ page, rowsPerPage }) => {
         const list = rowsPerPage > 0 ? productsList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : productsList;

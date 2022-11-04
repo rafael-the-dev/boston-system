@@ -51,7 +51,7 @@ const Loading = ({ loading, setLoading }) => {
         };
 
         func();
-    }, [ addUser, router ]);
+    }, [ addUser, router, setLoading ]);
 
     return (
         <div className="bg-white flex fixed h-screen items-center justify-center left-0 top-0 w-full z-10">

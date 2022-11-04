@@ -31,9 +31,9 @@ const CheckoutContainer = ({ onClose, setPanel, salesSerie }) => {
             variant="outlined">
             Voltar
         </Button>
-    ), [])
+    ), [ onClose ])
 
-    const clickHandler = React.useCallback(() => getPaymentMethods().add() , []);
+    const clickHandler = React.useCallback(() => getPaymentMethods().add() , [ getPaymentMethods ]);
 
     const methodsLength = getPaymentMethods().methods?.length;
     const restAmout = getPaymentMethods().amountRemaining();

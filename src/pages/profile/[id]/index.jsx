@@ -81,7 +81,7 @@ const Container = ({ profile }) => {
     const onOpen = useRef(null);
     const userNameRef = useRef(null);
 
-    const changeHandler = useCallback((e) => setUser(e.target.value), [])
+    const changeHandler = useCallback((e) => setUser(e.target.value), [ setUser ])
 
     const legendMemo = useMemo(() => (
         <Panel title="Perfil" />
@@ -211,7 +211,7 @@ const Container = ({ profile }) => {
             setUser(profile.Categoria);
             setUserName({ error: [], value: profile.Username })
         }
-    }, [ profile ])
+    }, [ profile, setFirstName, setLastName, setUser, setUserName ])
 
     return (
         <div className="">

@@ -36,7 +36,7 @@ const TokenDialog = () => {
                 router.push("/login")
             }
         }
-    }, [ getLocalStorageData, logoutHelper, router ]);
+    }, [ addUser, getLocalStorageData, logoutHelper, router ]);
 
     const checkExpirationToken = React.useCallback(() => {
         if(dialogTimeoutRef.current) clearTimeout(dialogTimeoutRef.current)

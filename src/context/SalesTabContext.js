@@ -13,12 +13,15 @@ const SalesTabContextProvider = ({ children }) => {
 
     const salesRef = useRef(new Sales(setSales));
 
-    const getSales = useCallback(() => salesRef.current, [ sales ]);
+    const getSales = useCallback(() => {
+        console.log(sales);
+        return salesRef.current;
+    }, [ sales ]);
 
     useEffect(() => {
         if(Object.keys(globalSales).length > 0)
             getSales().update(globalSales);
-    }, [ globalSales ])
+    }, [ globalSales, getSales ])
 
     return (
         <SalesTabContext.Provider

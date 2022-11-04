@@ -111,7 +111,7 @@ const Container = () => {
             value={name.value}
             variant="outlined"
         />
-    ), [ name ]);
+    ), [ name, nameChangeHandler ]);
 
     const categoryChangeHandler = useCallback(e => {
         const { value } = e.target;
@@ -242,7 +242,7 @@ const Container = () => {
             value={sellVat.value}
             variant="outlined"
         />
-    ), [ sellVat ]);
+    ), [ sellVat, sellVatChangeHandler ]);
 
     const purchaseVatChangeHandler = useCallback(e => {
         const errors = [];
@@ -324,7 +324,7 @@ const Container = () => {
                     setLoading(false);
                 })
         }
-    }, [])
+    }, [ id, role ])
 
     return (
         <main className={classes.main}>

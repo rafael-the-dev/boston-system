@@ -27,7 +27,7 @@ const Container = () => {
                 addUser(null);
                 router.push('/login');
             })
-    }, [ logoutHelper ])
+    }, [ addUser, logoutHelper, router ])
 
     return (
         <ListItem 

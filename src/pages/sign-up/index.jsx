@@ -30,7 +30,6 @@ const SignUpContent = () => {
         user, username, usernameChangeHandler
      } = useContext(SignUpContext);
 
-     const { query: { id } } = useRouter()
 
     const users = useRef([
         {
@@ -51,7 +50,7 @@ const SignUpContent = () => {
     const lastNameRef = useRef(null);
     const userNameRef = useRef(null);
 
-    const changeHandler = useCallback((e) => setUser(e.target.value), [])
+    const changeHandler = useCallback((e) => setUser(e.target.value), [ setUser ])
 
     const legendMemo = useMemo(() => (
         <Typography 
@@ -156,22 +155,6 @@ const SignUpContent = () => {
         })
     }, [ onSubmit ]);
 
-    useEffect(() => {
-        if(Boolean(id)) {
-            fetch(`/api/users/${id}`)
-                .then(res => res.json())
-                .then(res => {
-                    const data = res[0];
-                    
-                    setFirstName({ error: [], value: data.Nome });
-                    setLastName({ error: [], value: data.Apelido });
-                    setUser(data.Categoria);
-                    setUserName({ error: [], value: data.Username })
-                })
-                .catch(console.error)
-        }
-    }, [ id ])
-
     return (
         <div className="min-h-screen flex items-center justify-center w-full px-5 py-20 md:px-0 dark:bg-stone-500">
             <Paper 
@@ -185,21 +168,14 @@ const SignUpContent = () => {
                     { lastNameMemo }
                     { usernameMemo }
                     { userTypeMemo }
-                    { !id && passwordMemo }
-                    { !id && confirmPasswordMemo }
+                    { passwordMemo }
+                    { confirmPasswordMemo }
                     <div 
                         className={classNames("flex flex-col sm:items-center mt-6")}>
-                        { !id && signInMemo }
+                        { signInMemo }
                         <Button disabled={hasErrors}>
-                            { loading ? "Loading..." : (
-                                id ? "Atualizar" : "Submeter"
-                            )}
+                            { loading ? "Loading..." : "Submeter"}
                         </Button>
-                        {
-                            id && (
-                                <Link className="mt-3 text-red-500" href="/">Cancelar</Link>
-                            )
-                        }
                     </div>
                 </fieldset>
             </Paper>
