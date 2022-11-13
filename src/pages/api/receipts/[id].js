@@ -25,7 +25,16 @@ const requestHandler = async (req, res, user ) => {
                 `, [ id ])
             ]);
 
-            const fileName = await createInvoice({ 
+            res.json({
+                products, paymentMethods,
+                stats: {
+                    subTotal: products[0].subTotal ?? 0,
+                    totalAmount: products[0].totalAmount ?? 0,
+                    totalVAT: products[0].totalVAT ?? 0
+                }
+            });
+
+            /*const fileName = await createInvoice({ 
                 information: {
                     date: moment(new Date(paymentMethods[0].data)).format("DD-MM-YYYY")
                 }, 
@@ -48,7 +57,7 @@ const requestHandler = async (req, res, user ) => {
             const readStream = fileSystem.createReadStream(filePath);
             
             readStream.pipe(res);
-            readStream.on("close", () => deleteInvoice(fileName));
+            readStream.on("close", () => deleteInvoice(fileName));*/
         }
         default: {
             return;

@@ -1,6 +1,8 @@
 import * as React from "react";
 import axios from "axios"
 import Button from "@mui/material/Button";
+import { createPortal } from "react-dom";
+import ReactDOMServer from "react-dom/server";
 
 import classes from "./styles.module.css"
 
@@ -8,10 +10,12 @@ import { CheckoutContext } from "src/context";
 
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PrintIcon from '@mui/icons-material/Print';
-
+import Receipt from "src/components/sale-page/receipt"
 
 const SuccessfulPaymentPanel = ({ onClose, salesSerie, setPanel }) => {
     const { getPaymentMethods } = React.useContext(CheckoutContext);
+
+    const [ receipt, setReceipt ] = React.useState(null);
 
     const closeHandler = () => {
         getPaymentMethods().cart.reset();
@@ -21,40 +25,27 @@ const SuccessfulPaymentPanel = ({ onClose, salesSerie, setPanel }) => {
     };
 
     const printHandler = () => {
+        const iframeRef = document.querySelector("#print-iframe");
         closeHandler();
 
-        const iframeElement = document.querySelector("#print-iframe");
-
-        iframeElement.onload = () => {
-           // setTimeout(() => {
-                iframeElement.focus();
-                iframeElement.contentWindow.print();
-                blobRef.current = null;
-           // }, 1);
-        };
+        iframeRef.focus();
+        iframeRef.contentWindow.print();
     };
 
     const fetchData = React.useCallback(async () => {
         const options = {
             baseURL: process.env.SERVER,
             headers: {
-                Accept: "application/pdf",
                 Authorization: JSON.parse(localStorage.getItem(process.env.LOCAL_STORAGE)).user.token,
-                "content-type": "application/pdf"
             },
-            responseType: "blob"
-        }
+        };
 
         try {
             const res = await axios(`/api/receipts/${salesSerie.current}`, options);
             
             if(res.status === 200) {
-                
-                const blob = new Blob([ res.data ], { type: 'application/pdf' }); 
-                const blobURL = URL.createObjectURL(blob);
-                
-                const iframeElement = document.querySelector("#print-iframe");
-                iframeElement.src = blobURL;
+                setReceipt(res.data);
+                document.querySelector("#print-iframe").srcdoc = ReactDOMServer.renderToString(<Receipt { ...res.data } />);
             };
         } catch(e) {
             console.error(e)
@@ -63,7 +54,7 @@ const SuccessfulPaymentPanel = ({ onClose, salesSerie, setPanel }) => {
 
     React.useEffect(() => {
         fetchData();
-    }, [ fetchData ])
+    }, [ fetchData ]);
 
     return (
         <div className="flex flex-col h-full">
@@ -73,6 +64,7 @@ const SuccessfulPaymentPanel = ({ onClose, salesSerie, setPanel }) => {
             <div className="flex justify-end p-4">
                 <Button 
                     className='border-blue-500 text-blue-500 mr-3 hover:bg-blue-500 hover:text-white'
+                    disabled={!Boolean(receipt)}
                     onClick={printHandler}
                     variant="outlined"
                     startIcon={<PrintIcon />}>
@@ -90,3 +82,7 @@ const SuccessfulPaymentPanel = ({ onClose, salesSerie, setPanel }) => {
 };
 
 export default SuccessfulPaymentPanel;
+
+/**>
+                { Boolean(receipt) && createPortal(<Receipt { ...receipt } />, iframeRef.current?.contentWindow?.document?.body) }
+            </iframe */
