@@ -13,7 +13,8 @@ import { getTotalPrice } from "src/helpers/price";
 
 import Validation from "src/models/Validation";
 
-import Link from "src/components/link"
+import Link from "src/components/link";
+import SellPrice from "src/components/register-product-page/sell-price"
 
 /**
  *  w12 === w-1/2
@@ -21,7 +22,7 @@ import Link from "src/components/link"
 */
 
 export const getServerSideProps = async ({ params }) => {
-    console.log(params)    
+     
     return {
       props: {
       }, // will be passed to the page component as props
@@ -199,15 +200,16 @@ const Container = () => {
     }, [])
 
     const sellPriceMemo = useMemo(() => (
-        <Input 
-            className={classNames(classes.input, classes.w13)}
-            label="Preco de venda"
-            onChange={sellPriceChangeHandler}
-            required
-            value={sellPrice.value}
-            variant="outlined"
-        />
-    ), [ sellPrice, sellPriceChangeHandler ]);
+        <SellPrice
+            sellPrice={sellPrice}
+            setSellPrice={setSellPrice}
+            sellVat={sellVat}
+            sellVatRef={sellVatRef}
+            setSellVat={setSellVat}
+            />
+    ), [ sellPrice, sellVat ]);
+
+
 
     const purchasePriceChangeHandler = useCallback(e => {
         const { value } = e.target;
@@ -380,8 +382,6 @@ const Container = () => {
                             { purchaseVatMemo }
                             { totalPurchasePriceMemo }
                             { sellPriceMemo }
-                            { sellVatMemo }
-                            { totalSellPriceMemo }
                         </div>
                         <div>
                             { availabilityMemo }
