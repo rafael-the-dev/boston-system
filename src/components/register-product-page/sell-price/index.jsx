@@ -7,6 +7,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { getTotalPrice } from "src/helpers/price";
 
+import Checkbox from "src/components/checkbox";
 import Input from "src/components/default-input";
 
 const SellPrice = ({ sellPrice, sellVat, sellVatRef, setSellPrice, setSellVat }) => {
@@ -83,6 +84,16 @@ const SellPrice = ({ sellPrice, sellVat, sellVatRef, setSellPrice, setSellVat })
         />
     ), [ totalSellPrice ]);
 
+    const checkboxChangeHandler = React.useCallback(() => setIsVATIncluded(b => !b), []);
+
+    const checkboxMemo = React.useMemo(() => (
+        <Checkbox 
+            checked={isVATIncluded}
+            label="VAT Included"
+            onChange={checkboxChangeHandler}
+        />
+    ), [ checkboxChangeHandler, isVATIncluded ])
+
     return (
         <div className={classNames("border border-solid border-stone-200 pl-3 py-2 w-full", { "pb-0": open})}>
             <div className="flex items-center justify-between">
@@ -97,6 +108,7 @@ const SellPrice = ({ sellPrice, sellVat, sellVatRef, setSellPrice, setSellVat })
                     { sellVatMemo }
                     { totalSellPriceMemo }
                 </div>
+                { checkboxMemo }
             </Collapse>
         </div>
     );

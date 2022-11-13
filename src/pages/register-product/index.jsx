@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { Button, Checkbox, FormControlLabel, MenuItem, Typography } from "@mui/material";
+import { Button, MenuItem, Typography } from "@mui/material";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Input from "src/components/default-input";
 import classNames from "classnames";
@@ -13,6 +13,7 @@ import { getTotalPrice } from "src/helpers/price";
 
 import Validation from "src/models/Validation";
 
+import Checkbox from "src/components/checkbox";
 import Link from "src/components/link";
 import SellPrice from "src/components/register-product-page/sell-price"
 
@@ -189,16 +190,6 @@ const Container = () => {
         />
     ), [ date, dateChangeHandler ]);
 
-    const sellPriceChangeHandler = useCallback(e => {
-        const errors = [];
-        const { value } = e.target;
-
-        setSellPrice({
-            errors, 
-            value
-        })
-    }, [])
-
     const sellPriceMemo = useMemo(() => (
         <SellPrice
             sellPrice={sellPrice}
@@ -208,8 +199,6 @@ const Container = () => {
             setSellVat={setSellVat}
             />
     ), [ sellPrice, sellVat ]);
-
-
 
     const purchasePriceChangeHandler = useCallback(e => {
         const { value } = e.target;
@@ -234,39 +223,6 @@ const Container = () => {
         />
     ), [ purchasePrice, purchasePriceChangeHandler ]);
 
-    const sellVatChangeHandler = useCallback(e => {
-        const errors = [];
-        const { value } = e.target;
-
-        sellVatRef.current = value;
-
-        setSellVat({
-            errors,
-            value
-        })
-    }, [])
-
-    const sellVatMemo = useMemo(() => (
-        <Input 
-            className={classNames(classes.input, classes.w13)}
-            label="Iva de venda"
-            onChange={sellVatChangeHandler}
-            required
-            value={sellVat.value}
-            variant="outlined"
-        />
-    ), [ sellVat, sellVatChangeHandler ]);
-
-    const totalSellPriceMemo = useMemo(() => (
-        <Input 
-            className={classNames(classes.input, classes.w13)}
-            inputProps={{ readOnly: true }}
-            label="Total sell price"
-            required
-            value={totalSellPrice}
-            variant="outlined"
-        />
-    ), [ totalSellPrice ]);
 
     const purchaseVatChangeHandler = useCallback(e => {
         const errors = [];
@@ -310,9 +266,10 @@ const Container = () => {
     }, [])
 
     const availabilityMemo = useMemo(() => (
-        <FormControlLabel 
-            control={<Checkbox checked={available} onChange={availabilityChangeHandler} />} 
+        <Checkbox 
+            checked={available}  
             label="Disponivel" 
+            onChange={availabilityChangeHandler}
         />
     ), [ available, availabilityChangeHandler ]);
 
