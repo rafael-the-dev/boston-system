@@ -10,79 +10,82 @@ import { getTotalPrice } from "src/helpers/price";
 import Checkbox from "src/components/checkbox";
 import Input from "src/components/default-input";
 
-const SellPrice = ({ sellPrice, sellVat, sellVatRef, setSellPrice, setSellVat }) => {
+const PurchasePrice = ({ purchasePrice, purchasePriceRef, purchaseVat, setPurchasePrice, setPurchaseVat, purchaseVatRef }) => {
     const [ isVATIncluded, setIsVATIncluded ] = React.useState(true);
     const [ open, setOpen ] = React.useState(true);
 
     const toggleHandler = React.useCallback(() => setOpen(b => !b), [])
 
-    const totalSellPrice = React.useMemo(() => {
-        return getTotalPrice({ price: sellPrice.value, taxRate: sellVat.value })
-    }, [ sellVat, sellPrice ]);
-
     const legendMemo = React.useMemo(() => (
         <Typography
             component='legend'
             className="font-bold text-lg md:text-xl">
-            Sell price
+            Purchase price
         </Typography>
     ), [])
-
-    const sellPriceChangeHandler = React.useCallback(e => {
-        const errors = [];
+    
+    const purchasePriceChangeHandler = React.useCallback(e => {
         const { value } = e.target;
-
-        setSellPrice({
-            errors, 
-            value
-        })
-    }, [ setSellPrice ])
-
-    const sellPriceMemo = React.useMemo(() => (
-        <Input 
-            className="input w13"
-            label="Preco de venda"
-            onChange={sellPriceChangeHandler}
-            required
-            value={sellPrice.value}
-            variant="outlined"
-        />
-    ), [ sellPrice, sellPriceChangeHandler ]);
-
-    const sellVatChangeHandler = React.useCallback(e => {
         const errors = [];
-        const { value } = e.target;
 
-        sellVatRef.current = value;
+        purchasePriceRef.current = value;
 
-        setSellVat({
+        setPurchasePrice({
             errors,
             value
         })
-    }, [ sellVatRef, setSellVat ])
+    }, [ purchasePriceRef, setPurchasePrice ])
 
-    const sellVatMemo = React.useMemo(() => (
+    const purchasePriceMemo = React.useMemo(() => (
+        <Input 
+            className="input w13"
+            label="Preco de compra"
+            onChange={purchasePriceChangeHandler}
+            required
+            value={purchasePrice.value}
+            variant="outlined"
+        />
+    ), [ purchasePrice, purchasePriceChangeHandler ]);
+
+
+    const purchaseVatChangeHandler = React.useCallback(e => {
+        const errors = [];
+        const { value } = e.target;
+
+        purchaseVatRef.current = value;
+
+        setPurchaseVat({
+            errors,
+            value
+        })
+    }, [ purchaseVatRef, setPurchaseVat ])
+
+    const purchaseVatMemo = React.useMemo(() => (
         <Input 
             className="input w13"
             inputProps={{ readOnly: !isVATIncluded }}
-            label="Iva de venda"
-            onChange={sellVatChangeHandler}
+            label="Iva de compra"
+            onChange={purchaseVatChangeHandler}
             required
-            value={sellVat.value}
+            value={purchaseVat.value}
             variant="outlined"
         />
-    ), [ isVATIncluded, sellVat, sellVatChangeHandler ]);
+    ), [ isVATIncluded, purchaseVatChangeHandler, purchaseVat ]);
 
-    const totalSellPriceMemo = React.useMemo(() => (
+    const totalPurchasePrice = React.useMemo(() => {
+        return getTotalPrice({ price: purchasePrice.value, taxRate: purchaseVat.value })
+    }, [ purchasePrice, purchaseVat ])
+
+    const totalPurchasePriceMemo = React.useMemo(() => (
         <Input 
             className="input w13"
             inputProps={{ readOnly: true }}
-            label="Total sell price"
+            label="Total purchase price"
             required
-            value={totalSellPrice}
+            value={totalPurchasePrice}
             variant="outlined"
         />
-    ), [ totalSellPrice ]);
+    ), [ totalPurchasePrice ]);
 
     const checkboxChangeHandler = React.useCallback(() => setIsVATIncluded(b => !b), []);
 
@@ -100,12 +103,12 @@ const SellPrice = ({ sellPrice, sellVat, sellVatRef, setSellPrice, setSellVat })
             value: 0
         };
 
-        if(isVATIncluded) setSellVat({ ...newValue, value: 17 });
-        else setSellVat(newValue);
-    }, [ isVATIncluded, setSellVat ])
+        if(isVATIncluded) setPurchaseVat({ ...newValue, value: 17 });
+        else setPurchaseVat(newValue);
+    }, [ isVATIncluded, setPurchaseVat ])
 
     return (
-        <div className={classNames("border border-solid border-stone-200 mt-6 mb-3 pl-3 py-2 w-full", { "pb-0": open})}>
+        <div className={classNames("border border-solid border-stone-200 pl-3 py-2 w-full", { "pb-0": open})}>
             <div className="flex items-center justify-between">
                 { legendMemo }
                 <IconButton onClick={toggleHandler}>
@@ -114,9 +117,9 @@ const SellPrice = ({ sellPrice, sellVat, sellVatRef, setSellPrice, setSellVat })
             </div>
             <Collapse className="mt-4" unmountOnExit in={open}>
                 <div className="flex flex-wrap justify-between pr-3">
-                    { sellPriceMemo }
-                    { sellVatMemo }
-                    { totalSellPriceMemo }
+                    { purchasePriceMemo }
+                    { purchaseVatMemo }
+                    { totalPurchasePriceMemo }
                 </div>
                 { checkboxMemo }
             </Collapse>
@@ -124,4 +127,4 @@ const SellPrice = ({ sellPrice, sellVat, sellVatRef, setSellPrice, setSellVat })
     );
 };
 
-export default SellPrice;
+export default PurchasePrice;

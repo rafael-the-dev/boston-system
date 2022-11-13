@@ -15,6 +15,7 @@ import Validation from "src/models/Validation";
 
 import Checkbox from "src/components/checkbox";
 import Link from "src/components/link";
+import PurchasePrice from "src/components/register-product-page/purchase-price"
 import SellPrice from "src/components/register-product-page/sell-price"
 
 /**
@@ -156,14 +157,6 @@ const Container = () => {
         })
     }, []);
 
-    const totalPurchasePrice = useMemo(() => {
-        return getTotalPrice({ price: purchasePrice.value, taxRate: purchaseVat.value })
-    }, [ purchasePrice, purchaseVat ])
-
-    const totalSellPrice = useMemo(() => {
-        return getTotalPrice({ price: sellPrice.value, taxRate: sellVat.value })
-    }, [ sellVat, sellPrice ]);
-
     const barCodeMemo = useMemo(() => (
         <Input 
             className={classNames(classes.input, classes.w12)}
@@ -189,6 +182,17 @@ const Container = () => {
             renderInput={(params) => <Input {...params} className={classNames(classes.input, classes.w12)} />}
         />
     ), [ date, dateChangeHandler ]);
+    
+    const purchasePriceMemo = useMemo(() => (
+        <PurchasePrice
+            purchasePrice={purchasePrice}
+            purchasePriceRef={purchasePriceRef}
+            setPurchasePrice={setPurchasePrice}
+            purchaseVat={purchaseVat}
+            purchaseVatRef={purchaseVatRef}
+            setPurchaseVat={setPurchaseVat}
+        />
+    ), [ purchasePrice, purchaseVat ]);
 
     const sellPriceMemo = useMemo(() => (
         <SellPrice
@@ -199,64 +203,6 @@ const Container = () => {
             setSellVat={setSellVat}
             />
     ), [ sellPrice, sellVat ]);
-
-    const purchasePriceChangeHandler = useCallback(e => {
-        const { value } = e.target;
-        const errors = [];
-
-        purchasePriceRef.current = value;
-
-        setPurchasePrice({
-            errors,
-            value
-        })
-    }, [])
-
-    const purchasePriceMemo = useMemo(() => (
-        <Input 
-            className={classNames(classes.input, classes.w13)}
-            label="Preco de compra"
-            onChange={purchasePriceChangeHandler}
-            required
-            value={purchasePrice.value}
-            variant="outlined"
-        />
-    ), [ purchasePrice, purchasePriceChangeHandler ]);
-
-
-    const purchaseVatChangeHandler = useCallback(e => {
-        const errors = [];
-        const { value } = e.target;
-
-        purchaseVatRef.current = value;
-
-        setPurchaseVat({
-            errors,
-            value
-        })
-    }, [])
-
-    const purchaseVatMemo = useMemo(() => (
-        <Input 
-            className={classNames(classes.input, classes.w13)}
-            label="Iva de compra"
-            onChange={purchaseVatChangeHandler}
-            required
-            value={purchaseVat.value}
-            variant="outlined"
-        />
-    ), [ purchaseVatChangeHandler, purchaseVat ]);
-
-    const totalPurchasePriceMemo = useMemo(() => (
-        <Input 
-            className={classNames(classes.input, classes.w13)}
-            inputProps={{ readOnly: true }}
-            label="Total purchase price"
-            required
-            value={totalPurchasePrice}
-            variant="outlined"
-        />
-    ), [ totalPurchasePrice ]);
 
     const availabilityChangeHandler = useCallback(e => {
         const { checked } = e.target;
@@ -276,7 +222,7 @@ const Container = () => {
     const cancelButton = useMemo(() => (
         <Link 
             className="mr-3"
-            href="/">
+            href="/products">
             <Button 
                 className={classNames("border-red-500 text-red-500 sm:py-2 hover:bg-red-500 hover:border-red-500 hover:text-white")}
                 type="button"
@@ -336,8 +282,6 @@ const Container = () => {
                         </div>
                         <div className="flex flex-wrap justify-between w-full">
                             { purchasePriceMemo }
-                            { purchaseVatMemo }
-                            { totalPurchasePriceMemo }
                             { sellPriceMemo }
                         </div>
                         <div>
