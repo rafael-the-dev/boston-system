@@ -5,8 +5,11 @@ import Input from "src/components/default-input";
 import classNames from "classnames";
 import moment from "moment";
 import { useRouter } from "next/router";
+import currency from "currency.js";
 
 import classes from "./styles.module.css";
+
+import { getTotalPrice } from "src/helpers/price";
 
 import Validation from "src/models/Validation";
 
@@ -149,7 +152,15 @@ const Container = () => {
             errors: [],
             value
         })
-    }, [])
+    }, []);
+
+    const totalPurchasePrice = useMemo(() => {
+        return getTotalPrice({ price: purchasePrice.value, taxRate: purchaseVat.value })
+    }, [ purchasePrice, purchaseVat ])
+
+    const totalSellPrice = useMemo(() => {
+        return getTotalPrice({ price: sellPrice.value, taxRate: sellVat.value })
+    }, [ sellVat, sellPrice ]);
 
     const barCodeMemo = useMemo(() => (
         <Input 
@@ -244,6 +255,17 @@ const Container = () => {
         />
     ), [ sellVat, sellVatChangeHandler ]);
 
+    const totalSellPriceMemo = useMemo(() => (
+        <Input 
+            className={classNames(classes.input, classes.w13)}
+            inputProps={{ readOnly: true }}
+            label="Total sell price"
+            required
+            value={totalSellPrice}
+            variant="outlined"
+        />
+    ), [ totalSellPrice ]);
+
     const purchaseVatChangeHandler = useCallback(e => {
         const errors = [];
         const { value } = e.target;
@@ -266,6 +288,17 @@ const Container = () => {
             variant="outlined"
         />
     ), [ purchaseVatChangeHandler, purchaseVat ]);
+
+    const totalPurchasePriceMemo = useMemo(() => (
+        <Input 
+            className={classNames(classes.input, classes.w13)}
+            inputProps={{ readOnly: true }}
+            label="Total purchase price"
+            required
+            value={totalPurchasePrice}
+            variant="outlined"
+        />
+    ), [ totalPurchasePrice ]);
 
     const availabilityChangeHandler = useCallback(e => {
         const { checked } = e.target;
@@ -343,10 +376,12 @@ const Container = () => {
                             { datePickerMemo }
                         </div>
                         <div className="flex flex-wrap justify-between w-full">
-                            { sellPriceMemo }
                             { purchasePriceMemo }
-                            { sellVatMemo }
                             { purchaseVatMemo }
+                            { totalPurchasePriceMemo }
+                            { sellPriceMemo }
+                            { sellVatMemo }
+                            { totalSellPriceMemo }
                         </div>
                         <div>
                             { availabilityMemo }

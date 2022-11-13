@@ -1,4 +1,4 @@
-import { useCallback, useRef, useMemo, useState } from "react"
+import { useCallback, useEffect, useRef, useMemo, useState } from "react"
 import { Button, TableCell, Typography } from "@mui/material";
 import classNames from "classnames";
 import { v4 as uuidV4 } from "uuid";
@@ -10,7 +10,8 @@ import { getCategories, getProducts } from "src/helpers/queries"
 
 import { CategoriesCombobox } from "src/components/products-page"
 import Input from "src/components/default-input";
-import Link from "src/components/link"
+import Link from "src/components/link";
+import NewCategoryDialog from "src/components/products-page/new-category-dialog";
 import Table from "src/components/table";
 import TableBodyRow from "src/components/products-page/table-row" 
 
@@ -40,6 +41,7 @@ export const getServerSideProps = async ({ req: { headers }}) => {
 }
 
 const Container = ({ categories, products }) => {
+    const [ categoriesList, setCategoriesList ] = useState([]);
     const [ category, setCategory ] = useState(-1);
     const [ value, setValue ] = useState("");
 
@@ -61,7 +63,19 @@ const Container = ({ categories, products }) => {
         }
 
         return list;
-    }, [ category, products ])
+    }, [ category, products ]);
+
+    const categoryDialog = useMemo(() => <NewCategoryDialog setCategories={setCategoriesList} />, []);
+
+    const registerProductLinkMemo = useMemo(() => (
+        <Link href="register-product">
+            <Button
+                className="border-blue-500 py-2 text-blue-500 w-full md:py-3 hover:bg-blue-500 hover:text-white"
+                variant="outlined">
+                Add new product
+            </Button>
+        </Link>
+    ), [])
 
     const title = useMemo(() => (
         <Typography
@@ -88,13 +102,13 @@ const Container = ({ categories, products }) => {
         return ( 
             <CategoriesCombobox 
                 className={classNames(classes.categories)} 
-                categories={categories}
+                categories={categoriesList}
                 value={category} 
                 setValue={setCategory} 
             />
         )
             
-    }, [ category, categories, setCategory ]);
+    }, [ category, categoriesList, setCategory ]);
 
     const getBodyRows = useCallback(({ page, rowsPerPage }) => {
         const list = rowsPerPage > 0 ? productsList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : productsList;
@@ -117,7 +131,11 @@ const Container = ({ categories, products }) => {
                     ))
                 }
             </>
-    )}, [ productsList ])
+    )}, [ productsList ]);
+
+    useEffect(() => {
+        setCategoriesList(categories)
+    }, [ categories ])
 
     return (
         <main>
@@ -136,14 +154,9 @@ const Container = ({ categories, products }) => {
                         />
                     </div>
                 </div>
-                <div className="flex justify-end px-5">
-                    <Link href="register-product">
-                        <Button
-                            className="border-blue-500 text-blue-500 md:py-3 hover:bg-blue-500 hover:text-white"
-                            variant="outlined">
-                            Add new product
-                        </Button>
-                    </Link>
+                <div className="flex flex-col justify-end mt-6 px-5 sm:flex-row">
+                    { categoryDialog }
+                    { registerProductLinkMemo }
                 </div>
             </div>
         </main>

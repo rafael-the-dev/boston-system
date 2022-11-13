@@ -9,12 +9,12 @@ const BootstrapDialogTitle = (props) => {
     return (
       <DialogTitle 
         id={id}
-          className={classNames(classes.root, "border-b border-solid border-slate-200 pb-3 dark:text-slate-300 dark:border-slate-400")} sx={{ m: 0, p: 2, paddingLeft: 0 }} {...other}>
+          className={classNames(classes?.root, "border-b border-solid border-slate-200 pb-3 dark:text-slate-300 dark:border-slate-400")} sx={{ m: 0, p: 2, paddingLeft: 0 }} {...other}>
         {children}
         {onClose ? (
           <IconButton
             aria-label="close"
-            className={classes.button}
+            className={classes?.button}
             onClick={onClose}
             sx={{
               position: 'absolute',
@@ -23,7 +23,7 @@ const BootstrapDialogTitle = (props) => {
               color: (theme) => theme.palette.grey[500],
             }}
           >
-            <CloseIcon className={classes.icon} />
+            <CloseIcon className={classes?.icon} />
           </IconButton>
         ) : null}
       </DialogTitle>

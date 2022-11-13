@@ -135,12 +135,11 @@ const SignUpContent = () => {
     const signInMemo = useMemo(() => (
         <Typography component="p" className="ml-4 text-sm text-center dark:text-slate-400">
             have an account? 
-            <Link href="/login">
-                <a 
-                    className={classNames(classes.signUpLink, 
-                    "ml-2 text-blue-700 uppercase underline hover:opacity-90")}>
-                    sign in.
-                </a>
+            <Link 
+                className={classNames(classes.signUpLink, 
+                "ml-2 text-blue-700 uppercase underline hover:opacity-90")}
+                href="/login">
+                sign in.
             </Link>
         </Typography>
     ), []);

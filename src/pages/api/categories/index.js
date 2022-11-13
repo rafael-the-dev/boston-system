@@ -12,6 +12,12 @@ const requestHandler = async (req, res) => {
                     res.json(result)
                 })
         }
+        case "POST": {
+            const { description, type } = JSON.parse(req.body);
+
+            query("INSERT INTO grupo(descricao, Tipo) VALUES(?,?)", [ description, type ])
+                .then(() => res.status(201).send());
+        }
         default: {
             return;
         }
