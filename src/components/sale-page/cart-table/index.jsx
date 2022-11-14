@@ -11,14 +11,14 @@ const CartTable = () => {
     const { cart } = React.useContext(SaleContext);
 
     const headers = React.useRef([
-        { key: "barCode", label: "Codigo de barra" },
-        { key: "name", label: "Nome" },
-        { key: "sellVAT", label: "IVA" },
-        { key: "sellPrice", label: "Preco Unit" },
-        { key: "quantity", label: "Quantidade" },
-        { key: "vatSubTotal", label: "IVA SubTotal" },
+        { key: "barCode", label: "Bar code" },
+        { key: "name", label: "Name" },
+        { key: "sellVAT", label: "VAT" },
+        { key: "sellPrice", label: "Unit price" },
+        { key: "quantity", label: "Quantity" },
+        { key: "vatSubTotal", label: "VAT SubTotal" },
         { key: "subTotal", label: "SubTotal" },
-        { key: "delete", label: "Remover Item" },
+        { key: "delete", label: "Remove Item" },
     ]);
 
     const getBodyRows = React.useCallback(({ page , rowsPerPage }) => {

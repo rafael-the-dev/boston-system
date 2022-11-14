@@ -14,7 +14,7 @@ const Container = ({ categories, products }) => {
                 className="bg-blue-500 py-3 px-3 text-white hover:bg-transparent hover:border-blue-500 hover:text-blue-500 "
                 onClick={clickHandler}
                 variant="outlined">
-                Adicionar novo produto
+                Add new product
             </Button>
             <Dialog
                 categories={categories}

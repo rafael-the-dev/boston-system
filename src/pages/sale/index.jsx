@@ -88,7 +88,7 @@ const Container = ({ categories, productsList }) => {
                 className="border-blue-500 py-3 sm:px-8 text-blue-500 hover:bg-blue-500 hover:border-blue-500 hover:text-white"
                 startIcon={<ArrowBackIcon />}
                 variant="outlined">
-                Sair
+                Back
             </Button>
         </Link>
     ), []);
@@ -98,7 +98,7 @@ const Container = ({ categories, productsList }) => {
             className={classNames(classes.paymentButton, `bg-gray-700 font-bold rounded-none 
             md:text-lg xl:text-xl text-white hover:bg-blue-500`)}
             type="submit">
-            {loading ? "Loading..." : `Pagar ${  getCart() ? getCart().total : 0}MT` }
+            {loading ? "Loading..." : `Pay ${  getCart() ? getCart().total : 0}MT` }
         </Button>
     ), [ getCart, loading ]);
 
@@ -110,7 +110,7 @@ const Container = ({ categories, productsList }) => {
             onClick={resetHandler}
             startIcon={<DeleteIcon />}
             variant="outlined">
-            Limpar carrinho
+            Reset
         </Button>
     ), [ resetHandler ]);
 

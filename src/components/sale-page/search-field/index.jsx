@@ -19,6 +19,7 @@ const Container = ({ products }) => {
         { key: "barCode", label: "Codigo de barra" },
         { key: "name", label: "Nome" },
     ]);
+    const inputRef = React.useRef(null);
 
     const filteredList = React.useMemo(() => {
         return products.filter(product => product.barCode.includes(barCode));
@@ -33,7 +34,9 @@ const Container = ({ products }) => {
     const inputMemo = React.useMemo(() => (
         <Input 
             className="w-full"
-            label="codigo de barra"
+            id="bar-code-input"
+            inputRef={inputRef}
+            label="Insert bar code"
             onChange={barCodeChangeHandler}
             value={barCode}
         />
@@ -48,7 +51,11 @@ const Container = ({ products }) => {
                 setBarCode("");
             }
         }
-    }, [ barCode, getCart, products ])
+    }, [ barCode, getCart, products ]);
+
+    React.useEffect(() => {
+        inputRef.current.focus();
+    }, [])
 
     return (
         <div className="input relative w12">
