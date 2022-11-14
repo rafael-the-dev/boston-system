@@ -1,5 +1,6 @@
-import { useCallback, useContext, useRef, useMemo, useState } from "react"
+import { useCallback, useContext, useEffect, useRef, useMemo, useState } from "react"
 import { Button, Typography } from "@mui/material";
+import * as cookie from "cookie"
 import { v4 as uuidV4 } from "uuid";
 import classNames from "classnames";
 
@@ -10,8 +11,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 import { getCategories, getProducts } from "src/helpers/queries"
 import { CheckoutContextProvider, LoginContext, SaleContext } from "src/context";;
-import Product from "src/models/Product"
-import * as cookie from "cookie"
+import Product from "src/models/Product";
+//import SerialPort from "src/models/client/SerialPort";
 
 import Checkout from "src/components/sale-page/checkout-dialog"
 import Input from "src/components/default-input";
@@ -129,7 +130,11 @@ const Container = ({ categories, productsList }) => {
         if(cart.length === 0) return;
 
         onOpenDialog.current?.();
-    }, [ cart ])
+    }, [ cart ]);
+
+    /*useEffect(() => {
+        const serialPort = new SerialPort();
+    }, [])*/
 
     return (
         <main className={classNames(classes.main, `bg-stone-100 grow`)}>

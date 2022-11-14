@@ -1,4 +1,7 @@
 {
+  "browser":{
+    "child_process": false
+  } ,
   "name": "create-next-app-default",
   "version": "0.1.0",
   "description": "",
