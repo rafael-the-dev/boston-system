@@ -1,31 +1,19 @@
-const  { SerialPort } = require('serialport');
+const {ControllerManager} = require('st-ethernet-ip')
 
-class SerialPortClient {
-    constructor() {
-        // Create a port
-        SerialPort.list().then(ports => {
-            ports.forEach((port, index) => {
-                console.log(`port ${index}`, port)
-            });
-        }, err => console.error("port error: ", err));
+const cm = new ControllerManager();
 
-        this._port = new SerialPort({
-            path: 'COM3',
-            baudRate: 57600,
-        });
+//addController(ipAddress, slot = 0, rpi = 100, connected = true, retrySP = 3000, opts = {})
+const cont = cm.addController('192.168.86.200');
 
-        this._port.write('main screen turn on', function(err) {
-            if (err) {
-                return console.log('Error on write: ', err.message)
-            }
-            console.log('message written')
-        })
+cont.connect();
 
-        // Open errors will be emitted as an error event
-        this._port.on('error', function(err) {
-            console.log('Error: ', err.message)
-        })
-    }
-}
+//addTag(tagname, program = null, arrayDims = 0, arraySize = 0x01)
+cont.addTag('TheInteger')
 
-module.exports = SerialPortClient;
+cont.on('TagChanged', (tag, prevValue) => {
+  console.log(tag.name, ' changed from ', prevValue, ' => ', tag.value)
+})
+
+cont.on('error', (e) => {
+  console.log(e)
+})
