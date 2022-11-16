@@ -10,7 +10,7 @@ class SerialPortClient {
         }, err => console.error("port error: ", err));
 
         this._port = new SerialPort({
-            path: '/dev/tty-COM3',
+            path: 'COM3',
             baudRate: 57600,
         });
 

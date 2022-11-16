@@ -1,7 +1,7 @@
 {
-  "browser":{
+  "browser": {
     "child_process": false
-  } ,
+  },
   "name": "create-next-app-default",
   "version": "0.1.0",
   "description": "",
@@ -41,6 +41,7 @@
     "react-apexcharts": "^1.4.0",
     "react-dom": "18.2.0",
     "serialport": "^10.4.0",
+    "st-ethernet-ip": "^2.5.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
