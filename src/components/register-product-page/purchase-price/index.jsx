@@ -63,7 +63,7 @@ const PurchasePrice = ({ purchasePrice, purchasePriceRef, purchaseVat, setPurcha
     const purchaseVatMemo = React.useMemo(() => (
         <Input 
             className="input w13"
-            inputProps={{ readOnly: !isVATIncluded }}
+            inputProps={{ readOnly: isVATIncluded }}
             label="Iva de compra"
             onChange={purchaseVatChangeHandler}
             required
@@ -72,7 +72,7 @@ const PurchasePrice = ({ purchasePrice, purchasePriceRef, purchaseVat, setPurcha
         />
     ), [ isVATIncluded, purchaseVatChangeHandler, purchaseVat ]);
 
-    const totalPurchasePrice = React.useMemo(() => {
+    const totalPurchasePrice = React.useMemo(() => {        
         return getTotalPrice({ price: purchasePrice.value, taxRate: purchaseVat.value })
     }, [ purchasePrice, purchaseVat ])
 

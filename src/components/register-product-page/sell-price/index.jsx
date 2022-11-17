@@ -64,7 +64,7 @@ const SellPrice = ({ sellPrice, sellVat, sellVatRef, setSellPrice, setSellVat })
     const sellVatMemo = React.useMemo(() => (
         <Input 
             className="input w13"
-            inputProps={{ readOnly: !isVATIncluded }}
+            inputProps={{ readOnly: isVATIncluded }}
             label="Iva de venda"
             onChange={sellVatChangeHandler}
             required
