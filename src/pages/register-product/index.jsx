@@ -50,6 +50,7 @@ const Container = () => {
     const barCodeRef = useRef("");
     const categoryRef = useRef("");
     const dateRef = useRef("");
+    const hasDataChanged = useRef(false);
     const nameRef = useRef("");
     const purchasePriceRef = useRef(0);
     const purchaseVatRef = useRef(0);
@@ -175,7 +176,7 @@ const Container = () => {
 
     const datePickerMemo = useMemo(() => (
         <DatePicker
-            label="Date"
+            label="Expiry date"
             required
             value={date}
             onChange={dateChangeHandler}
@@ -185,6 +186,8 @@ const Container = () => {
     
     const purchasePriceMemo = useMemo(() => (
         <PurchasePrice
+            hasDataChanged={hasDataChanged}
+            id={id}
             purchasePrice={purchasePrice}
             purchasePriceRef={purchasePriceRef}
             setPurchasePrice={setPurchasePrice}
@@ -192,17 +195,19 @@ const Container = () => {
             purchaseVatRef={purchaseVatRef}
             setPurchaseVat={setPurchaseVat}
         />
-    ), [ purchasePrice, purchaseVat ]);
+    ), [ id, purchasePrice, purchaseVat ]);
 
     const sellPriceMemo = useMemo(() => (
         <SellPrice
+        hasDataChanged={hasDataChanged}
+            id={id}
             sellPrice={sellPrice}
             setSellPrice={setSellPrice}
             sellVat={sellVat}
             sellVatRef={sellVatRef}
             setSellVat={setSellVat}
             />
-    ), [ sellPrice, sellVat ]);
+    ), [ id, sellPrice, sellVat ]);
 
     const availabilityChangeHandler = useCallback(e => {
         const { checked } = e.target;
@@ -240,12 +245,14 @@ const Container = () => {
     }, []);
 
     useEffect(() => {
-        console.log(id, role)
+        
         if(id && role === "edit") {
             fetch(`/api/products/${id}`)
                 .then(res => res.json())
                 .then(data => {
                     const product = data[0];
+
+                    hasDataChanged.current = true;
 
                     setAvailable(Boolean(product.Estado));
                     setBarCode({ errors: [], value: product.BarCod })

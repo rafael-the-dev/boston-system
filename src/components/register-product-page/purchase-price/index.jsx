@@ -6,13 +6,16 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { getTotalPrice } from "src/helpers/price";
+import { useVAT } from "../hooks/useVAT";
 
 import Checkbox from "src/components/checkbox";
 import Input from "src/components/default-input";
 
-const PurchasePrice = ({ purchasePrice, purchasePriceRef, purchaseVat, setPurchasePrice, setPurchaseVat, purchaseVatRef }) => {
+const PurchasePrice = ({ hasDataChanged, id, purchasePrice, purchasePriceRef, purchaseVat, setPurchasePrice, setPurchaseVat, purchaseVatRef }) => {
     const [ isVATIncluded, setIsVATIncluded ] = React.useState(true);
     const [ open, setOpen ] = React.useState(true);
+    
+    useVAT({ hasDataChanged, isVATIncluded, setIsVATIncluded, setVAT: setPurchaseVat, vat: purchaseVat.value })
 
     const toggleHandler = React.useCallback(() => setOpen(b => !b), [])
 
@@ -108,7 +111,7 @@ const PurchasePrice = ({ purchasePrice, purchasePriceRef, purchaseVat, setPurcha
     }, [ isVATIncluded, setPurchaseVat ])
 
     return (
-        <div className={classNames("border border-solid border-stone-200 pl-3 py-2 w-full", { "pb-0": open})}>
+        <fieldset className={classNames("border border-solid border-stone-200 pl-3 py-2 w-full", { "pb-0": open})}>
             <div className="flex items-center justify-between">
                 { legendMemo }
                 <IconButton onClick={toggleHandler}>
@@ -123,7 +126,7 @@ const PurchasePrice = ({ purchasePrice, purchasePriceRef, purchaseVat, setPurcha
                 </div>
                 { checkboxMemo }
             </Collapse>
-        </div>
+        </fieldset>
     );
 };
 

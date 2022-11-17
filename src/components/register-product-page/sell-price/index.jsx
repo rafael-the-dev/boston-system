@@ -6,13 +6,16 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { getTotalPrice } from "src/helpers/price";
+import { useVAT } from "../hooks/useVAT"
 
 import Checkbox from "src/components/checkbox";
 import Input from "src/components/default-input";
 
-const SellPrice = ({ sellPrice, sellVat, sellVatRef, setSellPrice, setSellVat }) => {
+const SellPrice = ({ hasDataChanged, id, sellPrice, sellVat, sellVatRef, setSellPrice, setSellVat }) => {
     const [ isVATIncluded, setIsVATIncluded ] = React.useState(true);
     const [ open, setOpen ] = React.useState(true);
+    
+    useVAT({ hasDataChanged, isVATIncluded, setIsVATIncluded, setVAT: setSellVat, vat: sellVat.value })
 
     const toggleHandler = React.useCallback(() => setOpen(b => !b), [])
 
@@ -94,18 +97,8 @@ const SellPrice = ({ sellPrice, sellVat, sellVatRef, setSellPrice, setSellVat })
         />
     ), [ checkboxChangeHandler, isVATIncluded ]);
 
-    React.useEffect(() => {
-        const newValue = { 
-            errors: [],
-            value: 0
-        };
-
-        if(isVATIncluded) setSellVat({ ...newValue, value: 17 });
-        else setSellVat(newValue);
-    }, [ isVATIncluded, setSellVat ])
-
     return (
-        <div className={classNames("border border-solid border-stone-200 mt-6 mb-3 pl-3 py-2 w-full", { "pb-0": open})}>
+        <fieldset className={classNames("border border-solid border-stone-200 mt-6 mb-3 pl-3 py-2 w-full", { "pb-0": open})}>
             <div className="flex items-center justify-between">
                 { legendMemo }
                 <IconButton onClick={toggleHandler}>
@@ -120,7 +113,7 @@ const SellPrice = ({ sellPrice, sellVat, sellVatRef, setSellPrice, setSellVat })
                 </div>
                 { checkboxMemo }
             </Collapse>
-        </div>
+        </fieldset>
     );
 };
 
