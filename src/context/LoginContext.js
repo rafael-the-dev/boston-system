@@ -20,6 +20,7 @@ const LoginContextProvider = ({ children }) => {
             },
             category: "",
             firstName: "",
+            image: "",
             lastName: "",
             username: ""
         };

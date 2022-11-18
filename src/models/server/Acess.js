@@ -2,7 +2,8 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
 const AuthorizationError = require("./errors/AuthorizationError");
-const Error404 = require("./errors/404Error")
+const Error404 = require("./errors/404Error");
+const { getFile } = require("src/helpers/image")
 const LoginError = require("./errors/LoginError");
 const { query } = require("src/helpers/db")
 
@@ -25,31 +26,34 @@ class Access {
                 const user = users[0];
 
                 if(await bcrypt.compare(password, user.Password)) {                        
-                    return query(`INSERT INTO userlog (login, user, data) value (now(), ?, now());`, [ user.idUser ])
-                        .then((response) => {
+                    const [ image, response ] = await Promise.all([
+                        getFile({ name: username }),
+                        query(`INSERT INTO userlog (login, user, data) value (now(), ?, now());`, [ user.idUser ])
+                    ]);
 
-                            const acessToken = jwt.sign({ 
-                                category: user.Categoria, 
-                                loginId: response.insertId, 
-                                username,
-                                idUser: user.idUser
-                            }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
+                    const acessToken = jwt.sign({ 
+                        category: user.Categoria, 
+                        image,
+                        loginId: response.insertId, 
+                        username,
+                        idUser: user.idUser
+                    }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
 
-                            const verifiedToken = jwt.verify(acessToken, process.env.JWT_SECRET_KEY);
+                    const verifiedToken = jwt.verify(acessToken, process.env.JWT_SECRET_KEY);
 
-                            res.json({
-                                access: {
-                                    expiresIn: verifiedToken.exp, 
-                                    token: acessToken
+                    res.json({
+                        access: {
+                            expiresIn: verifiedToken.exp, 
+                            token: acessToken
 
-                                },
-                                category: user.Categoria,
-                                firstName: user.Nome,
-                                lastName: user.Apelido,
-                                username: user.Username
-                            });
-                        }
-                    );
+                        },
+                        category: user.Categoria,
+                        firstName: user.Nome,
+                        image,
+                        lastName: user.Apelido,
+                        username: user.Username
+                    });
+                    return;
                 }
 
                 throw new LoginError();
@@ -98,6 +102,7 @@ class Access {
                         },
                         category: user.Categoria,
                         firstName: user.Nome,
+                        image: loggedUser.image,
                         lastName: user.Apelido,
                         username: user.Username
                     });

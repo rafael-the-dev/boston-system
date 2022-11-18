@@ -2,6 +2,19 @@ const fs = require("fs");
 const moment = require("moment");
 const path = require("path");
 
+const getFile = ({ name }) => {
+    return new Promise((resolve, reject) => {
+        fs.readdir(path.join(path.resolve("."), `/public/images/users`), (err, files) => {
+            if(err) {
+                reject(err);
+                return;
+            }
+
+            resolve(files.find(file => file.includes(name)));
+        })
+    })
+};
+
 const saveLocally = async ({ folder, image }) => {
     
     const { createReadStream, filepath } = image;
@@ -39,4 +52,4 @@ const saveImage = async ({ folder, image }) => {
     return pathname;
 };
 
-module.exports = { saveImage, saveLocally }
+module.exports = { getFile, saveImage, saveLocally }

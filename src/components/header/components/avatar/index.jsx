@@ -26,6 +26,14 @@ const Container = () => {
     const logoutHandler = () => {
         logoutHelper();
     };
+
+    const getImage = () => {
+        if(loggedUser.image?.startsWith("https://") || loggedUser.image?.startsWith("http://")) {
+            return loggedUser.image;
+        }
+
+        return `/images/users/${loggedUser.image}`
+    };
     
     return (
         <>
@@ -33,9 +41,9 @@ const Container = () => {
                 className="p-0"
                 onClick={clickHandler}>
                 <Avatar 
-                    alt=""
+                    alt={loggedUser.firstName}
                     className={classNames(classes.avatar)}
-                    src="https://xsgames.co/randomusers/avatar.php?g=male"
+                    src={getImage()}
                 />
             </IconButton>
             <Popover
