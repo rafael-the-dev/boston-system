@@ -52,7 +52,7 @@ const SignUpContextProvider = ({ children }) => {
         const body = formData;
 
         try {
-            const res = await fetch(`/api/users/${id ?? ""}`, { body, headers, method: id ? "PUT" : "POST" });
+            const res = await fetch(`/api/users/${id ?? ""}?user=${details['username']}`, { body, headers, method: id ? "PUT" : "POST" });
             setLoading(false);
             return res;
         } catch(e) {
