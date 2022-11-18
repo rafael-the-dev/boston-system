@@ -41,7 +41,6 @@ const Container = () => {
     const [ name, setName ] = useState({ errors: [], value: "" });
     const [ purchasePrice, setPurchasePrice ] = useState({ errors: [], value: "" });
     const [ purchaseVat, setPurchaseVat ] = useState({ errors: [], value: "" });
-    const [ responseMessage, setResponseMessage ] = useState({});
     const [ sellPrice, setSellPrice ] = useState({ errors: [], price: "" });
     const [ sellVat, setSellVat ] = useState({ errors: [], value: "" });
 
@@ -54,11 +53,12 @@ const Container = () => {
     const dateRef = useRef("");
     const hasDataChanged = useRef(false);
     const nameRef = useRef("");
-    const onOpenMessageDialog = useRef(null);
     const purchasePriceRef = useRef(0);
     const purchaseVatRef = useRef(0);
     const sellPriceRef = useRef(0);
-    const sellVatRef = useRef(0)
+    const sellVatRef = useRef(0);
+
+    const setDialogMessage = useRef(null);
 
     const submitHandler = useCallback((e) => {
         e.preventDefault();
@@ -83,19 +83,20 @@ const Container = () => {
         fetch(`/api/products${ Boolean(id) && role ? `/${id}` : "" }`, options)
             .then(res => {
                 e.target.reset();
-                setResponseMessage({ 
+                setDialogMessage.current?.({ 
                     description: "Product was successfully registered.",
-                    type: "success"
-                })
+                    type: "success",
+                    title: "Success"
+                });
                 setLoading(false);
             })
             .catch(err => {
                 console.error(err);
-                setResponseMessage({
+                setDialogMessage.current?.({
                     description: "Product not registered, try again.",
                     type: "error",
                     title: "Error"
-                })
+                });
                 setLoading(false);
             })
     }, [ available, barCode, category, date, id, name, purchasePrice, purchaseVat, sellPrice, sellVat, role ]);
@@ -210,12 +211,15 @@ const Container = () => {
     ), [ id, purchasePrice, purchaseVat ]);
 
     const messageDialogCloseHelper = useCallback(() => {
-        setResponseMessage({});
+        
     }, []);
 
     const messageDialogMemo = useMemo(() => (
-        <MessageDialog { ...responseMessage } closeHelper={messageDialogCloseHelper} onOpen={onOpenMessageDialog} />
-    ), [ messageDialogCloseHelper, responseMessage ])
+        <MessageDialog 
+            closeHelper={messageDialogCloseHelper} 
+            setDialogMessage={setDialogMessage}
+        />
+    ), [ messageDialogCloseHelper ])
 
     const sellPriceMemo = useMemo(() => (
         <SellPrice
@@ -263,12 +267,6 @@ const Container = () => {
             .then(data => setCategories(data))
             .catch(console.error)
     }, []);
-
-    useEffect(() => {
-        if(Object.keys(responseMessage).length > 0) {
-            onOpenMessageDialog.current?.();
-        }
-    }, [ responseMessage ])
 
     useEffect(() => {
         
