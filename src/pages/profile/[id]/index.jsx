@@ -76,7 +76,8 @@ const Container = ({ profile }) => {
 
     const confirmPasswordRef = useRef(null);
     const nameRef = useRef(null);
-    const firstNameRef = useRef(null)
+    const firstNameRef = useRef(null);
+    const imageRef = useRef(null);
     const passwordRef = useRef(null);
     const lastNameRef = useRef(null);
     const onOpen = useRef(null);
@@ -84,20 +85,26 @@ const Container = ({ profile }) => {
 
     const changeHandler = useCallback((e) => setUser(e.target.value), [ setUser ]);
 
-    const imageMemo = useMemo(() => <Image alt="" classes={{ root: classNames("border border-solid border-stone-200", classes.imageContainer) }} />, [])
+    const imageMemo = useMemo(() => (
+        <Image 
+            alt="" 
+            classes={{ root: classNames("border border-solid border-stone-200", classes.imageContainer) }} 
+            fileRef={imageRef}
+        />
+    ), []);
 
     const legendMemo = useMemo(() => (
         <Panel title="Perfil" />
     ), []);
+    
+    const setDialogMessage = useRef(null);
 
     const messageDialog = useMemo(() => (
         <MessageDialog 
-            description={ message.description }
-            onOpen={onOpen}
-            title={ message.title }
-            type={ message.type }
+            closeHelper={() => {}}
+            setDialogMessage={setDialogMessage}
         />
-    ), [ message ])
+    ), [])
 
     const firstNameMemo = useMemo(() => (
         <Input 
@@ -192,17 +199,31 @@ const Container = ({ profile }) => {
 
     const submitHandler = useCallback(async e => {
         e.preventDefault();
+        
+        /*const formData = new FormData();
+        console.log(imageRef.current)
+        formData.append(firstName, imageRef.current);
+        formData.append(imageRef.current?.name, );*/
+
+        const headers = {
+            //"Content-Type": 'multipart/form-data',
+            "Authorization": JSON.parse(localStorage.getItem(process.env.LOCAL_STORAGE)).user.token
+        }
 
         try {
-            await onSubmit({
+            const { status } = await onSubmit({
                 firstName: firstNameRef.current.value,
+                image: imageRef.current,
                 lastName: lastNameRef.current.value,
                 username: userNameRef.current.value
-            })
-            setMessage({ description: "Dados atualizados com successo", type: "success" });
+            }, headers);
+
+            if((status >= 300) || (status < 200)) throw new Error();
+
+            setDialogMessage.current?.({ description: "Dados atualizados com successo", title: "Success", type: "success" });
             onOpen.current?.();
         } catch(e) {
-            setMessage({ description: "Erro ao atualizar os dados", title: "Error", type: "error" });
+            setDialogMessage.current?.({ description: "Erro ao atualizar os dados", title: "Error", type: "error" });
             onOpen.current?.();
         }
     }, [ onSubmit ]);

@@ -1,5 +1,14 @@
+const formidable =  require('formidable');
+
 const { apiHandler } = require("src/helpers/api-handler")
-const { query } = require("src/helpers/db")
+const { query } = require("src/helpers/db");
+
+//set bodyparser
+export const config = {
+    api: {
+        bodyParser: false
+    }
+}
 
 const requestHandler = async (req, res) => {
 
@@ -16,8 +25,18 @@ const requestHandler = async (req, res) => {
             return query(`SELECT * FROM user WHERE username=?`, [ id ])
                 .then(result => {
                     if(result.length === 0 ) throw new Error("User not found");
+                    
+                    new Promise((resolve, reject) => {
+                        const form = formidable({ multiples: true });
+                    
+                        form.parse(req, (err, fields, files) => {
+                            if (err) reject({ err })
+                            resolve({ err, fields, files })
+                        }) 
+                    }).then(formData => console.log(formData));
 
-                    const { firstName, lastName, user, username } = JSON.parse(req.body);
+                    const { firstName, image, lastName, user, username } = JSON.parse(req.body);
+                    
                     const values = [ lastName, user, firstName, username, id ];
 
                     return query(`UPDATE user SET Apelido=?, Categoria=?, Nome=?, Username=? WHERE Username=?`, values)

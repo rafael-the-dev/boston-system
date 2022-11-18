@@ -6,8 +6,9 @@ import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 
 import DefaultImage from "../default-image"
 
-const Image = React.forwardRef(({ alt, classes, src }, ref) => {
+const Image = React.forwardRef(({ alt, classes, fileRef, src }, ref) => {
     const [ file, setFile ] = React.useState({
+        input: "",
         url: src
     });
 
@@ -32,7 +33,11 @@ const Image = React.forwardRef(({ alt, classes, src }, ref) => {
 
     const clickHandler = React.useCallback(() => {
         inputRef.current?.click();
-    }, [])
+    }, []);
+
+    React.useEffect(() => {
+        fileRef.current = file.input;
+    }, [ file, fileRef ])
 
     return (
         <Button 

@@ -36,20 +36,25 @@ const SignUpContextProvider = ({ children }) => {
 
     const { query: { id } } = useRouter();
 
-    const onSubmit = useCallback(async (details) => {
+    const onSubmit = useCallback(async (details, headers) => {
         setLoading(true);
 
         const passwordObj  = id ? {} : { password: passwordRef.current };
-        const body = JSON.stringify({
-                ...details,
-                ...passwordObj,
-                user: userRef.current
-        })
+
+        const formData = new FormData();
+
+        Object.entries({
+            ...details,
+            ...passwordObj,
+            user: userRef.current
+        }).forEach(([ key, value]) => formData.append(key, value))
+        
+        const body = formData;
 
         try {
-            await fetch(`/api/users/${id ?? ""}`, { body, method: id ? "PUT" : "POST" });
+            const res = await fetch(`/api/users/${id ?? ""}`, { body, headers, method: id ? "PUT" : "POST" });
             setLoading(false);
-            return;
+            return res;
         } catch(e) {
             console.error(e);
             setLoading(false);
