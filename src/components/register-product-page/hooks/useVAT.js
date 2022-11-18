@@ -1,8 +1,6 @@
 import * as React from "react";
 
 const useVAT  = ({ hasDataChanged, isVATIncluded, setIsVATIncluded, setVAT, vat }) => {
-    const counter = React.useRef(0);
-
     React.useEffect(() => {
         const newValue = { 
             errors: [],

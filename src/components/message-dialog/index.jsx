@@ -6,10 +6,13 @@ import classes from "./styles.module.css";
 
 import Dialog from "../dialog";
 
-const MessageDialog = ({ description, onOpen, title, type }) => {
+const MessageDialog = ({ closeHelper, description, onOpen, title, type }) => {
     const onClose = React.useRef(null);
 
-    const closeHandler = () => onClose.current?.();
+    const closeHandler = () => {
+        onClose.current?.();
+        closeHelper();
+    }
 
     return (
         <Dialog
