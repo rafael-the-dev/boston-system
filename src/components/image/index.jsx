@@ -1,5 +1,10 @@
 import * as React from "react";
 import Button from "@mui/material/Button";
+import classNames from "classnames";
+
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+
+import DefaultImage from "../default-image"
 
 const Image = React.forwardRef(({ alt, classes, src }, ref) => {
     const [ file, setFile ] = React.useState({
@@ -31,14 +36,17 @@ const Image = React.forwardRef(({ alt, classes, src }, ref) => {
 
     return (
         <Button 
-            className={ classes?.root }
+            className={classNames(classes?.root, { "flex items-center justify-center": !Boolean(file.url)})}
             onClick={clickHandler}>
-            <img
-                alt={alt ?? ""}
-                className="block h-full w-full"
-                ref={ref}
-                src={file.url}
-            />
+            {
+                Boolean(file.url) ? 
+                    <DefaultImage
+                        alt={alt ?? ""}
+                        layout="fill"
+                        src={file.url}
+                    />
+                    : <AddPhotoAlternateIcon className="text-4xl" />
+            }
             <input 
                 className="hidden"
                 onChange={changeHandler}
