@@ -34,7 +34,7 @@ const MessageDialog = ({ closeHelper, description, onOpen, setDialogMessage, tit
             <Alert 
                 className={classNames(classes.alert)} 
                 onClose={closeHandler}
-                severity={type} >
+                severity={message.type ?? type} >
                 <AlertTitle>{ message.title ?? title }</AlertTitle>
                 { message.description ?? ( description ?? "" ) }
             </Alert>

@@ -82,9 +82,11 @@ const Container = () => {
 
         fetch(`/api/products${ Boolean(id) && role ? `/${id}` : "" }`, options)
             .then(res => {
-                e.target.reset();
+                const { status } = res;
+                if((status >= 300) || (status < 200)) throw new Error("Register error");
+
                 setDialogMessage.current?.({ 
-                    description: "Product was successfully registered.",
+                    description: `Product was successfully ${ id ? "updated" : "registered" }.`,
                     type: "success",
                     title: "Success"
                 });
@@ -93,7 +95,7 @@ const Container = () => {
             .catch(err => {
                 console.error(err);
                 setDialogMessage.current?.({
-                    description: "Product not registered, try again.",
+                    description: `Product not ${ id ? "updated" : "registered" }, try again.`,
                     type: "error",
                     title: "Error"
                 });
@@ -211,7 +213,11 @@ const Container = () => {
     ), [ id, purchasePrice, purchaseVat ]);
 
     const messageDialogCloseHelper = useCallback(() => {
-        
+        setBarCode({ errors: [], value: "" })
+        setCategory("");
+        setName({ errors: [], value: "" });
+        setPurchasePrice({ errors: [], value: 0 });
+        setSellPrice({ errors: [], value: 0 });
     }, []);
 
     const messageDialogMemo = useMemo(() => (
