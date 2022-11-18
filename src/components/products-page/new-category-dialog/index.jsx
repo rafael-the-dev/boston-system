@@ -8,6 +8,7 @@ import { getCategories } from "src/helpers/queries"
 
 import Dialog from "src/components/dialog";
 import DialogHeader from "src/components/dialog/components/dialog-header";
+import MessageDialog from "src/components/message-dialog";
 import TextField from "src/components/default-input";
 
 const CategoryDialog = ({ setCategories }) => {
@@ -16,6 +17,7 @@ const CategoryDialog = ({ setCategories }) => {
     const [ type, setType ] = React.useState("");
 
     const descriptionRef = React.useRef(null);
+    const setDialogMessage = React.useRef(null);
     const typeRef = React.useRef(null);
 
     const onClose = React.useRef(null);
@@ -52,20 +54,28 @@ const CategoryDialog = ({ setCategories }) => {
 
             fetch("/api/categories", options)
                 .then(async res => {
-                    if(res.status !== 201) throw new Error();
-                    
-                    setDescription("");
-                    setType("");
+                    const { status } = res;
+                    if((status >= 300) || (status < 200)) throw new Error();
+
+                    setDialogMessage.current?.({ 
+                        description: `Category was successfully registered.`,
+                        type: "success",
+                        title: "Success"
+                    });
 
                     await getCategories({ options: { headers }})
                         .then(data => setCategories(data));
 
                         
                     setLoading(false);
-                    onClose.current?.();
                 })
                 .catch(err => {
                     console.error(err);
+                    setDialogMessage.current?.({ 
+                        description: `Category was not registered.`,
+                        type: "error",
+                        title: "Error"
+                    });
                     setLoading(false);
                 })
         } catch(e) {
@@ -89,6 +99,20 @@ const CategoryDialog = ({ setCategories }) => {
             Add new category
         </DialogHeader>
     ), [ closeHandler ]);
+
+    const messageDialogCloseHelper = React.useCallback(() => {
+        setDescription("");
+        setType("");
+        onClose.current?.();
+    }, [])
+
+    const messageDialogMemo = React.useMemo(() => (
+        <MessageDialog 
+            closeHelper={messageDialogCloseHelper} 
+            setDialogMessage={setDialogMessage}
+        />
+    ), [ messageDialogCloseHelper ])
+
 
     return (
         <>
@@ -133,6 +157,7 @@ const CategoryDialog = ({ setCategories }) => {
                     </div>
                 </form>
             </Dialog>
+            { messageDialogMemo }
         </>
     );
 };
