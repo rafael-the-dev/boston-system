@@ -13,6 +13,7 @@ import { fetchHelper } from "src/helpers/queries"
 import { SignUpContext } from "src/context";
 
 import DefaultInput from "src/components/default-input";
+import Image from "src/components/image";
 import Input from "src/components/default-input"
 import Link from "src/components/link";
 import MessageDialog from "src/components/message-dialog";
@@ -81,7 +82,9 @@ const Container = ({ profile }) => {
     const onOpen = useRef(null);
     const userNameRef = useRef(null);
 
-    const changeHandler = useCallback((e) => setUser(e.target.value), [ setUser ])
+    const changeHandler = useCallback((e) => setUser(e.target.value), [ setUser ]);
+
+    const imageMemo = useMemo(() => <Image alt="" classes={{ root: classNames("border border-solid border-stone-200", classes.imageContainer) }} />, [])
 
     const legendMemo = useMemo(() => (
         <Panel title="Perfil" />
@@ -222,16 +225,21 @@ const Container = ({ profile }) => {
                 <fieldset className="flex flex-col h-full items-stretch justify-between">
                     <div>
                         { legendMemo }
-                        <div className="flex flex-wrap justify-between pt-6 px-5">
-                            { firstNameMemo }
-                            { lastNameMemo }
+                        <div className="flex flex-col justify-between pt-6 px-5 md:flex-row">
+                            {imageMemo }
+                            <div className='grow'>
+                                <div className="flex flex-wrap justify-between">
+                                    { firstNameMemo }
+                                    { lastNameMemo }
+                                </div>
+                                <div className="flex flex-wrap justify-between">
+                                    { usernameMemo }
+                                    { userTypeMemo }
+                                </div>
+                                { !id && passwordMemo }
+                                { !id && confirmPasswordMemo }
+                            </div>
                         </div>
-                        <div className="flex flex-wrap justify-between px-5">
-                            { usernameMemo }
-                            { userTypeMemo }
-                        </div>
-                        { !id && passwordMemo }
-                        { !id && confirmPasswordMemo }
                     </div>
                     <div 
                         className={classNames("flex justify-end px-5 pb-6")}>

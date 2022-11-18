@@ -18,7 +18,8 @@ const MessageDialog = ({ closeHelper, description, onOpen, setDialogMessage, tit
     }, [ closeHelper ]);
 
     React.useEffect(() => {
-        setDialogMessage.current = newMessage => setMessage(newMessage);
+        if(setDialogMessage)
+            setDialogMessage.current = newMessage => setMessage(newMessage);
     }, [ setDialogMessage ]);
 
     React.useEffect(() => {
