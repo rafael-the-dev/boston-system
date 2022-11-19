@@ -2,6 +2,21 @@ const fs = require("fs");
 const moment = require("moment");
 const path = require("path");
 
+const deleteImage = ({ name }) => {
+    return new Promise((resolve, reject) => {
+        const pathname = path.join(path.resolve("."), `/public/images/users/${name}`);
+
+        fs.unlink(pathname, error => {
+            if(error) {
+                reject(error);
+                return;
+            }
+
+            resolve()
+        });
+    })
+};
+
 const getFile = ({ name }) => {
     return new Promise((resolve, reject) => {
         fs.readdir(path.join(path.resolve("."), `/public/images/users`), (err, files) => {
@@ -52,4 +67,4 @@ const saveImage = async ({ folder, image }) => {
     return pathname;
 };
 
-module.exports = { getFile, saveImage, saveLocally }
+module.exports = { deleteImage, getFile, saveImage, saveLocally }

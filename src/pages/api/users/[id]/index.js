@@ -3,7 +3,7 @@ const path = require("path");
 
 const { apiHandler } = require("src/helpers/api-handler")
 const { query } = require("src/helpers/db");
-const { saveImage } = require("src/helpers/image")
+const { deleteImage, getFile } = require("src/helpers/image")
 
 //set bodyparser
 export const config = {
@@ -28,16 +28,22 @@ const requestHandler = async (req, res) => {
                 .then(result => {
                     if(result.length === 0 ) throw new Error("User not found");
                     
-                    new Promise((resolve, reject) => {
+                    return new Promise((resolve, reject) => {
                         const form = formidable({ 
                             filename: (name, ext) => `${ user ?? name }${ext}`,
                             multiples: true ,
                             keepExtensions: true,
                             uploadDir: path.join(path.resolve("."), `/public/images/users`)
-                    });
+                        });
                     
-                        form.parse(req, (err, fields, files) => {
+                        form.parse(req, async (err, fields, files) => {
                             if (err) reject({ err });
+
+                            if(files) {
+                                try {
+                                    await deleteImage({ name: await getFile({ name: username }) });
+                                } catch(e){}
+                            }
 
                             resolve({ err, fields, files })
                         }) 
