@@ -88,6 +88,7 @@ class Access {
                     
                     const acessToken = jwt.sign({ 
                         category: user.Categoria, 
+                        image: loggedUser.image,
                         loginId: loggedUser.insertId, 
                         username: user.Username,
                         idUser: user.idUser

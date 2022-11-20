@@ -15,7 +15,7 @@ import NewCategoryDialog from "src/components/products-page/new-category-dialog"
 import Table from "src/components/table";
 import TableBodyRow from "src/components/products-page/table-row" 
 
-export const getServerSideProps = async ({ req: { headers }}) => {
+export const getServerSideProps = async ({ req: { headers }, res }) => {
     const { token } = cookie.parse(headers.cookie);
 
     const options = {
@@ -23,6 +23,11 @@ export const getServerSideProps = async ({ req: { headers }}) => {
             Authorization: token
         }
     };
+
+    res.setHeader(
+        'Cache-Control',
+        'public, s-maxage=10, stale-while-revalidate=59'
+    );
 
     let [ categories, products ] = [[], []];
 

@@ -95,7 +95,7 @@ const Container = () => {
             .catch(err => {
                 console.error(err);
                 setDialogMessage.current?.({
-                    description: `Product not ${ id ? "updated" : "registered" }, try again.`,
+                    description: `Product not ${ id ? "updated" : "registered or exists" }, try again.`,
                     type: "error",
                     title: "Error"
                 });
