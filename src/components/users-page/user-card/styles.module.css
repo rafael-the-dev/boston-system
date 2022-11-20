@@ -2,3 +2,9 @@
 .imageContainer {
     height: 250px;
 }
+
+@media screen and (min-width: 600px) {
+    .imageContainer {
+        width: 270px
+    }
+}
