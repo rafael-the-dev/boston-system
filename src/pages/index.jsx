@@ -82,7 +82,7 @@ const Home = () => {
                 <HightlightCard color="#fecaca" href="sale" icon={<AddShoppingCartIcon />} title="Sale"/>
                 <HightlightCard color="#fde68a" href="products" icon={<LiquorIcon />} title="Products" />
                 <HightlightCard color="#e9d5ff" href="profile/rafaeltivane" icon={<Person2Icon />} title="Profile"/>
-                <HightlightCard color="#a5f3fc" href="/" icon={<GroupIcon />} title="Users"/>
+                <HightlightCard color="#a5f3fc" href="/users" icon={<GroupIcon />} title="Users"/>
             </div>
         </main>
     );
