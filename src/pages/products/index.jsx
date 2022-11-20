@@ -6,8 +6,6 @@ import * as cookie from "cookie";
 
 import classes from "./styles.module.css";
 
-import { getCategories, getProducts } from "src/helpers/queries"
-
 import { CategoriesCombobox } from "src/components/products-page"
 import Input from "src/components/default-input";
 import Link from "src/components/link";
@@ -15,37 +13,10 @@ import NewCategoryDialog from "src/components/products-page/new-category-dialog"
 import Table from "src/components/table";
 import TableBodyRow from "src/components/products-page/table-row" 
 
-export const getServerSideProps = async ({ req: { headers }, res }) => {
-    const { token } = cookie.parse(headers.cookie);
+//server side render products and products
+export { getProductsAndCategories as getStaticProps } from "src/helpers/server-side";
 
-    const options = {
-        headers: {
-            Authorization: token
-        }
-    };
-
-    res.setHeader(
-        'Cache-Control',
-        'public, s-maxage=10, stale-while-revalidate=59'
-    );
-
-    let [ categories, products ] = [[], []];
-
-    try {
-        [ categories, products ] = await Promise.all([ getCategories({ options }), getProducts({ options }) ]);
-    } catch(e) {
-
-    }  
-
-    return {
-      props: {
-        categories, 
-        products
-      }, // will be passed to the page component as props
-    }
-}
-
-const Container = ({ categories, products }) => {
+const Container = ({ categories, productsList }) => {
     const [ categoriesList, setCategoriesList ] = useState([]);
     const [ category, setCategory ] = useState(-1);
     const [ value, setValue ] = useState("");
@@ -60,15 +31,15 @@ const Container = ({ categories, products }) => {
         { key: "NoEstadome", label: "Estado" }
     ]);
 
-    const productsList = useMemo(() => {
-        let list = products;
+    const products = useMemo(() => {
+        let list = productsList;
 
         if(category && category !== -1) {
             list = list.filter(item => item.fk_grupo === category);
         }
 
         return list;
-    }, [ category, products ]);
+    }, [ category, productsList ]);
 
     const categoryDialog = useMemo(() => <NewCategoryDialog setCategories={setCategoriesList} />, []);
 
@@ -116,7 +87,7 @@ const Container = ({ categories, products }) => {
     }, [ category, categoriesList, setCategory ]);
 
     const getBodyRows = useCallback(({ page, rowsPerPage }) => {
-        const list = rowsPerPage > 0 ? productsList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : productsList;
+        const list = rowsPerPage > 0 ? products.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : products;
 
         return (
             <>
@@ -136,7 +107,7 @@ const Container = ({ categories, products }) => {
                     ))
                 }
             </>
-    )}, [ productsList ]);
+    )}, [ products ]);
 
     useEffect(() => {
         setCategoriesList(categories)
@@ -153,7 +124,7 @@ const Container = ({ categories, products }) => {
                     </div>
                     <div className="px-5">
                         <Table 
-                            data={productsList} 
+                            data={products} 
                             getBodyRows={getBodyRows}
                             headers={headers} 
                         />

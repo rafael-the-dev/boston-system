@@ -9,8 +9,7 @@ import classes from "./styles.module.css";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-import { getCategories, getProducts } from "src/helpers/queries"
-import { CheckoutContextProvider, LoginContext, SaleContext } from "src/context";;
+import { CheckoutContextProvider, LoginContext, SaleContext } from "src/context";
 import Product from "src/models/Product";
 //import SerialPort from "src/models/client/SerialPort";
 
@@ -20,36 +19,8 @@ import Link from "src/components/link"
 import Table from "src/components/table";
 import { AddProductButton, CartTable, SearchField } from "src/components/sale-page";  
 
-export const getServerSideProps = async ({ req }) => {
-    const parsedCookies = cookie.parse(req.headers.cookie); 
-    const { token } = parsedCookies;
-    
-    const options = {
-        headers: {
-            "Authorization": token
-        }
-    }
-
-    let categories = [];
-    let productsList = [];
-
-    try {
-        const [ categoriesResutlt, productsListResult ] = await Promise.all([ getCategories({ options }), getProducts({ options }) ]);
-
-        categories = categoriesResutlt;
-        productsList = productsListResult;
-    } catch(e) {
-
-    }
-
-    return {
-        props: {
-            categories, 
-            productsList
-        }, // will be passed to the page component as props
-    }
-};
-
+// server side render products and categories
+export { getProductsAndCategories as getStaticProps } from "src/helpers/server-side";
 
 const Container = ({ categories, productsList }) => {
     const { loggedUser } = useContext(LoginContext);
