@@ -17,7 +17,11 @@ const TableRowContainer = ({ headers, row, selectedProducts, setSelectedProducts
         return Boolean(getCart().list.find(item => item.product.id === row.id));
     };
 
-    const changeHandler = () => {
+        const isAdded = added();
+
+    const handler = () => {
+        if(isAdded) return;
+
         setSelectedProducts(list => {
             if(Boolean(list.find(item => item.product.id === row.id))) {
                 return [ ...list.filter(item => item.product.id !== row.id) ]
@@ -29,9 +33,9 @@ const TableRowContainer = ({ headers, row, selectedProducts, setSelectedProducts
 
 
     return (
-        <TableRow className={classNames(
-            { "bg-yellow-100 opacity-60": added() }
-        )}>
+        <TableRow 
+            className={classNames(isAdded ? "bg-yellow-100 opacity-60" : "cursor-pointer hover:bg-stone-100")}
+            onClick={handler}>
             {
                 headers.current.map((header, index) => (
                     index === 0 ? (
@@ -40,8 +44,7 @@ const TableRowContainer = ({ headers, row, selectedProducts, setSelectedProducts
                             key={uuidV4()}>
                             <Checkbox 
                                 checked={isSelected()} 
-                                disabled={added()}
-                                onChange={changeHandler}
+                                disabled={isAdded}
                             />
                         </TableCell>
                     ) :
