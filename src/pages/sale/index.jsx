@@ -93,7 +93,12 @@ const Container = ({ categories, productsList }) => {
                 <span className="font-bold ml-3 text-3xl">{ getCart() ? getCart().total : 0 }MT</span>
             </Typography>
         </div>
-    ), [ getCart ])
+    ), [ getCart ]);
+
+    const keydownHandler = useCallback((e) => {
+        //
+        if(e.key.toLowerCase() === "enter") e.preventDefault();
+    }, [])
 
     const submitHandler = useCallback((e) => {
         e.preventDefault();
@@ -112,6 +117,7 @@ const Container = ({ categories, productsList }) => {
             <section className="h-full">
                 <form
                     className="flex flex-col h-full items-stretch justify-between"
+                    onKeyDown={keydownHandler}
                     onSubmit={submitHandler}>
                     <div className="px-5">
                         <div className="flex flex-wrap justify-between pt-4">
