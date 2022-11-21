@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useMemo, useState } from "react"
 import { Button, TableCell, Typography } from "@mui/material";
 import classNames from "classnames";
 import { v4 as uuidV4 } from "uuid";
-import * as cookie from "cookie";
 
 import classes from "./styles.module.css";
 
@@ -10,6 +9,7 @@ import { CategoriesCombobox } from "src/components/products-page"
 import Input from "src/components/default-input";
 import Link from "src/components/link";
 import NewCategoryDialog from "src/components/products-page/new-category-dialog";
+import Panel from "src/components/panel";
 import Table from "src/components/table";
 import TableBodyRow from "src/components/products-page/table-row" 
 
@@ -20,15 +20,15 @@ const Container = ({ categories, productsList }) => {
     const [ categoriesList, setCategoriesList ] = useState([]);
     const [ category, setCategory ] = useState(-1);
     const [ value, setValue ] = useState("");
-
+    
     const headers = useRef([
-        { key: "Nome", label: "Nome" },
-        { key: "BarCod", label: "Codigo de barra" },
-        { key: "Preco_compra", label: "Preco de compra" },
-        { key: "Preco_venda", label: "Preco de venda" },
-        { key: "IVA_compra", label: "IVA de compra" },
-        { key: "IVA_venda", label: "Iva de venda" },
-        { key: "NoEstadome", label: "Estado" }
+        { key: "Nome", label: "Name" },
+        { key: "BarCod", label: "Barcode" },
+        { key: "Preco_compra", label: "Purchase price" },
+        { key: "Preco_venda", label: "Sell price" },
+        { key: "IVA_compra", label: "Purchase VAT" },
+        { key: "Iva_venda", label: "Sell VAT" },
+        { key: "Profit", label: "Profit" }
     ]);
 
     const products = useMemo(() => {
@@ -53,13 +53,7 @@ const Container = ({ categories, productsList }) => {
         </Link>
     ), [])
 
-    const title = useMemo(() => (
-        <Typography
-            component="h1"
-            className="bg-blue-500 capitalize px-5 py-6 text-center text-xl text-white w-full xl:py-8 xl:text-2xl">
-            Produtos
-        </Typography>
-    ), []);
+    const title = useMemo(() => <Panel title="Products" />, []);
 
     const changeHandler = useCallback(e => setValue(e.target.value), []);
 

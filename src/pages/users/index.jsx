@@ -1,7 +1,8 @@
 
 import { fetchHelper } from "src/helpers/queries";
 
-import Card from "src/components/users-page/user-card"
+import Card from "src/components/users-page/user-card";
+import Panel from "src/components/panel"
 
 export const getStaticProps = async () => {
     let users = [];
@@ -24,7 +25,8 @@ const Container = ({ users }) => {
 
     return (
         <main>
-            <div className="px-5">
+            <Panel title="Users" />
+            <div className="px-5 pt-8 pb-6">
                 {
                     users.map(user => (
                         <Card { ...user } key={user.username} />
