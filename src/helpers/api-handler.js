@@ -9,6 +9,18 @@ let dbConfig = {
     isConnected: false 
 };
 
+const hasFreeAccess = (req) => {
+    const { method, url } = req;
+
+    const userPattern = new RegExp("/api/users/[A-z0-9]{8,}");
+    const isGetMethod = method === "GET";
+
+    if(userPattern.test(url) && isGetMethod) return true;
+    else if([ "/api/categories", "/api/products", "/api/users"].includes(url) && isGetMethod) return true;
+    
+    return ([ "/api/login", "/api/logout"  ].includes(url));
+};
+
 const apiHandler = (handler) => {
     return async (req, res) => {
         
@@ -34,7 +46,7 @@ const apiHandler = (handler) => {
 
             let user = null;
             
-            if(![ "/api/categories", "/api/login", "/api/logout", "/api/products", "/api/users" ].includes(req.url)) {
+            if(!hasFreeAccess(req)) {
                 user = Access.getUser(authorization ?? token);
             } 
 
