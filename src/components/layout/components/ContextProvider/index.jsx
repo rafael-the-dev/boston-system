@@ -10,7 +10,7 @@ const ContextProvider = ({ children }) => {
         return {
             "/sale": <SaleContextProvider>{ children }</SaleContextProvider>,
             "/sign-up": <SignUpContextProvider>{ children }</SignUpContextProvider>,
-            "/profile/[id]": <SignUpContextProvider>{ children }</SignUpContextProvider>,
+            "/users/[id]": <SignUpContextProvider>{ children }</SignUpContextProvider>,
             "/sales": <SalesContextProvider>{ children }</SalesContextProvider>
         }[pathname]
     };

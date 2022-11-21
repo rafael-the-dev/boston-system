@@ -19,8 +19,14 @@ const getProducts = ({ options }) => {
         .then(res => res.json())
 };
 
+const getUsers = ({ options }) => {
+    return fetch(`${process.env.SERVER}/api/users`, options)
+        .then(res => res.json())
+}
+
 export {
     fetchHelper,
     getCategories,
-    getProducts
+    getProducts,
+    getUsers
 };

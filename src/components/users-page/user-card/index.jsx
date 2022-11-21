@@ -31,7 +31,7 @@ const Card = ({ category, firstName, image, lastName, username }) => {
                     <Chip 
                         label={category} 
                     />
-                    <Link href={`profile/${username}`}>
+                    <Link href={`/users/${username}`}>
                         <Button
                             className="bg-blue-500 capitalize py-2 px-3 text-white hover:bg-blue-700"
                             endIcon={<ArrowRightAltIcon />}

@@ -21,7 +21,7 @@ const Container = () => {
     const clickHandler = e => onOpen.current?.(e);
 
     const router = useRouter();
-    const profileClickHandler = () => router.push(`/profile/${loggedUser.Username}`)
+    const profileClickHandler = () => router.push(`/users/${loggedUser.username}`)
 
     const logoutHandler = () => {
         logoutHelper();
