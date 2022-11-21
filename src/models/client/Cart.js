@@ -70,6 +70,8 @@ class Cart {
             
             const cartItem = data.find(item => item.product.id === id);
 
+            if(!Boolean(cartItem)) return list;
+
             if(isNaN(cartItem.quantity)) cartItem.quantity = 1;
             else cartItem.quantity += 1;
 

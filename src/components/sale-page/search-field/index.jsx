@@ -19,6 +19,8 @@ const Container = ({ products }) => {
         { key: "barCode", label: "Codigo de barra" },
         { key: "name", label: "Nome" },
     ]);
+
+    const lastProductRef = React.useRef({});
     const inputRef = React.useRef(null);
 
     const filteredList = React.useMemo(() => {
@@ -40,18 +42,31 @@ const Container = ({ products }) => {
             onChange={barCodeChangeHandler}
             value={barCode}
         />
-    ), [ barCode, barCodeChangeHandler ])
+    ), [ barCode, barCodeChangeHandler ]);
 
     React.useEffect(() => {
         if(barCode.trim()) {
+            if(lastProductRef.current.barCode === barCode) {
+                getCart().incrementQuantity(lastProductRef.current.id)
+                setBarCode("");
+                return;
+            }
+
             const product = products.find(item => item.barCode === barCode);
             
             if(Boolean(product) && !getCart().hasProduct(product.id)) {
+                lastProductRef.current = product;
                 getCart().addItem( new CartItem(product, 1));
                 setBarCode("");
             }
         }
     }, [ barCode, getCart, products ]);
+
+    React.useEffect(() => {
+        if(getCart().list.length === 0) {
+            lastProductRef.current = {};
+        }
+    }, [ getCart ])
 
     React.useEffect(() => {
         inputRef.current.focus();

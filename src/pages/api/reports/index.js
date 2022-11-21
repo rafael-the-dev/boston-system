@@ -9,7 +9,7 @@ const SalesList = require("src/models/server/SalesList");
 
 const requestHandler = async (req, res, user ) => {
 
-    const { method, query: { endDate, startDate} } = req;
+    const { method, query: { endDate, startDate, username } } = req;
 
     switch(method) {
         case "GET": {
@@ -28,6 +28,8 @@ const requestHandler = async (req, res, user ) => {
 
                 return stringifiedDate ? stringifiedDate : "";
             };
+
+            const usernameFilter = username ? ` AND username=${username}` : "";
 
             const filterDate = getDate();
             const dateResult =  Boolean(filterDate) ? filterDate : "=curdate()";
