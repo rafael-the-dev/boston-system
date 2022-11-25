@@ -8,6 +8,8 @@ import Main from "src/components/main";
 import Panel from "src/components/panel";
 import Table from "src/components/default-table";
 
+import { RegisterProvider } from "src/components/stock-providers-page"
+
 const Container = () => {
     const [ providersList, setProvidersList ] = React.useState([]);
 
@@ -19,7 +21,7 @@ const Container = () => {
 
     const filteredList = () => providersList;
 
-    const cancelLinkMemo = React.useMemo(() => <CancelLink href="/" />, [])
+    const cancelLinkMemo = React.useMemo(() => <CancelLink clases={{ link: "mr-4" }} href="/" />, [])
 
     const panel = React.useMemo(() => (
         <Panel 
@@ -27,6 +29,8 @@ const Container = () => {
             title="Stock providers"
         />
     ), []);
+
+    const registerProviderMemo = React.useMemo(() => <RegisterProvider />, [])
 
     const fetchData = React.useCallback(async () => {
         try {
@@ -51,6 +55,7 @@ const Container = () => {
                 />
                 <div className="flex items-stretch justify-end">
                     { cancelLinkMemo }
+                    { registerProviderMemo }
                 </div>
             </Content>
         </Main>
