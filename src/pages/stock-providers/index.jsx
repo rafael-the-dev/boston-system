@@ -32,7 +32,7 @@ const Container = () => {
         openHandler()
     }, [ openHandler ])
 
-    const cancelLinkMemo = React.useMemo(() => <CancelLink classes={{ link: "mr-4" }} href="/" />, [])
+    const cancelLinkMemo = React.useMemo(() => <CancelLink classes={{ link: "mr-4" }} href="/stocks" />, [])
 
     const openDialogButtonMemo = React.useMemo(() => (
         <PrimaryButton onClick={openHandler}>

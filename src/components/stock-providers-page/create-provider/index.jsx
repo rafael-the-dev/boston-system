@@ -27,7 +27,7 @@ const CreateProvider = ({ onOpen, onSuccess, setSupplierIdRef }) => {
     const [ loading, setLoading ] = React.useState(false);
 
     const hasServerErrors = React.useRef(false);
-    const loadingRef = React.useRef(null);
+    const loadingRef = React.useRef(false);
     const nuitRef = React.useRef(null);
     const onClose = React.useRef(null);
     
@@ -115,6 +115,7 @@ const CreateProvider = ({ onOpen, onSuccess, setSupplierIdRef }) => {
 
         hasServerErrors.current = true;
 
+        loadingRef.current = true;
         setLoading(true);
 
         const options =  {
@@ -122,11 +123,11 @@ const CreateProvider = ({ onOpen, onSuccess, setSupplierIdRef }) => {
             body: JSON.stringify({
                 address, name, nuit: nuitRef.current.value
             }),
-            method: "POST"
+            method: Boolean(supplierId) ? "PUT" : "POST"
         }
 
         try {
-            const res = await fetch(`/api/stock-providers/${Boolean(supplierId) ?? ""}`, options);
+            const res = await fetch(`/api/stock-providers/${supplierId ?? ""}`, options);
 
             const { status } = res;
 
@@ -134,13 +135,13 @@ const CreateProvider = ({ onOpen, onSuccess, setSupplierIdRef }) => {
 
             hasServerErrors.current = false;
 
+            Boolean(onSuccess) && onSuccess();
+
             setDialogMessage.current?.({
                 description: `Supplier was successfully ${Boolean(supplierId) ? "updated" : "registered"}`,
                 title: "Success",
                 type: "success"
             });
-
-            Boolean(onSuccess) && onSuccess();
         }
         catch(e) {
             console.error(e);
@@ -151,6 +152,7 @@ const CreateProvider = ({ onOpen, onSuccess, setSupplierIdRef }) => {
             });
         }
         finally {
+            loadingRef.current = false;
             setLoading(false);
         }
     };

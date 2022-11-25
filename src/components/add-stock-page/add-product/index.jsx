@@ -34,6 +34,7 @@ const AddProduct = () => {
             };
             
             const data = await fetchHelper({ url: "/api/stocks", options });
+            console.log(data)
             setProductsList(data.map(item => new Product(item)));
         } catch(e) {
             console.error(e)

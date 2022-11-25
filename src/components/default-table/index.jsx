@@ -9,7 +9,6 @@ const ProductsTable = ({ classes, data, headers, onClickRow }) => {
     const getBodyRows = ({ page, rowsPerPage }) => {
         const list = rowsPerPage > 0 ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : data;
 
-
         return list.map(row => (
             <TableRow 
                 headers={headers}

@@ -29,7 +29,7 @@ const requestHandler = (req, res) => {
             const { invoiceReference, products: { list, stats }, stockProvider } = JSON.parse(req.body);
 
             const invoiceProviderValues = [ invoiceReference, stockProvider, stats.totalVAT, stats.subTotal, stats.total ]
-
+            
             return query(`INSERT INTO 
                 factura_fornecedor(CodFactura, Data_Entrada, Fornecedor, IVA, Subtotal, Total, Data) 
                 VALUES(?, NOW(), ?, ?, ?, ?, NOW())`, invoiceProviderValues)
@@ -39,18 +39,23 @@ const requestHandler = (req, res) => {
                     try {
                         await Promise.all(
                             list.map((product) => {
-                                const { id, purchasePrice, purchaseVAT, stock } = product;
-                                console.log(product);
+                                const { id, purchasePrice, purchaseVAT, stock: { quantity, stockId, total } } = product;
+                                
                                 const totalPrice = getTotalPrice({ price: purchasePrice, taxRate: purchaseVAT });
                                 
-                                const factura_fornecedor_detail = [ id, purchasePrice, purchaseVAT, totalPrice, stock.quantity, insertId ]
+                                const factura_fornecedor_detail = [ id, purchasePrice, purchaseVAT, totalPrice, quantity, insertId ]
     
-                                return query(`
-                                    INSERT INTO factura_fornecedor_detail(idproduto, Preco_compra, IVA_Compra, Total_Compra, Quantidade, IDFactura_Fornecedor, Data)
-                                    VALUES(?,?,?,?,?,?, NOW())
-                                    `, factura_fornecedor_detail
-                                )
-                            })
+                                return [
+                                    query(`
+                                        INSERT INTO factura_fornecedor_detail(idproduto, Preco_compra, IVA_Compra, Total_Compra, Quantidade, IDFactura_Fornecedor, Data)
+                                        VALUES(?,?,?,?,?,?, NOW())
+                                        `, factura_fornecedor_detail
+                                    ),
+                                    query(`
+                                        UPDATE stock SET Total=? WHERE idStock=?
+                                    `, [ total, stockId ])
+                                ]
+                            }).flatMap(promiseQuery => promiseQuery)
                         );
 
                         res.status(201).send();
@@ -59,6 +64,13 @@ const requestHandler = (req, res) => {
                             query("DELETE FROM factura_fornecedor WHERE idFactura_Fornecedor=?", [ insertId ]),
                             query('DELETE FROM factura_fornecedor_detail WHERE IDFactura_Fornecedor=?', [ insertId ])
                         ]);
+
+                        await Promise.all(
+                            list.map(({ stock: { currentStock, stockId, } }) => 
+                            query(`
+                                UPDATE stock SET Total=? WHERE idStock=?
+                            `, [ currentStock, stockId ]))
+                        )
 
                         res.status(500).send();
                     }

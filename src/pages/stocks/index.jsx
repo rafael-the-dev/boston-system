@@ -30,7 +30,7 @@ const Container = () => {
                 href="/" 
             />
             <PrimaryButton classes={{ link: "ml-4" }} href="/stock-providers" variant="outlined">
-                Stock providers
+                Stock suppliers
             </PrimaryButton>
             <PrimaryButton classes={{ link: "ml-4" }} href="/add-stock">
                 Add stock

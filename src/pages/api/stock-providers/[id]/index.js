@@ -4,7 +4,6 @@ const Error404 = require("src/models/server/errors/404Error");
 const { apiHandler } = require("src/helpers/api-handler");
 const { query } = require("src/helpers/db")
 
-
 const requestHandler = (req, res) => {
     const { body, method, query: { id } } = req;
 
@@ -18,6 +17,11 @@ const requestHandler = (req, res) => {
 
                     res.status(200).json(result[0]);
                 })
+        }
+        case "PUT": {
+            const { address, name, nuit } = JSON.parse(body);
+            return query(`UPDATE Fornecedor SET Nome=?, Nuit=?, Morada=? WHERE idFornecedor=?`, [ name, nuit, address, id ])
+                .then(() => res.status(200).send());
         }
     }
 };
