@@ -29,6 +29,9 @@ const Container = () => {
             <CancelLink 
                 href="/" 
             />
+            <PrimaryButton classes={{ link: "ml-4" }} href="/stock-providers" variant="outlined">
+                Stock providers
+            </PrimaryButton>
             <PrimaryButton classes={{ link: "ml-4" }} href="/add-stock">
                 Add stock
             </PrimaryButton>
