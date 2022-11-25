@@ -1,15 +1,15 @@
 import * as React from "react";
-import Button from "@mui/material/Button";
 import currency from "currency.js";
 
 import { AddStockContext } from "src/context";
 
 import BarcodeScanner from "./components/barcode-scanner";
+import PrimaryButton from "src/components/primary-button"
 import Table from "./components/table";
 import TextField from "src/components/default-input";
 
 const ContentContainer = ({ productsList }) => {
-    const { addProduct } = React.useContext(AddStockContext);
+    const { addProduct, getProductsList } = React.useContext(AddStockContext);
 
     const [ product, setProduct ] = React.useState(null);
 
@@ -50,13 +50,11 @@ const ContentContainer = ({ productsList }) => {
             </div>
             { tableMemo }
             <div className="flex justify-end">
-                <Button
-                    className="bg-neutral-700 py-2 text-white hover:bg-neutral-600"
-                    disabled={!Boolean(product)}
-                    onClick={clickHandler}
-                    variant="contained">
+                <PrimaryButton
+                    disabled={!Boolean(product) || getProductsList().find(item => item.id === product?.id)}
+                    onClick={clickHandler}>
                     Add
-                </Button>
+                </PrimaryButton>
             </div>
         </div>
     );
