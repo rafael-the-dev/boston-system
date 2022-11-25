@@ -43,7 +43,7 @@ const ContentContainer = ({ productsList }) => {
                 <TextField 
                     className="input w12"
                     inputRef={quantityInputRef}
-                    label="Quantidade"
+                    label="Quantity"
                     onChange={quantityChangeHandler}
                     inputProps={{ readOnly: !Boolean(product)}}
                 />
@@ -55,7 +55,7 @@ const ContentContainer = ({ productsList }) => {
                     disabled={!Boolean(product)}
                     onClick={clickHandler}
                     variant="contained">
-                    Adicionar
+                    Add
                 </Button>
             </div>
         </div>

@@ -37,7 +37,7 @@ const Container = ({ productsList, setProduct }) => {
             className="w-full"
             id="bar-code-input"
             inputRef={inputRef}
-            label="Insere o codigo de barra"
+            label="Insert bar code"
             onChange={barCodeChangeHandler}
             value={barCode}
         />

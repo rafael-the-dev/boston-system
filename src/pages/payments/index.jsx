@@ -1,26 +1,22 @@
 import * as React from "react";
 import Button from "@mui/material/Button";
 
-import classes from "../styles.module.css";
+import AddIcon from '@mui/icons-material/Add';
 
+import classes from "../styles.module.css";
 
 import { fetchHelper, getAuthorizationHeader } from "src/helpers/queries"
 
 import Content from "src/components/scroll-container";
 import CancelLink from "src/components/cancel-link";
+import Link from "src/components/link";
 import Main from "src/components/main";
 import Panel from "src/components/panel";
-import PrimaryButton from "src/components/primary-button";
-import Table from "src/components/default-table"
+import PrimaryButton from "src/components/primary-button"
+import Table from "src/components/stocks-page/table"
 
 const Container = () => {
     const [ stocksList, setStocksList ] = React.useState([]);
-
-    const headers = React.useRef([
-        { label: "Codigo de barra", value: "barCode" },
-        { label: "Nome", value: "name" },
-        { label: "Stock atual", key: "stock", value: "currentStock" }
-    ]);
 
     const filterList = () => stocksList;
 
@@ -29,8 +25,8 @@ const Container = () => {
             <CancelLink 
                 href="/" 
             />
-            <PrimaryButton classes={{ link: "ml-4" }} href="/add-stock">
-                Add stock
+            <PrimaryButton classes={{ link: "ml-4" }} href="/add-stock" startIcon={<AddIcon />}>
+                Adicionar stock
             </PrimaryButton>
         </div>
     ), []);
@@ -38,7 +34,7 @@ const Container = () => {
     const panel = React.useMemo(() => (
         <Panel 
             component="h1"
-            title="Stocks list"
+            title="Pagamentos"
         />
     ), []);
 
@@ -48,25 +44,22 @@ const Container = () => {
                 ...getAuthorizationHeader()
             };
 
-            const data = await fetchHelper({ options, url: "/api/stocks"});
+            const data = await fetchHelper({ options, url: "/api/stock-providers-invoices"});
             setStocksList(data);
         } catch(e) {
-            console.error(e)
+
         }
     }, [])
 
     React.useEffect(() => {
-        fetchData();
-    }, [ fetchData ]);
+        fetchData()
+    }, [ fetchData ])
 
     return (
         <Main>
             { panel }
             <Content>
-                <Table 
-                    data={filterList()}
-                    headers={headers}
-                />
+                <Table invoicesList={filterList()} />
                 { linksMemo }
             </Content>
         </Main>

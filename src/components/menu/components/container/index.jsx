@@ -32,7 +32,7 @@ const Container = () => {
                 <ListItem href="/stocks">
                     <ReceiptLongIcon /> Stocks
                 </ListItem>
-                <ListItem>
+                <ListItem href="/payments">
                     <PaidIcon /> Payments
                 </ListItem>
                 <ListItem>

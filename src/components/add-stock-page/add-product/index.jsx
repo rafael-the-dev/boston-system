@@ -19,7 +19,7 @@ const AddProduct = () => {
         <Typography 
             className="font-bold text-lg xl:text-xl" 
             component="legend">
-            Adicionar produto
+            Add product
         </Typography>
     ), []);
 

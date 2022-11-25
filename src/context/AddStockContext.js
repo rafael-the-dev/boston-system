@@ -8,6 +8,11 @@ const AddStockContextProvider = ({ children }) => {
     const [ productsList, setProductsList ] = React.useState([]);
     const [ invoiceReference, setInvoiceReference ] = React.useState("");
     const [ stockProvider, setStockProvider ] = React.useState(1);
+    const [ errors, setErrors ] = React.useState({ "reference-code": true });
+
+    const addError = React.useCallback((key, errorValue) => {
+        setErrors(currentErrors => ({ ...currentErrors, [key]: errorValue }))
+    }, [])
 
     const getProductsList = React.useCallback(() => productsList, [ productsList ]);
     
@@ -90,7 +95,11 @@ const AddStockContextProvider = ({ children }) => {
         setProductsList([]);
         setStockProvider(1);
         setInvoiceReference("")
-    }, [])
+    }, []);
+
+    const hasErrors = React.useMemo(() => {
+        return Object.values(errors).includes(true);
+    }, [ errors ])
 
     const toLiteral = React.useMemo(() => {
         const stats = productsList.reduce((previousValue, currentProduct) => {
@@ -111,15 +120,20 @@ const AddStockContextProvider = ({ children }) => {
             },
             stockProvider
         };
-    }, [ invoiceReference, productsList, stockProvider ]); console.log(toLiteral)
+    }, [ invoiceReference, productsList, stockProvider ]);
+
+    React.useEffect(() => {
+        addError("products-list", productsList.length === 0);
+    }, [ addError, productsList ]);
 
     return (
         <AddStockContext.Provider
             value={{
-                addStockProvider, addInvoiceReference, addProduct,
+                addError, addStockProvider, addInvoiceReference, addProduct,
                 changeValue, 
                 decrementValue,
                 getInvoiceReference, getProductsList, getStockProvider,
+                hasErrors,
                 incrementValue,
                 reset, removeProduct,
                 toLiteral

@@ -8,6 +8,12 @@ const fetchHelper = ({ options, url }) => {
         })
 };
 
+const getAuthorizationHeader = () => ({
+    headers: {
+        Authorization: JSON.parse(localStorage.getItem(process.env.LOCAL_STORAGE)).user.token
+    }
+});
+
 const getCategories = ({ options }) => {
     return fetch(`${process.env.SERVER}/api/categories`, options)
             .then(res => res.json())
@@ -26,6 +32,7 @@ const getUsers = ({ options }) => {
 
 export {
     fetchHelper,
+    getAuthorizationHeader,
     getCategories,
     getProducts,
     getUsers

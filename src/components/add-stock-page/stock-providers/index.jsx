@@ -31,12 +31,13 @@ const StockProviders = () => {
         fetchData();
     }, [ fetchData ]);
 
-    const changeHandler = React.useCallback(e => addStockProvider(e.target.value), [])
+    const changeHandler = React.useCallback(e => addStockProvider(e.target.value), [ addStockProvider ])
 
     return (
         <TextField
             className="input w12"
-            label="Selecione o fornecedor"
+            label="Select a provider"
+            onChange={changeHandler}
             value={stockProvider}
             select>
             {

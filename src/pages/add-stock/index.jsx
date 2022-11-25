@@ -16,11 +16,12 @@ import Link from "src/components/link";
 import Main from "src/components/main";
 import MessageDialog from "src/components/message-dialog";
 import Panel from "src/components/panel";
+import PrimaryButton from "src/components/primary-button";
 
-import { AddProduct, NewStockList, StockProviders } from "src/components/add-stock-page";
+import { AddProduct, NewStockList, ReferenceCodeInput, StockProviders } from "src/components/add-stock-page";
 
 const Container = () => {
-    const { reset, toLiteral } = React.useContext(AddStockContext);
+    const { hasErrors, reset, toLiteral } = React.useContext(AddStockContext);
 
     const [ loading, setLoading ] = React.useState(false);
 
@@ -95,10 +96,7 @@ const Container = () => {
             <Content component="form">
                 <div>
                     <div className="flex flex-wrap justify-between">
-                        <Input 
-                            className="input w12"
-                            label="Insere a referencia da fatura do fornecedor"
-                        />
+                        <ReferenceCodeInput />
                         { stockProvidersMemo }
                         { addProductMemo }
                     </div>
@@ -110,7 +108,7 @@ const Container = () => {
                         elevation={0}>
                         <Typography
                             className="flex items-end justify-between mb-3">
-                            <span className="font-semibold text-base uppercase">Iva</span>
+                            <span className="font-semibold text-base uppercase">VAT</span>
                             <span className="font-bold text-xl xl:text32xl">{ toLiteral.products.stats.totalVAT } MT</span>
                         </Typography>
                         <Typography
@@ -126,13 +124,13 @@ const Container = () => {
                     </Paper>
                     <div className="flex items-stretch jsutify-between">
                         { homeMemo }
-                        <Button
-                            className="bg-blue-500 ml-4 text-white hover:bg-blue-700"
+                        <PrimaryButton
+                            classes={{ button: "ml-4" }}
+                            disabled={hasErrors}
                             onClick={clickHandler}
-                            startIcon={<SaveIcon />}
-                            variant='contained'>
-                            { loading ? "Loading..." : "Guardar" }
-                        </Button>
+                            startIcon={<SaveIcon />}>
+                            { loading ? "Loading..." : "Save" }
+                        </PrimaryButton>
                     </div>
                 </div>
             </Content>
