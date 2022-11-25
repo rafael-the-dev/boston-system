@@ -14,8 +14,11 @@ import { getTotalPrice } from "src/helpers/price";
 import Validation from "src/models/Validation";
 
 import Checkbox from "src/components/checkbox";
+import Content from "src/components/scroll-container"
 import Link from "src/components/link";
+import Main from "src/components/main";
 import MessageDialog from "src/components/message-dialog";
+import Panel from "src/components/panel";
 import PurchasePrice from "src/components/register-product-page/purchase-price"
 import SellPrice from "src/components/register-product-page/sell-price"
 
@@ -104,11 +107,10 @@ const Container = () => {
     }, [ available, barCode, category, date, id, name, purchasePrice, purchaseVat, sellPrice, sellVat, role ]);
 
     const legendMemo = useMemo(() => (
-        <Typography
+        <Panel 
             component="legend"
-            className="bg-blue-500 capitalize px-5 py-6 text-center text-xl text-white w-full xl:py-8 xl:text-2xl">
-            Cadastro de produto
-        </Typography>
+            title="Cadastro de produto"
+        />
     ), []);
 
     const nameChangeHandler = useCallback(e => {
@@ -302,50 +304,52 @@ const Container = () => {
     }, [ id, role ])
 
     return (
-        <main className={classes.main}>
+        <Main>
             <form 
-                className="flex flex-col h-full items-stretch justify-between pb-8"
+                className="h-full"
                 onSubmit={submitHandler}>
-                <fieldset className="grow">
+                <fieldset className="h-full">
                     { legendMemo }
-                    <div className="px-5 py-6 xl:py-8">
-                        <div className="flex flex-wrap justify-between w-full">
-                            { nameMemo }
-                            { categoriesMemo }
-                        </div>
-                        <div className="flex flex-wrap justify-between w-full">
-                            { barCodeMemo }
-                            { datePickerMemo }
-                        </div>
-                        <div className="flex flex-wrap justify-between w-full">
-                            { purchasePriceMemo }
-                            { sellPriceMemo }
-                        </div>
+                    <Content>
                         <div>
-                            { availabilityMemo }
+                            <div className="flex flex-wrap justify-between w-full">
+                                { nameMemo }
+                                { categoriesMemo }
+                            </div>
+                            <div className="flex flex-wrap justify-between w-full">
+                                { barCodeMemo }
+                                { datePickerMemo }
+                            </div>
+                            <div className="flex flex-wrap justify-between w-full">
+                                { purchasePriceMemo }
+                                { sellPriceMemo }
+                            </div>
+                            <div>
+                                { availabilityMemo }
+                            </div>
                         </div>
-                    </div>
+                        <div className="flex justify-end">
+                            { cancelButton }
+                            { !Boolean(id) && role !== "edit" && <Button
+                                    className={classNames("bg-blue-800 text-white hover:bg-blue-500 sm:py-2")}
+                                    type="submit"
+                                    variant="contained">
+                                    { loading ? "Loading..." : "Submeter" }
+                                </Button>
+                            }
+                            { Boolean(id) && role === "edit" && <Button
+                                    className={classNames("bg-blue-800 text-white hover:bg-blue-500 sm:py-2")}
+                                    type="submit"
+                                    variant="contained">
+                                    { loading ? "Loading..." : "Atualizar" }
+                                </Button>
+                            }
+                        </div>
+                    </Content>
                 </fieldset>
-                <div className="flex justify-end px-5">
-                    { cancelButton }
-                    { !Boolean(id) && role !== "edit" && <Button
-                            className={classNames("bg-blue-800 text-white hover:bg-blue-500 sm:py-2")}
-                            type="submit"
-                            variant="contained">
-                            { loading ? "Loading..." : "Submeter" }
-                        </Button>
-                    }
-                    { Boolean(id) && role === "edit" && <Button
-                            className={classNames("bg-blue-800 text-white hover:bg-blue-500 sm:py-2")}
-                            type="submit"
-                            variant="contained">
-                            { loading ? "Loading..." : "Atualizar" }
-                        </Button>
-                    }
-                </div>
                 { messageDialogMemo }
             </form>
-        </main>
+        </Main>
     );
 };
 

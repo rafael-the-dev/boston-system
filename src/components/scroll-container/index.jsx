@@ -5,9 +5,10 @@ import classes from "./styles.module.css";
 
 const Container = ({ children, component, className }) => (
     <Paper
-        className={classNames("bg-transparent flex flex-col justify-between px-5 py-8 xl:px-8 rounded-none",
+        className={classNames("bg-transparent flex flex-col justify-between overflow-y-auto px-5 py-8 xl:px-8 rounded-none",
             classes.root, className)}
-        component={ component ?? "div" }>
+        component={ component ?? "div" }
+        elevation={0}>
         { children }
     </Paper>
 );
