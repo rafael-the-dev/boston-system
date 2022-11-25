@@ -1,6 +1,7 @@
 import * as React from "react";
 import { IconButton } from "@mui/material";
 import classNames from "classnames";
+import currency from "currency.js";
 
 import classes from "./styles.module.css";
 
@@ -21,25 +22,27 @@ const Container = ({ cartItem, quantity }) => {
     };
 
     const changeHandler = (e) => {
-        getCart().addQuantity(cartItem.product.id, parseInt(e.target.value));
+        getCart().addQuantity(cartItem.product.id, e.target.value);
     };
+
+    const hasError = currency(quantity).value >  cartItem.product.stock.currentStock;
+    const errorClasses = { "text-red-600": hasError };
 
     return (
         <div className="flex items-center justify-center">
             <IconButton 
-                className="p-0 text-sm"
+                className={classNames("p-0 text-sm", errorClasses)}
                 onClick={increment}>
                 <AddIcon className="text-base" />
             </IconButton>
             <input 
-                className={classNames(classes.input, "bg-transparent border-0 text-center outline-none")}
-                min={1}
+                className={classNames(classes.input, errorClasses,
+                "bg-transparent border-0 text-center outline-none")}
                 onChange={changeHandler}
-                type="number"
                 value={quantity}
             />
             <IconButton 
-                className="p-0 text-sm"
+                className={classNames("p-0 text-sm", errorClasses)}
                 onClick={decrement}>
                 <RemoveIcon className="text-base" />
             </IconButton>

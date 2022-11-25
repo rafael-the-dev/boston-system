@@ -11,7 +11,7 @@ import { fetchHelper } from "src/helpers/queries"
 
 import PaymentMethod from "../payment-method"
 
-const CheckoutContainer = ({ onClose, setPanel, salesSerie }) => {
+const CheckoutContainer = ({ fetchData, onClose, setPanel, salesSerie }) => {
     const { getPaymentMethods } = React.useContext(CheckoutContext);
     const [ loading, setLoading ] = React.useState(false);
 
@@ -54,6 +54,7 @@ const CheckoutContainer = ({ onClose, setPanel, salesSerie }) => {
             const result = await fetchHelper({ options, url: "/api/sales" });
             setLoading(false);
             salesSerie.current = result.salesserie;
+            fetchData();
             setPanel("SUCCESSFULPAYMENT")
         } catch(e) {
             console.error(e);

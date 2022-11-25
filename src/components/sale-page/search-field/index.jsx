@@ -22,8 +22,9 @@ const Container = ({ products }) => {
 
     const lastProductRef = React.useRef({});
     const inputRef = React.useRef(null);
-
+    
     const filteredList = React.useMemo(() => {
+        console.log(products)
         return products.filter(product => product.barCode.includes(barCode));
     }, [ barCode, products ])
 

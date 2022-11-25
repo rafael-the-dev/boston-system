@@ -1,4 +1,5 @@
 import * as React from "react";
+import classNames from "classnames";
 import { IconButton, TableCell, TableRow } from "@mui/material"
 import { v4 as uuidV4 } from "uuid";
 
@@ -17,6 +18,7 @@ const TableRowContainer = ({ cartItem, headers }) => {
 
     const getData = (header) => {
         switch(header) {
+            case "currentStock": return cartItem.product.stock[header]
             case "quantity": { return <Input cartItem={cartItem} quantity={cartItem[header]} /> ; }
             case "subTotal": { return cartItem.getTotal(); }
             case "vatSubTotal": { return cartItem.getTotalVAT();}
@@ -26,8 +28,10 @@ const TableRowContainer = ({ cartItem, headers }) => {
             }
         }
     };
+    
     return (
-        <TableRow>
+        <TableRow
+            className={classNames({ "text-red-600": cartItem.quantity > cartItem.product.stock.currentStock })}>
             {
                 headers.current.map((header) => (
                     <TableCell 

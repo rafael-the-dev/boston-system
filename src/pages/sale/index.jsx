@@ -10,7 +10,8 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import { CheckoutContextProvider, LoginContext, SaleContext } from "src/context";
-import Product from "src/models/Product";
+import { fetchHelper, getAuthorizationHeader } from "src/helpers/queries"
+import Product from "src/models/client/Product";
 
 import Checkout from "src/components/sale-page/checkout-dialog"
 import Input from "src/components/default-input";
@@ -21,14 +22,27 @@ import { AddProductButton, CartTable, SearchField } from "src/components/sale-pa
 // server side render products and categories
 export { getProductsAndCategories as getStaticProps } from "src/helpers/server-side";
 
-const Container = ({ categories, productsList }) => {
+const Container = ({ categories }) => {
     const { loggedUser } = useContext(LoginContext);
-    const { cart, getCart } = useContext(SaleContext);
+    const { cart, getCart, hasQuantityError } = useContext(SaleContext);
 
     const [ barCode, setBarCode ] = useState("")
     const [ loading, setLoading ] = useState(false);
+    const [ productsList, setProductsList ] = useState([]);
 
     const onOpenDialog = useRef(null);
+
+    const fetchData = useCallback(async () => {
+        try {
+            const options = { ...getAuthorizationHeader() };
+
+            const data = await fetchHelper({ options, url: "/api/stocks" });
+            setProductsList(data)
+        }
+        catch(e) {
+            console.error(e)
+        }
+    }, [])
 
     const products = useMemo(() => productsList.map(product => new Product(product)), [ productsList ])
 
@@ -49,7 +63,7 @@ const Container = ({ categories, productsList }) => {
 
     const checkoutDialogMemo = useMemo(() => (
         <CheckoutContextProvider>
-            <Checkout onOpen={onOpenDialog} />
+            <Checkout fetchData={fetchData} onOpen={onOpenDialog} />
         </CheckoutContextProvider>
     ), [])
 
@@ -63,7 +77,7 @@ const Container = ({ categories, productsList }) => {
             </Button>
         </Link>
     ), []);
-
+    
     const paymentButtonMemo = useMemo(() => (
         <Button
             className={classNames(classes.paymentButton, `bg-gray-700 font-bold rounded-none 
@@ -102,14 +116,14 @@ const Container = ({ categories, productsList }) => {
     const submitHandler = useCallback((e) => {
         e.preventDefault();
 
-        if(cart.length === 0) return;
+        if(cart.length === 0 || hasQuantityError) return;
 
         onOpenDialog.current?.();
-    }, [ cart ]);
+    }, [ cart, hasQuantityError ]);
 
-    /*useEffect(() => {
-        const serialPort = new SerialPort();
-    }, [])*/
+    useEffect(() => {
+        fetchData();
+    }, [ fetchData ])
 
     return (
         <main className={classNames(classes.main, `bg-stone-100 grow`)}>

@@ -11,7 +11,8 @@ const requestHandler = (req, res) => {
         case "GET": {
             return query(`
                 SELECT produto.idProduto AS id, BarCod AS barCode, produto.Nome AS name, fk_grupo AS groupId, 
-                Preco_compra AS purchasePrice, Iva_compra AS purchaseVAT, Total_Preco_compra AS totalPurchasePrice,
+                Preco_compra AS purchasePrice, Iva_compra AS purchaseVAT, produto.Preco_venda as sellPrice, 
+                produto.Iva_venda as sellVAT, Total_Preco_compra AS totalPurchasePrice,
                 stock.idStock as stockId, stock.inicial as initial, stock.final, stock.total,  
                 user.idUser as userId, user.Nome as firstName, user.apelido as lastName, user.categoria as category
                 FROM produto

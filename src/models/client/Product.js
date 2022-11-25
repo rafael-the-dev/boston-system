@@ -1,8 +1,10 @@
 import currency from "currency.js";
 
+import Stock from "./Stock"
+
 class Product {
     constructor({ id, barCode, name, purchasePrice, purchaseVAT, sellPrice, sellVAT, 
-        groupId, Estado, date, stock }) {
+        groupId, Estado, date, stock }) { 
         this._barCode = barCode;
         this._categoryId = groupId;
         this._date = date;
@@ -13,7 +15,7 @@ class Product {
         this._state = Estado;
         this._sellPrice = sellPrice;
         this._sellVAT = sellVAT;
-        this._stock = stock;
+        this._stock = new Stock(stock);
     }
 
     get barCode() {
@@ -132,7 +134,7 @@ class Product {
             state: this.Estado,
             sellPrice: this.sellPrice,
             sellVAT: this.sellVAT,
-            stock: this.stock
+            stock: this.stock.toLiteral()
         }
     }
 

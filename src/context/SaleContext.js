@@ -1,4 +1,6 @@
-import { createContext, useCallback, useEffect, useRef, useState } from "react";
+import { createContext, useCallback, useMemo, useRef, useState } from "react";
+import currency from "currency.js"
+
 import Cart from "src/models/client/Cart";
 import Payment from "src/models/client/Payment";
 
@@ -15,11 +17,18 @@ const SaleContextProvider = ({ children }) => {
         return cartRef.current;
     }, [ cart ]);
 
+    const hasQuantityError = useMemo(() => {
+        return getCart().list.find(item => {
+            return currency(item.quantity).value > item.product.stock.currentStock;
+        })
+    }, [ getCart ])
+
     return (
         <SaleContext.Provider 
             value={{
                 cart,
                 getCart,
+                hasQuantityError
                 //getPaymentMethods,
                 //paymentMethods
             }}>

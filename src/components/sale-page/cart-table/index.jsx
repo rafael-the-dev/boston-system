@@ -16,6 +16,7 @@ const CartTable = () => {
         { key: "sellVAT", label: "VAT" },
         { key: "sellPrice", label: "Unit price" },
         { key: "quantity", label: "Quantity" },
+        { key: "currentStock", label: "Current Stock" },
         { key: "vatSubTotal", label: "VAT SubTotal" },
         { key: "subTotal", label: "SubTotal" },
         { key: "delete", label: "Remove Item" },

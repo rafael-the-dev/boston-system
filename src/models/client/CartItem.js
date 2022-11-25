@@ -26,9 +26,12 @@ class CartItem {
     }
 
     toLiteral() {
+        this.product.stock.total = currency(this.product.stock.currentStock).subtract(this.quantity).value;
+
         return {
             id: this.product.id,
             quantity: this.quantity,
+            stock: this.product.stock.toLiteral(),
             subTotal: this.getSubTotal(),
             totalVAT: this.getTotalVAT(),
             total: this.getTotal()
