@@ -20,7 +20,7 @@ const requestHandler = async (req, res) => {
         case "GET": {
             return query(`SELECT * FROM user WHERE username=?`, [ id ])
                 .then(result => {
-                    res.json(result)
+                    res.json(result).send();
                 })
         }
         case "PUT": {

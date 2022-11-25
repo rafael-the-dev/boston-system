@@ -19,7 +19,7 @@ const SaleContextProvider = ({ children }) => {
 
     const hasQuantityError = useMemo(() => {
         return getCart().list.find(item => {
-            return currency(item.quantity).value > item.product.stock.currentStock;
+            return currency(item.quantity).value > item.product.stock.currentStock || currency(item.quantity).value <= 0;
         })
     }, [ getCart ])
 

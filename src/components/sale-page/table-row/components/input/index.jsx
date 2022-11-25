@@ -25,7 +25,7 @@ const Container = ({ cartItem, quantity }) => {
         getCart().addQuantity(cartItem.product.id, e.target.value);
     };
 
-    const hasError = currency(quantity).value >  cartItem.product.stock.currentStock;
+    const hasError = currency(quantity).value > cartItem.product.stock.currentStock || currency(quantity).value <= 0;
     const errorClasses = { "text-red-600": hasError };
 
     return (
