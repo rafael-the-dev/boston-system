@@ -14,6 +14,7 @@ import { getTotalPrice } from "src/helpers/price";
 import Validation from "src/models/Validation";
 
 import Checkbox from "src/components/checkbox";
+import CancelLink from "src/components/cancel-link"
 import Content from "src/components/scroll-container"
 import Link from "src/components/link";
 import Main from "src/components/main";
@@ -257,16 +258,10 @@ const Container = () => {
     ), [ available, availabilityChangeHandler ]);
 
     const cancelButton = useMemo(() => (
-        <Link 
-            className="mr-3"
-            href="/products">
-            <Button 
-                className={classNames("border-red-500 text-red-500 sm:py-2 hover:bg-red-500 hover:border-red-500 hover:text-white")}
-                type="button"
-                variant="outlined">
-                Cancelar
-            </Button>
-        </Link>
+        <CancelLink 
+            classes={{ root: "mr-3" }}
+            href="/products"
+        />
     ), [])
 
     useEffect(() => {

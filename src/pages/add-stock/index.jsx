@@ -9,6 +9,8 @@ import classes from "./styles.module.css";
 
 import { AddStockContext } from "src/context";
 
+import Content from "src/components/scroll-container";
+import CancelLink from "src/components/cancel-link";
 import Input from "src/components/default-input";
 import Link from "src/components/link";
 import Main from "src/components/main";
@@ -29,14 +31,7 @@ const Container = () => {
     const stockProvidersMemo = React.useMemo(() => <StockProviders />, []);
 
     const homeMemo = React.useMemo(() => (
-        <Link href="/stocks">
-            <Button
-                className="bg-red-600 py-2 text-white hover:bg-red-800 "
-                startIcon={<KeyboardBackspaceIcon />}
-                variant='contained'>
-                Voltar
-            </Button>
-        </Link>
+        <CancelLink href="/stocks">Back</CancelLink>
     ), []);
     
     const setMessageDialog = React.useRef(null);
@@ -97,8 +92,7 @@ const Container = () => {
     return (
         <Main>
             <Panel component="h1" title="Add new stock" />
-            <form
-                className={classNames(classes.form, "flex flex-col justify-between overflow-y-auto py-6  px-5 xl:px-8 w-full")}>
+            <Content component="form">
                 <div>
                     <div className="flex flex-wrap justify-between">
                         <Input 
@@ -133,7 +127,7 @@ const Container = () => {
                     <div className="flex items-stretch jsutify-between">
                         { homeMemo }
                         <Button
-                            className="bg-neutral-700 ml-4 text-white hover:bg-neutral-800"
+                            className="bg-blue-500 ml-4 text-white hover:bg-blue-700"
                             onClick={clickHandler}
                             startIcon={<SaveIcon />}
                             variant='contained'>
@@ -141,7 +135,7 @@ const Container = () => {
                         </Button>
                     </div>
                 </div>
-            </form>
+            </Content>
             { messageDialogMemo }
         </Main>
     );

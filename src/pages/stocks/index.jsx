@@ -3,11 +3,11 @@ import Button from "@mui/material/Button";
 
 import classes from "../styles.module.css";
 
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import { fetchHelper, getAuthorizationHeader } from "src/helpers/queries"
 
-import Content from "src/components/scroll-container"
+import Content from "src/components/scroll-container";
+import CancelLink from "src/components/cancel-link";
 import Link from "src/components/link";
 import Main from "src/components/main";
 import Panel from "src/components/panel";
@@ -20,14 +20,9 @@ const Container = () => {
 
     const linksMemo = React.useMemo(() => (
         <div className="flex items-stretch justify-end mt-8">
-            <Link href="/">
-                <Button
-                    className="border-red-600 text-red-600 py-2 hover:bg-red-600 hover:border-red-600 hover:text-white"
-                    startIcon={<ArrowBackIcon />}
-                    variant="outlined">
-                    Back
-                </Button>
-            </Link>
+            <CancelLink 
+                href="/" 
+            />
             <Link href="/add-stock">
                 <Button
                     className="bg-blue-500 ml-4 py-2 text-white hover:bg-blue-700"
