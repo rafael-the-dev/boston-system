@@ -6,8 +6,10 @@ import { v4 as uuidV4 } from "uuid";
 import classes from "./styles.module.css";
 
 import { CategoriesCombobox } from "src/components/products-page"
+import Content from "src/components/scroll-container";
 import Input from "src/components/default-input";
 import Link from "src/components/link";
+import Main from "src/components/main";
 import NewCategoryDialog from "src/components/products-page/new-category-dialog";
 import Panel from "src/components/panel";
 import Table from "src/components/table";
@@ -25,8 +27,8 @@ const Container = ({ categories, productsList }) => {
         { key: "Nome", label: "Name" },
         { key: "BarCod", label: "Barcode" },
         { key: "Preco_compra", label: "Purchase price" },
-        { key: "Preco_venda", label: "Sell price" },
         { key: "IVA_compra", label: "Purchase VAT" },
+        { key: "Preco_venda", label: "Sell price" },
         { key: "Iva_venda", label: "Sell VAT" },
         { key: "Profit", label: "Profit" }
     ]);
@@ -108,15 +110,15 @@ const Container = ({ categories, productsList }) => {
     }, [ categories ])
 
     return (
-        <main>
-            <div className={classNames(classes.container, "flex flex-col h-full items-stretch justify-between pb-8")}>
+        <Main>
+            { title }
+            <Content>
                 <div>
-                    { title }
-                    <div className="flex flex-wrap justify-between px-5 py-6">
+                    <div className="flex flex-wrap justify-between">
                         { searchMemo }
                         { categoriesMemo }
                     </div>
-                    <div className="px-5">
+                    <div>
                         <Table 
                             data={products} 
                             getBodyRows={getBodyRows}
@@ -124,12 +126,12 @@ const Container = ({ categories, productsList }) => {
                         />
                     </div>
                 </div>
-                <div className="flex flex-col justify-end mt-6 px-5 sm:flex-row">
+                <div className="flex flex-col justify-end mt-6 sm:flex-row">
                     { categoryDialog }
                     { registerProductLinkMemo }
                 </div>
-            </div>
-        </main>
+            </Content>
+        </Main>
     );
 };
 
