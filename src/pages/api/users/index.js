@@ -25,7 +25,7 @@ const requestHandler = async (req, res) => {
                     const images = await Promise.all(result.map(item => getFile({ name: item.username })));
 
                     const users = result.map((user, index) => ({ ...user, image: images[index]}))
-
+                    
                     res.json(users);
                 });
         }

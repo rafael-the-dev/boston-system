@@ -18,9 +18,10 @@ const requestHandler = async (req, res) => {
     
     switch(method) {
         case "GET": {
-            return query(`SELECT * FROM user WHERE username=?`, [ id ])
+            return query(`SELECT Apelido, Categoria, idUser, Nome, Username FROM user WHERE username=?`, [ id ])
                 .then(result => {
-                    res.json(result).send();
+                    
+                    res.json(result);
                 })
         }
         case "PUT": {
