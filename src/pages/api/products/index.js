@@ -27,11 +27,26 @@ const requestHandler = async (req, res) => {
 
             return query(`SELECT * FROM Produto WHERE BarCod=?`, [ barCode ])
                 .then(result => {
-                    if(result.length !== 0) throw new Error("Product already exists");
+                    if(result.length !== 0) throw new Error404("Product already exists");
 
                     return query(`INSERT INTO Produto(Estado, BarCod, fk_grupo, Data, Iva_venda, Nome, Profit, Preco_compra, IVA_compra, Total_Preco_Compra, Total_Preco_Venda, Preco_venda) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)`, values)
-                        .then(() => res.json({ message: "Product was successfully registered" }));
-                })
+                        .then(async productResult => {
+                            const stockValues = [ productResult.insertId, 0, 0, 0, "ACTIVO", user.idUser ];
+
+                            try {
+                                await query(`INSERT INTO stock (idProduto, Inicial, Final, Total, Estado, user, Data) VALUES (?, ?, ?, ?, ?, ?, NOW());`, stockValues );
+                           
+                                res.json({ message: "Product was successfully registered" });
+                            } catch(e) {
+                                await Promise.all([
+                                    query(`DELETE FROM Produto WHERE idProduto=?`, [ productResult.insertId ]),
+                                    query(`DELETE FROM stock WHERE idProduto=?`, [ productResult.insertId ]),
+                                ]);
+
+                                res.status(500).send();
+                            }
+                        });
+                });
         }
         default: {
             return;
