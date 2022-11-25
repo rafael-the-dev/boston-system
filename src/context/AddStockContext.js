@@ -7,7 +7,7 @@ AddStockContext.displayName = "AddStockContext";
 const AddStockContextProvider = ({ children }) => {
     const [ productsList, setProductsList ] = React.useState([]);
     const [ invoiceReference, setInvoiceReference ] = React.useState("");
-    const [ stockProvider, setStockProvider ] = React.useState(1);
+    const [ stockProvider, setStockProvider ] = React.useState(-1);
     const [ errors, setErrors ] = React.useState({ "reference-code": true });
 
     const addError = React.useCallback((key, errorValue) => {
@@ -123,7 +123,8 @@ const AddStockContextProvider = ({ children }) => {
     }, [ invoiceReference, productsList, stockProvider ]);
 
     React.useEffect(() => {
-        addError("products-list", productsList.length === 0);
+        const hasEmptyProduct = Boolean(productsList.find(product => currency(product.stock.quantity).value <= 0));
+        addError("products-list", productsList.length === 0 || hasEmptyProduct);
     }, [ addError, productsList ]);
 
     return (
@@ -132,6 +133,7 @@ const AddStockContextProvider = ({ children }) => {
                 addError, addStockProvider, addInvoiceReference, addProduct,
                 changeValue, 
                 decrementValue,
+                errors,
                 getInvoiceReference, getProductsList, getStockProvider,
                 hasErrors,
                 incrementValue,

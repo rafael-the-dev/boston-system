@@ -8,7 +8,7 @@ import { fetchHelper } from "src/helpers/queries";
 import TextField from "src/components/default-input";
 
 const StockProviders = () => {
-    const { addStockProvider, stockProvider } = React.useContext(AddStockContext);
+    const { addError, addStockProvider, errors, getStockProvider, stockProvider } = React.useContext(AddStockContext);
 
     const [ list, setList ] = React.useState([]);
 
@@ -31,11 +31,17 @@ const StockProviders = () => {
         fetchData();
     }, [ fetchData ]);
 
+    React.useEffect(() => {
+        addError("stock-supplier", !Boolean(list.find(item => item.id === getStockProvider())))
+    }, [ addError, getStockProvider, list ]);
+
     const changeHandler = React.useCallback(e => addStockProvider(e.target.value), [ addStockProvider ])
 
     return (
         <TextField
             className="input w12"
+            error={errors["stock-supplier"]}
+            helperText={Boolean(errors["stock-supplier"]) ? "This field is required" : ""}
             label="Select a provider"
             onChange={changeHandler}
             value={stockProvider}
