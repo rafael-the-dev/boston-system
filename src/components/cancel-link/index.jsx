@@ -12,7 +12,7 @@ const CancelLink = ({ children, classes, href, hideIcon, variant, ...rest }) => 
     const button = (
         <Button
             className={classNames("py-2", 
-                newVariant === "contained" ? "bg-red-500 text-white hover:bg-red-700" : "border border-solid border-red-500 text-red-500 hover:bg-red-500 hover:text-white", 
+                newVariant === "contained" ? "bg-red-500 text-white hover:bg-red-700" : "border border-solid border-red-500 text-red-500 hover:border-red-500 hover:bg-red-500 hover:text-white", 
                 classes?.button
             )}
             variant={newVariant}

@@ -4,7 +4,7 @@ import { v4 as uuidV4 } from "uuid"
 import Table from "src/components/table";
 import TableRow from "src/components/table/components/table-row";
 
-const ProductsTable = ({ classes, data, headers }) => {
+const ProductsTable = ({ classes, data, headers, onClickRow }) => {
     
     const getBodyRows = ({ page, rowsPerPage }) => {
         const list = rowsPerPage > 0 ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : data;
@@ -14,6 +14,7 @@ const ProductsTable = ({ classes, data, headers }) => {
             <TableRow 
                 headers={headers}
                 key={uuidV4()}
+                onClick={onClickRow}
                 row={row}
             />
         ))

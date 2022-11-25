@@ -6,6 +6,7 @@ import CancelLink from "src/components/cancel-link";
 import Content from "src/components/scroll-container";
 import Main from "src/components/main";
 import Panel from "src/components/panel";
+import PrimaryButton from "src/components/primary-button";
 import Table from "src/components/default-table";
 
 import { RegisterProvider } from "src/components/stock-providers-page"
@@ -19,19 +20,33 @@ const Container = () => {
         { label: "Address", value: "address" },
     ]);
 
+    const onOpenDialog = React.useRef(null);
+    const setSupplierIdRef = React.useRef(null);
+
     const filteredList = () => providersList;
 
-    const cancelLinkMemo = React.useMemo(() => <CancelLink clases={{ link: "mr-4" }} href="/" />, [])
+    const openHandler = React.useCallback(() => onOpenDialog.current?.(), []);
+
+    const rowClickHandler = React.useCallback(row => () => {
+        setSupplierIdRef.current?.(row.id);
+        openHandler()
+    }, [ openHandler ])
+
+    const cancelLinkMemo = React.useMemo(() => <CancelLink classes={{ link: "mr-4" }} href="/" />, [])
+
+    const openDialogButtonMemo = React.useMemo(() => (
+        <PrimaryButton onClick={openHandler}>
+            Register
+        </PrimaryButton>
+    ), [ openHandler ]);
 
     const panel = React.useMemo(() => (
         <Panel 
             component="h1"
-            title="Stock providers"
+            title="Stock suppliers"
         />
     ), []);
-
-    const registerProviderMemo = React.useMemo(() => <RegisterProvider />, [])
-
+    
     const fetchData = React.useCallback(async () => {
         try {
             const data = await fetchHelper({ options: getAuthorizationHeader(), url: "/api/stock-providers"});
@@ -40,6 +55,14 @@ const Container = () => {
 
         }
     }, []);
+
+    const registerSupplierMemo = React.useMemo(() => (
+        <RegisterProvider 
+            onOpen={onOpenDialog}
+            onSuccess={fetchData} 
+            setSupplierIdRef={setSupplierIdRef}
+        />
+    ), [ fetchData ])
 
     React.useEffect(() => {
         fetchData()
@@ -52,12 +75,14 @@ const Container = () => {
                 <Table 
                     data={filteredList()}
                     headers={headers}
+                    onClickRow={rowClickHandler}
                 />
                 <div className="flex items-stretch justify-end">
                     { cancelLinkMemo }
-                    { registerProviderMemo }
+                    { openDialogButtonMemo }
                 </div>
             </Content>
+            { registerSupplierMemo }
         </Main>
     );
 };

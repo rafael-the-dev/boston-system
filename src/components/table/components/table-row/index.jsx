@@ -1,8 +1,9 @@
+import classNames from "classnames";
 import moment from "moment";
 import { TableCell, TableRow } from "@mui/material"
 
-const TableRowContainer = ({ headers, row }) => {
-
+const TableRowContainer = ({ headers, onClick, row }) => {
+    
     const getLabel = (header) => {
         const { key, value } = header;
 
@@ -14,7 +15,9 @@ const TableRowContainer = ({ headers, row }) => {
     };
 
     return (
-        <TableRow>
+        <TableRow 
+            className={classNames({ "cursor-pointer hover:bg-stone-100": Boolean(onClick) })}
+            onClick={onClick && onClick(row)}>
             {
                 headers.current.map(header => (
                     <TableCell
