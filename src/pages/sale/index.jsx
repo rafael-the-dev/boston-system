@@ -11,7 +11,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 import { CheckoutContextProvider, LoginContext, SaleContext } from "src/context";
 import Product from "src/models/Product";
-//import SerialPort from "src/models/client/SerialPort";
 
 import Checkout from "src/components/sale-page/checkout-dialog"
 import Input from "src/components/default-input";

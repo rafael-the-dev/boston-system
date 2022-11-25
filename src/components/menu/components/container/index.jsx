@@ -29,8 +29,8 @@ const Container = () => {
                 <ListItem href="/sales">
                     <ShoppingCartIcon /> Sales
                 </ListItem>
-                <ListItem>
-                    <ReceiptLongIcon /> Reports
+                <ListItem href="/stocks">
+                    <ReceiptLongIcon /> Stocks
                 </ListItem>
                 <ListItem>
                     <PaidIcon /> Payments

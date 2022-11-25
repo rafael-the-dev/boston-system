@@ -1,4 +1,5 @@
 export * from "./AppContext";
+export * from "./AddStockContext";
 export * from "./CheckoutContext"
 export * from "./LoginContext";
 export * from "./SignUpContext";

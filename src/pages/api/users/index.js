@@ -1,10 +1,20 @@
 const bcrypt = require("bcrypt");
+const formidable =  require('formidable');
+const path = require("path");
 
+const { apiHandler } = require("src/helpers/api-handler")
 const { connection } = require("src/connections/mysql");
-const { getFile } = require("src/helpers/image")
-const { query } = require("src/helpers/db")
+const { deleteImage, getFile } = require("src/helpers/image")
+const { query } = require("src/helpers/db");
 
-const handler = async (req, res) => {
+//set bodyparser
+export const config = {
+    api: {
+        bodyParser: false
+    }
+}
+
+const requestHandler = async (req, res) => {
 
     const { method } = req;
 
@@ -20,25 +30,43 @@ const handler = async (req, res) => {
                 });
         }
         case "POST": {
-            const { body } = req; 
-            const { firstName, lastName, password, user, username } = JSON.parse(body);
+            return new Promise((resolve, reject) => {
+                const form = formidable({ 
+                    filename: (name, ext) => `${ req.query?.user ?? name }${ext}`,
+                    multiples: true ,
+                    keepExtensions: true,
+                    uploadDir: path.join(path.resolve("."), `/public/images/users`)
+                });
+                
+                form.parse(req, async (err, fields, files) => {
+                    if (err) reject({ err });
 
-            const hashedPassword = await bcrypt.hash(password, 10);
-            const values = [ firstName, lastName, username, hashedPassword, user ];
-            
-            connection.query(`INSERT INTO user(Nome, Apelido, Username, Password, Categoria) Values ( ?, ?, ?, ?, ? )`,
-            values, (error, result) => {
-                if(error) res.status(500).send();
+                    if(files) {
+                        try {
+                            await deleteImage({ name: await getFile({ name: req.query?.user }) });
+                        } catch(e){}
+                    }
+                    
+                    resolve({ err, fields, files })
+                }) 
+            }).then(async ({ fields }) => {
+                
+                const { firstName, lastName, password, user, username } = fields;
+                
+                const hashedPassword = await bcrypt.hash(password, 10);
 
-                res.send()
+                const values = [ firstName, lastName, username, hashedPassword, user ];
+                
+                return query(`INSERT INTO user(Nome, Apelido, Username, Password, Categoria) Values ( ?, ?, ?, ?, ? )`, values)
+                    .then(() => res.send())
             })
-            res.send();
-            return;
         }
         default: {
             return;
         }
     }
 };
+
+const handler = apiHandler(requestHandler);
 
 export default handler;
