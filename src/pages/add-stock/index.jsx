@@ -1,8 +1,7 @@
 import * as React from "react";
-import { Button, Paper, Typography } from "@mui/material"
+import { Paper, Typography } from "@mui/material"
 import classNames from "classnames";
 
-import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import SaveIcon from '@mui/icons-material/Save';
 
 import classes from "./styles.module.css";

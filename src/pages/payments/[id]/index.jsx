@@ -1,17 +1,17 @@
 import * as React from "react";
-import {Button} from "@mui/material";
 import { useRouter } from "next/router"
 
 import { fetchHelper, getAuthorizationHeader } from "src/helpers/queries";
 
+import Content from "src/components/scroll-container"
 import DefaultTable from "src/components/default-table";
-import Link from "src/components/link";
 import Main from "src/components/main";
 import Panel from "src/components/panel";
+import CancelButton from "src/components/cancel-link"
 import ProductsTable from "src/components/stocks-page/products-table"
 
 const Container = () => {
-    const [ invoice, setInvoice ] = React.useState({ provider: {}, products: [], subTotal });
+    const [ invoice, setInvoice ] = React.useState({ provider: {}, products: [], subTotal: 0 });
 
     const providerHeaders = React.useRef([
         { label: "Nome", value: "name" },
@@ -29,13 +29,9 @@ const Container = () => {
     const { query: { id }} = useRouter();
 
     const backLinkMemo = React.useMemo(() => (
-        <Link href="/stocks">
-            <Button
-                className="border border-solid border-red-600 bg-red-600 text-white hover:bg-transparent hover:border-red-600 hover:text-red-600"
-                variant="contained">
-                Voltar
-            </Button>
-        </Link>
+        <CancelButton href="/stocks">
+            Back
+        </CancelButton>
     ), []);
     const panelMemo = React.useMemo(() => <Panel />, []);
 
@@ -54,7 +50,7 @@ const Container = () => {
     return (
         <Main>
             { panelMemo }
-            <div className="flex flex-col justify-between px-5 xl:px-8 py-6">
+            <Content>
                 <div>
                     <ProductsTable products={products} />
                     <div className="flex flex-wrap justify-between mt-8">
@@ -77,7 +73,7 @@ const Container = () => {
                 <div className="flex justify-end mt-8">
                     { backLinkMemo }
                 </div>
-            </div>
+            </Content>
         </Main>
     );
 };

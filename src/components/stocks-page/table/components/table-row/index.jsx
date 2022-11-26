@@ -17,7 +17,7 @@ const TableRowContainer = ({ headers, invoice }) => {
     const router = useRouter();
 
     const clickHandler = () => {
-        router.push(`/stocks/${invoice.id}`)
+        router.push(`/payments/${invoice.id}`)
     };
 
     return (
