@@ -29,7 +29,7 @@ const Container = () => {
     const { query: { id }} = useRouter();
 
     const backLinkMemo = React.useMemo(() => (
-        <CancelButton href="/stocks">
+        <CancelButton href="/payments">
             Back
         </CancelButton>
     ), []);
