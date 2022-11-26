@@ -3,7 +3,7 @@ import currency from "currency.js";
 import Stock from "./Stock"
 
 class Product {
-    constructor({ id, barCode, name, purchasePrice, purchaseVAT, sellPrice, sellVAT, 
+    constructor({ id, barCode, name, profit, purchasePrice, purchaseVAT, sellPrice, sellVAT, 
         groupId, Estado, date, stock }) { 
         this._barCode = barCode;
         this._categoryId = groupId;
@@ -12,10 +12,11 @@ class Product {
         this._name = name;
         this._purchasePrice = purchasePrice;
         this._purchaseVAT = purchaseVAT;
+        this._profit = profit;
         this._state = Estado;
         this._sellPrice = sellPrice;
         this._sellVAT = sellVAT;
-        this._stock = new Stock(stock);
+        this._stock = new Stock(stock ?? {});
     }
 
     get barCode() {
@@ -57,6 +58,8 @@ class Product {
     set name(name) {
         this._name = name;
     }
+
+    get profit() { return this._profit; }
 
     get purchasePrice() {
         return this._purchasePrice;

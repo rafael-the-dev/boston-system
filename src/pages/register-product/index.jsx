@@ -259,7 +259,7 @@ const Container = () => {
 
     const cancelButton = useMemo(() => (
         <CancelLink 
-            classes={{ root: "mr-3" }}
+            classes={{ link: "mr-3" }}
             href="/products"
         />
     ), [])

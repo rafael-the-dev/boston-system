@@ -22,9 +22,7 @@ const Container = () => {
 
     const linksMemo = React.useMemo(() => (
         <div className="flex items-stretch justify-end mt-8">
-            <CancelLink 
-                href="/" 
-            />
+            <CancelLink href="/">Back</CancelLink>
             <PrimaryButton classes={{ link: "ml-4" }} href="/add-stock" startIcon={<AddIcon />}>
                 Adicionar stock
             </PrimaryButton>

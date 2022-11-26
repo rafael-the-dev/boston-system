@@ -9,6 +9,7 @@ import { getCategories } from "src/helpers/queries"
 import Dialog from "src/components/dialog";
 import DialogHeader from "src/components/dialog/components/dialog-header";
 import MessageDialog from "src/components/message-dialog";
+import PrimaryButton from "src/components/primary-button"
 import TextField from "src/components/default-input";
 
 const CategoryDialog = ({ setCategories }) => {
@@ -84,12 +85,12 @@ const CategoryDialog = ({ setCategories }) => {
     }, [ setCategories ])
 
     const buttonMemo = React.useMemo(() => (
-        <Button
-            className="border-blue-500 mr-3 mb-4 py-2 sm:mb-0 text-blue-500 md:py-3 hover:bg-blue-500 hover:text-white"
+        <PrimaryButton
+            classes={{ button: "mr-3 mb-4 sm:mb-0" }}
             onClick={clickHandler}
             variant="outlined">
             Add new category
-        </Button>
+        </PrimaryButton>
     ), [ clickHandler ]);
 
     const headerMemo = React.useMemo(() => (
@@ -147,13 +148,11 @@ const CategoryDialog = ({ setCategories }) => {
                         />
                     </div>
                     <div className="flex justify-end">
-                        <Button
-                            className="bg-blue-500 border-blue-500 py-2 text-white md:py-3 hover:bg-blue-700"
+                        <PrimaryButton
                             disabled={description.length ===  0 || type.length === 0}
-                            type="submit"
-                            variant="outlined">
+                            type="submit">
                             { loading ? "Loading..." : "Submit" }
-                        </Button>
+                        </PrimaryButton>
                     </div>
                 </form>
             </Dialog>

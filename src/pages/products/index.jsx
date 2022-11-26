@@ -4,6 +4,7 @@ import classNames from "classnames";
 import { v4 as uuidV4 } from "uuid";
 
 import classes from "./styles.module.css";
+import Product from "src/models/client/Product"
 
 import { CategoriesCombobox } from "src/components/products-page"
 import Content from "src/components/scroll-container";
@@ -12,6 +13,7 @@ import Link from "src/components/link";
 import Main from "src/components/main";
 import NewCategoryDialog from "src/components/products-page/new-category-dialog";
 import Panel from "src/components/panel";
+import PrimaryButton from "src/components/primary-button"
 import Table from "src/components/table";
 import TableBodyRow from "src/components/products-page/table-row" 
 
@@ -24,35 +26,32 @@ const Container = ({ categories, productsList }) => {
     const [ value, setValue ] = useState("");
     
     const headers = useRef([
-        { key: "Nome", label: "Name" },
-        { key: "BarCod", label: "Barcode" },
-        { key: "Preco_compra", label: "Purchase price" },
-        { key: "IVA_compra", label: "Purchase VAT" },
-        { key: "Preco_venda", label: "Sell price" },
-        { key: "Iva_venda", label: "Sell VAT" },
-        { key: "Profit", label: "Profit" }
+        { key: "name", label: "Name" },
+        { key: "barCode", label: "Barcode" },
+        { key: "purchasePrice", label: "Purchase price" },
+        { key: "purchaseVAT", label: "Purchase VAT" },
+        { key: "sellPrice", label: "Sell price" },
+        { key: "sellVAT", label: "Sell VAT" },
+        { key: "profit", label: "Profit" }
     ]);
-
+    
+    const productsListMemo = useMemo(() => productsList.map(product => new Product(product)), [ productsList ])
     const products = useMemo(() => {
-        let list = productsList;
+        let list = productsListMemo;
 
         if(category && category !== -1) {
-            list = list.filter(item => item.fk_grupo === category);
+            list = list.filter(item => item.groupId === category);
         }
 
         return list;
-    }, [ category, productsList ]);
+    }, [ category, productsListMemo ]);
 
     const categoryDialog = useMemo(() => <NewCategoryDialog setCategories={setCategoriesList} />, []);
 
     const registerProductLinkMemo = useMemo(() => (
-        <Link href="register-product">
-            <Button
-                className="border-blue-500 py-2 text-blue-500 w-full md:py-3 hover:bg-blue-500 hover:text-white"
-                variant="outlined">
-                Add new product
-            </Button>
-        </Link>
+        <PrimaryButton href="register-product" variant="outlined">
+            Add new product
+        </PrimaryButton>
     ), [])
 
     const title = useMemo(() => <Panel title="Products" />, []);
@@ -89,7 +88,7 @@ const Container = ({ categories, productsList }) => {
             <>
                 {
                     list.map(row => (
-                        <TableBodyRow { ...row } key={uuidV4()}>
+                        <TableBodyRow row={row} key={uuidV4()}>
                             {
                                 headers.current.map(header => (
                                     <TableCell 
