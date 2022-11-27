@@ -4,7 +4,6 @@ import classNames from "classnames";
 import { v4 as uuidV4 } from "uuid";
 
 import classes from "./styles.module.css";
-import Product from "src/models/client/Product"
 
 import { CategoriesCombobox } from "src/components/products-page"
 import Content from "src/components/scroll-container";
@@ -26,25 +25,34 @@ const Container = ({ categories, productsList }) => {
     const [ value, setValue ] = useState("");
     
     const headers = useRef([
-        { key: "name", label: "Name" },
-        { key: "barCode", label: "Barcode" },
-        { key: "purchasePrice", label: "Purchase price" },
-        { key: "purchaseVAT", label: "Purchase VAT" },
-        { key: "sellPrice", label: "Sell price" },
-        { key: "sellVAT", label: "Sell VAT" },
-        { key: "profit", label: "Profit" }
+        { key: "Nome", label: "Name" },
+        { key: "BarCod", label: "Barcode" },
+        { key: "Preco_compra", label: "Purchase price" },
+        { key: "IVA_compra", label: "Purchase VAT" },
+        { key: "Preco_venda", label: "Sell price" },
+        { key: "Iva_venda", label: "Sell VAT" },
+        { key: "Profit", label: "Profit" }
     ]);
-    
-    const productsListMemo = useMemo(() => productsList.map(product => new Product(product)), [ productsList ])
+    //console.log(productsList)
+    //const productsListMemo = useMemo(() => productsList.map(product => new Product(product)), [ productsList ])
     const products = useMemo(() => {
-        let list = productsListMemo;
+        let list = productsList;
 
         if(category && category !== -1) {
-            list = list.filter(item => item.groupId === category);
+            list = list.filter(item => item.fk_grupo === category);
+        }
+
+        if(value.trim()) {
+            list = list.filter(item => {
+                const isName = item.Nome.toLowerCase().includes(value.toLowerCase());
+                const isBarCode = item.BarCod.includes(value);
+
+                return isName || isBarCode;
+            })
         }
 
         return list;
-    }, [ category, productsListMemo ]);
+    }, [ category, productsList, value ]);
 
     const categoryDialog = useMemo(() => <NewCategoryDialog setCategories={setCategoriesList} />, []);
 
@@ -88,12 +96,12 @@ const Container = ({ categories, productsList }) => {
             <>
                 {
                     list.map(row => (
-                        <TableBodyRow row={row} key={uuidV4()}>
+                        <TableBodyRow { ...row } key={uuidV4()}>
                             {
                                 headers.current.map(header => (
                                     <TableCell 
                                         align="center"
-                                        key={uuidV4()}>
+                                        key={row.idProduto}>
                                         { row[header.key] }
                                     </TableCell>
                                 ))

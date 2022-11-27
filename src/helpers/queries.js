@@ -17,7 +17,7 @@ const getAuthorizationHeader = () => ({
 const getCategories = ({ options }) => {
     return fetch(`${process.env.SERVER}/api/categories`, options)
             .then(res => res.json())
-            .then(data => [ { Descricao: "Todos", idGrupo: -1 }, ...data ])
+            .then(data => [ { Descricao: "All", idGrupo: -1 }, ...data ])
 };
 
 const getProducts = ({ options }) => {
