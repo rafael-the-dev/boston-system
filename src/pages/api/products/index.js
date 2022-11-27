@@ -1,10 +1,12 @@
 const currency = require("currency.js");
 
+const Error404 = require("src/models/server/errors/404Error")
+
 const { apiHandler } = require("src/helpers/api-handler");
 const { getTotalPrice } = require("src/helpers/price")
 const { query } = require("src/helpers/db")
 
-const requestHandler = async (req, res) => {
+const requestHandler = async (req, res, user) => {
 
     const { method } = req;
 

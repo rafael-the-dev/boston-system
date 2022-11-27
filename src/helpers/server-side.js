@@ -19,7 +19,7 @@ export const getProductsAndCategories = async () => {
         categories = categoriesResutlt;
         productsList = productsListResult;
     } catch(e) {
-
+        console.error(e)
     }
 
     return {

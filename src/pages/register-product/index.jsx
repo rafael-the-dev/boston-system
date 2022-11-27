@@ -51,6 +51,8 @@ const Container = () => {
     const [ loading, setLoading ] = useState(false);
     const { query: { id, role } } = useRouter();
 
+    const hasServerErrors = useRef(false);
+
     const availableRef = useRef(false);
     const barCodeRef = useRef("");
     const categoryRef = useRef("");
@@ -67,6 +69,7 @@ const Container = () => {
     const submitHandler = useCallback((e) => {
         e.preventDefault();
 
+        hasServerErrors.current = true;
         setLoading(true);
 
         const options = {
@@ -94,6 +97,8 @@ const Container = () => {
                     type: "success",
                     title: "Success"
                 });
+
+                hasServerErrors.current = false;
                 setLoading(false);
             })
             .catch(err => {
@@ -216,6 +221,8 @@ const Container = () => {
     ), [ id, purchasePrice, purchaseVat ]);
 
     const messageDialogCloseHelper = useCallback(() => {
+        if(hasServerErrors.current) return;
+
         setBarCode({ errors: [], value: "" })
         setCategory("");
         setName({ errors: [], value: "" });
