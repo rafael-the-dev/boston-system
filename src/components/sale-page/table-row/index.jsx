@@ -11,7 +11,7 @@ import Input from "./components/input"
 
 const TableRowContainer = ({ cartItem, headers }) => {
     const { getCart } = React.useContext(SaleContext);
-
+   
     const removeHandler = () => {
         getCart().remove(cartItem.product.id)
     };
@@ -36,7 +36,7 @@ const TableRowContainer = ({ cartItem, headers }) => {
                 headers.current.map((header) => (
                     <TableCell 
                         align="center"
-                        key={uuidV4()}>
+                        key={header.value}>
                         { getData(header.key) }
                     </TableCell>
                 ))

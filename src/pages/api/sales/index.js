@@ -70,10 +70,11 @@ const requestHandler = async (req, res, user ) => {
 
                         res.json({ message: "Venda feita com successo", salesserie: insertId });
                     } catch(e) {
+                        console.error(e)
                         await Promise.all([
-                            query("DELETE FROM SalesSeries WHERE idSalesSeries=?", [ errorRecovery.salesSeries ]),
-                            query("DELETE FROM Sales WHERE SalesSerie=?", [ errorRecovery.salesSeries ]),
-                            query("DELETE FROM PaymentSeries WHERE fk_salesserie=?", [ errorRecovery.salesSeries ])
+                            query("UPDATE SalesSeries SET Estado='FALHADO' WHERE idSalesSeries=?", [ errorRecovery.salesSeries ]),
+                            query("UPDATE Sales SET Status='FALHADO' WHERE SalesSerie=?", [ errorRecovery.salesSeries ]),
+                            query("UPDATE PaymentSeries SET status='FALHADO' WHERE fk_salesserie=?", [ errorRecovery.salesSeries ])
                         ]);
 
                         await Promise.all(
@@ -84,11 +85,11 @@ const requestHandler = async (req, res, user ) => {
                         );
 
                         if(errorRecovery.salesId) {
-                            await query(`DELETE FROM SalesDetail WHERE FKSales=?`, [ errorRecovery.salesId ])
+                            await query(`UPDATE SalesDetail SET Satus='FALHADO' WHERE FKSales=?`, [ errorRecovery.salesId ])
                         }
 
                         if(errorRecovery.paymentSeries) {
-                            await query(`DELETE FROM PaymentMethodUsed WHERE fk_payment_serie=?`, [ errorRecovery.paymentSeries ])
+                            await query(`UPDATE PaymentMethodUsed SET status='FALHADO' WHERE fk_payment_serie=?`, [ errorRecovery.paymentSeries ])
                         }
 
                         throw e;

@@ -65,7 +65,7 @@ const Container = ({ categories }) => {
         <CheckoutContextProvider>
             <Checkout fetchData={fetchData} onOpen={onOpenDialog} />
         </CheckoutContextProvider>
-    ), [])
+    ), [ fetchData ])
 
     const homeLinkMemo = useMemo(() => (
         <Link href="/">

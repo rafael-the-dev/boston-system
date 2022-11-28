@@ -36,10 +36,6 @@ const requestHandler = (req, res) => {
                 res.json(productsStockList);
             });
         }
-        case "POST": {
-            return query("SELECT idFornecedor AS id, Nome AS name, Nuit AS nuit, Morada AS address, Estado AS state, Data AS date FROM Fornecedor;")
-                .then(result => res.json(result))
-        }
         default: {
             throw new Error();
         }
