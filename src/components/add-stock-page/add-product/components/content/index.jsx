@@ -1,5 +1,6 @@
 import * as React from "react";
 import currency from "currency.js";
+import classNames from "classnames"
 import { Typography } from "@mui/material";
 
 import { AddStockContext } from "src/context";
@@ -38,6 +39,7 @@ const ContentContainer = ({ productsList }) => {
         const { value } = e.target;
         
         productRef.current.stock.quantity = value;
+        //productRef.current.purchasePrice = currency()
         productRef.current.stock.total = currency(productRef.current.stock.quantity).add(productRef.current.stock.currentStock).value;
         
         setQuantity(value);
@@ -60,11 +62,12 @@ const ContentContainer = ({ productsList }) => {
                 />
             </div>
             { tableMemo }
-            <div className="flex items-center justify-between">
-                { isAdded && <Typography className="text-red-600 text-sm">
+            <div className="flex flex-col items-end justify-between sm:flex-row sm:items-center">
+                { isAdded && <Typography className="text-red-600 text-sm" component="label">
                     Product was already added
                 </Typography> }
                 <PrimaryButton
+                    classes={{ button: classNames({ "mt-4 sm:mt-0": isAdded }) }}
                     disabled={!canISubmit}
                     onClick={clickHandler}>
                     Add

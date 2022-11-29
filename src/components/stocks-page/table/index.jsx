@@ -29,6 +29,7 @@ const TableContainer = ({ invoicesList }) => {
     return (
         <div>
             <Table 
+                classes={{ root: "overflow-x-auto" }}
                 data={invoicesList}
                 headers={headers}
                 getBodyRows={getBodyRows}

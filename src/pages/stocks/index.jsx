@@ -25,14 +25,15 @@ const Container = () => {
     const filterList = () => stocksList;
 
     const linksMemo = React.useMemo(() => (
-        <div className="flex items-stretch justify-end mt-8">
+        <div className="flex flex-col items-stretch justify-end mt-8 sm:flex-row">
             <CancelLink 
+                classes={{ button: "w-full" }}
                 href="/" 
             />
-            <PrimaryButton classes={{ link: "ml-4" }} href="/stock-providers" variant="outlined">
+            <PrimaryButton classes={{ button: "w-full", link: "my-3 sm:mx-4 sm:my-0" }} href="/stock-providers" variant="outlined">
                 Stock suppliers
             </PrimaryButton>
-            <PrimaryButton classes={{ link: "ml-4" }} href="/add-stock">
+            <PrimaryButton classes={{ button: "w-full" }} href="/add-stock">
                 Add stock
             </PrimaryButton>
         </div>
@@ -67,6 +68,7 @@ const Container = () => {
             { panel }
             <Content>
                 <Table 
+                    classes={{ root: "overflow-x-auto" }}
                     data={filterList()}
                     headers={headers}
                 />

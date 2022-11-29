@@ -101,7 +101,7 @@ const Container = () => {
                     </div>
                     { newStockListMemo }
                 </div>
-                <div className="flex flex-col items-end justify-between mt-12 xl:flex-row-reverse">
+                <div className="flex flex-col items-end justify-between mt-12 sm:flex-row-reverse">
                     <Paper 
                         className={classNames(classes.paper, "bg-stone-200 py-4 px-3")}
                         elevation={0}>
@@ -121,7 +121,7 @@ const Container = () => {
                             <span className="font-bold text-xl xl:text32xl">{ toLiteral.products.stats.total } MT</span>
                         </Typography>
                     </Paper>
-                    <div className="flex items-stretch jsutify-between">
+                    <div className="flex items-stretch jsutify-between mt-6 sm:mt-0">
                         { homeMemo }
                         <PrimaryButton
                             classes={{ button: "ml-4" }}

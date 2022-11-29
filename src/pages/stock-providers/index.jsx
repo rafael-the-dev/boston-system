@@ -73,11 +73,12 @@ const Container = () => {
             { panel }
             <Content>
                 <Table 
+                    classes={{ root: "overflow-x-auto" }}
                     data={filteredList()}
                     headers={headers}
                     onClickRow={rowClickHandler}
                 />
-                <div className="flex items-stretch justify-end">
+                <div className="flex items-stretch justify-end mt-6">
                     { cancelLinkMemo }
                     { openDialogButtonMemo }
                 </div>

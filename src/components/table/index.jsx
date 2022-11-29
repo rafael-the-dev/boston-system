@@ -1,7 +1,9 @@
 import { useCallback, useMemo, useState } from "react"
 import { Box, IconButton, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow } from "@mui/material";
 import { v4 as uuidV4 } from "uuid";
-import classNames from "classnames"
+import classNames from "classnames";
+
+import innerClasses from "./styles.module.css";
 
 import { useTheme } from '@mui/material/styles';
 
@@ -96,7 +98,7 @@ const Container = ({ classes, data, getBodyRows, headers }) => {
 
     return (
         <TableContainer className={classNames(classes?.root)}>
-            <Table className={classNames(classes?.table, "border border-solid border-stone-300")} sx={{ minWidth: 500 }} aria-label="custom pagination table">
+            <Table className={classNames(classes?.table, innerClasses.table, "border border-solid border-stone-300")} sx={{ minWidth: 500 }} aria-label="custom pagination table">
                 { tableHeader }
                 <TableBody>
                     { getBodyRows({ page, rowsPerPage }) }

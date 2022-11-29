@@ -21,11 +21,11 @@ const Container = () => {
     const filterList = () => stocksList;
 
     const linksMemo = React.useMemo(() => (
-        <div className="flex items-stretch justify-end mt-8">
-            <CancelLink href="/">Back</CancelLink>
-            <PrimaryButton classes={{ link: "ml-4" }} href="/add-stock" startIcon={<AddIcon />}>
+        <div className="flex flex-col items-stretch justify-end mt-8 sm:flex-row-reverse sm:justify-start">
+            <PrimaryButton classes={{ button: "w-full", link: "mb-4 sm:ml-4 sm:mb-0" }} href="/add-stock" startIcon={<AddIcon />}>
                 Adicionar stock
             </PrimaryButton>
+            <CancelLink classes={{ button: "w-full" }} href="/">Back</CancelLink>
         </div>
     ), []);
 
