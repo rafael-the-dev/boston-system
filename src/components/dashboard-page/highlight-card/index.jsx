@@ -14,12 +14,12 @@ const Card = ({ color, href, icon, title }) => {
             <div 
                 className="bg-stone-100 flex flex-col h-full items-center justify-center px-4 relative hover:bg-stone-200"
                 style={{ backgroundcolor: color }}>
+                { icon }
                 <Typography
                     component="h2"
-                    className="font-bold text-lg text-neutral-700 sm:text-xl">
+                    className="font-bold mt-4 text-lg text-neutral-700 sm:text-xl">
                     { title }
                 </Typography>
-                { icon }
             </div>
         </Link>
     );

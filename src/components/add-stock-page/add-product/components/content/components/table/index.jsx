@@ -1,8 +1,9 @@
 import * as React from "react";
 import { TableCell, TableRow } from "@mui/material"
 
-import Table from "src/components/table";
+import classes from "./styles.module.css";
 
+import Table from "src/components/table";
 
 const TableContainer = ({ product }) => {
     const headers = React.useRef([
@@ -32,7 +33,7 @@ const TableContainer = ({ product }) => {
     return (
         <div className="mb-4">
             <Table 
-                classes={{ tableFooter: "hidden " }}
+                classes={{ root: classes.root, tableFooter: "hidden " }}
                 data={[ product ]}
                 getBodyRows={getBodyRows}
                 headers={headers}

@@ -13,9 +13,11 @@ import { CheckoutContextProvider, LoginContext, SaleContext } from "src/context"
 import { fetchHelper, getAuthorizationHeader } from "src/helpers/queries"
 import Product from "src/models/client/Product";
 
-import Checkout from "src/components/sale-page/checkout-dialog"
+import Checkout from "src/components/sale-page/checkout-dialog";
+import CancelButton from "src/components/cancel-link";
 import Input from "src/components/default-input";
 import Link from "src/components/link"
+import PrimaryButton from "src/components/primary-button"
 import Table from "src/components/table";
 import { AddProductButton, CartTable, SearchField } from "src/components/sale-page";  
 
@@ -68,14 +70,9 @@ const Container = ({ categories }) => {
     ), [ fetchData ])
 
     const homeLinkMemo = useMemo(() => (
-        <Link href="/">
-            <Button
-                className="border-blue-500 py-3 sm:px-8 text-blue-500 hover:bg-blue-500 hover:border-blue-500 hover:text-white"
-                startIcon={<ArrowBackIcon />}
-                variant="outlined">
-                Back
-            </Button>
-        </Link>
+        <CancelButton href="/">
+            Back
+        </CancelButton>
     ), []);
     
     const paymentButtonMemo = useMemo(() => (
@@ -90,13 +87,13 @@ const Container = ({ categories }) => {
     const resetHandler = useCallback(() => getCart().reset(), [ getCart ])
 
     const resetCartButtonMemo = useMemo(() => (
-        <Button
-            className="border-red-600 ml-3 py-3 text-red-600 hover:bg-red-600 hover:border-red-600 hover:text-white"
+        <PrimaryButton
+            classes={{ button: "ml-3" }}
             onClick={resetHandler}
             startIcon={<DeleteIcon />}
             variant="outlined">
             Reset
-        </Button>
+        </PrimaryButton>
     ), [ resetHandler ]);
 
     const totalPanel = useMemo(() => (
@@ -140,14 +137,14 @@ const Container = ({ categories }) => {
                         { cartTableMemo }
                     </div>
                     <div>
-                        <div className="flex items-end justify-between px-5 py-4">
-                            <div>
+                        <div className="bg-stone-100 flex flex-col items-end justify-between px-5 py-4 sm:flex-row-reverse">
+                            { totalPanel }
+                            <div className="flex mt-4 sm:mt-0">
                                 { homeLinkMemo }
                                 {
                                     cart.length > 0 && resetCartButtonMemo
                                 }
                             </div>
-                            { totalPanel }
                         </div>
                         <div className="bg-gray-200 flex items-center justify-between">
                             <Typography>
