@@ -7,10 +7,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "next",
+    "dev": "next -p 7070",
     "build": "next build",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start -p 7070"
   },
   "keywords": [],
   "author": "",

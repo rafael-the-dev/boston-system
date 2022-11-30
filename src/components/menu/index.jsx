@@ -8,7 +8,7 @@ import classes from "./styles.module.css";
 import MenuIcon from '@mui/icons-material/Menu';
 
 import Container from "./components/container";
-import Drawer from "src/components/Drawer";
+import Drawer from "src/components/drawer";
 
 
 const Menu = () => {
