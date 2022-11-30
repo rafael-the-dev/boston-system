@@ -4,7 +4,7 @@ module.exports = {
     env: {
         DB: {
             connectionLimit: 10,
-            host     : 'localhost',
+            host     : 'https://212.129.25.57:7070/',
             user     : 'root',
             password : "40260101",
             database : 'mydb'
@@ -19,7 +19,7 @@ module.exports = {
             { value: 500, label: "POS" },
             { value: 600, label: "P24" }
         ],
-        SERVER: "http://localhost:3000"
+        SERVER: "https://212.129.25.57:7070/"//"http://localhost:3000"
     },
     webpack: config => {
         config.resolve.modules.push(path.resolve('./'));
