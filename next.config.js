@@ -4,7 +4,7 @@ module.exports = {
     env: {
         DB: {
             connectionLimit: 10,
-            host     : 'https://212.129.25.57:7070/',
+            host     : 'localhost',
             user     : 'root',
             password : "40260101",
             database : 'mydb'
