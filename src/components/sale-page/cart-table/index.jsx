@@ -1,5 +1,7 @@
 import * as React from "react";
-import { v4 as uuidV4 } from "uuid";
+import classNames from "classnames";
+
+import classes from "./styles.module.css";
 
 import { SaleContext } from "src/context"
 
@@ -51,7 +53,7 @@ const CartTable = () => {
     if(cart.length === 0) return <EmptyCart />
 
     return (
-        <div className="mt-8">
+        <div className={classNames(classes.container, "mt-8 overflow-y-auto")}>
             { tableMemo }
         </div>
     );

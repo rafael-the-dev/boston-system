@@ -75,7 +75,7 @@ const Container = () => {
     }, [])
 
     return (
-        <div className="input relative w12">
+        <div className="input relative w12 md:mb-0">
             { inputMemo }
             { Boolean(barCode) && (
                 <ClickAwayListener onClickAway={handleClickAway}>
