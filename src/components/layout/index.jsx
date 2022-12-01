@@ -35,7 +35,7 @@ const LayoutContainer = ({ children }) => {
             <Hidden lgDown>
                 <Menu />
             </Hidden>
-            <div className={classNames("overflow-y-auto",
+            <div className={classNames("grow overflow-y-auto",
                 [ "/sign-up", "/login" ].includes(pathname) ? "w-full" : classes.main,
                 { "flex flex-col h-full items-stretch": pathname === "/sale" })}>
                 <ContextProvider>

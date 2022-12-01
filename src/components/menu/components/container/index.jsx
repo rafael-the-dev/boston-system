@@ -52,7 +52,7 @@ const Container = () => {
             </div>
             <IconButton 
                 className={classNames(classes.toggleButton, { [classes.toggleButtonClose]: close },
-                "bg-stone-300 hidden text-blue-700 xl:flex")}
+                "bg-stone-300 hidden text-blue-700 hover:bg-stone-400 xl:flex")}
                 onClick={toggle}>
                 { close ? <ArrowForwardIcon /> : <ArrowBackIcon /> }
             </IconButton>
