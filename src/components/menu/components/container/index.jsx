@@ -1,7 +1,11 @@
-import { Typography} from "@mui/material";
+import * as React from "react";
+import { IconButton, Typography } from "@mui/material";
 import classNames from "classnames";
 
 import classes from "./styles.module.css";
+
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import HomeIcon from '@mui/icons-material/Home';
@@ -13,32 +17,45 @@ import Link from "src/components/link";
 import ListItem from "../list-item";
 
 const Container = () => {
+    const [ close, setClose ] = React.useState(false);
+
+    const toggle = React.useCallback(() => setClose(b => !b), []);
+
     return (
-        <aside className={classNames(classes.container, "bg-blue-800 h-screen")}>
-            <div className="bg-blue-500 px-5 py-4 lg:py-3">
-                <Link 
-                    className="text-lg sm:text-xl md:text-2xl text-white uppercase"
-                    href="/">
-                    Logo
-                </Link>
+        <aside className={classNames(classes.container, { [classes.containerClose]: close }, 
+            "bg-blue-800 flex flex-col h-screen justify-between")}>
+            <div>
+                <div className="bg-blue-500 px-5 py-4 lg:py-3">
+                    <Link 
+                        className="text-lg sm:text-xl md:text-2xl text-white uppercase"
+                        href="/">
+                        Logo
+                    </Link>
+                </div>
+                <ul className="py-3 lg:pt-6">
+                    <ListItem href="/">
+                        <HomeIcon /> { !close && "Home"}
+                    </ListItem>
+                    <ListItem href="/sales">
+                        <ShoppingCartIcon /> { !close && "Sales" }
+                    </ListItem>
+                    <ListItem href="/stocks">
+                        <ReceiptLongIcon /> { !close && "Stocks" }
+                    </ListItem>
+                    <ListItem href="/payments">
+                        <PaidIcon /> { !close && "Payments" }
+                    </ListItem>
+                    <ListItem>
+                        <TimelineIcon /> { !close && "Management" }
+                    </ListItem>
+                </ul>
             </div>
-            <ul className="py-3 lg:pt-6">
-                <ListItem href="/">
-                    <HomeIcon /> Home
-                </ListItem>
-                <ListItem href="/sales">
-                    <ShoppingCartIcon /> Sales
-                </ListItem>
-                <ListItem href="/stocks">
-                    <ReceiptLongIcon /> Stocks
-                </ListItem>
-                <ListItem href="/payments">
-                    <PaidIcon /> Payments
-                </ListItem>
-                <ListItem>
-                    <TimelineIcon /> Management
-                </ListItem>
-            </ul>
+            <IconButton 
+                className={classNames(classes.toggleButton, { [classes.toggleButtonClose]: close },
+                "bg-stone-300 hidden text-blue-700 xl:flex")}
+                onClick={toggle}>
+                { close ? <ArrowForwardIcon /> : <ArrowBackIcon /> }
+            </IconButton>
         </aside>
     );
 };
