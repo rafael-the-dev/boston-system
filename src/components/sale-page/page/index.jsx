@@ -19,10 +19,10 @@ import Table from "src/components/table";
 import { AddProductButton, CartTable, SearchField } from "src/components/sale-page";  
 
 
-const Container = () => {
+const Container = ({ tabId }) => {
     const { loggedUser } = useContext(LoginContext);
     const { cart, getCart, hasQuantityError } = useContext(SaleContext);
-    //const { } = React.useContext(SaleTabsContext);
+    const { getCurrentTab } = useContext(SaleTabsContext);
 
     const [ barCode, setBarCode ] = useState("")
     const [ loading, setLoading ] = useState(false);
@@ -92,7 +92,8 @@ const Container = () => {
 
     return (
         <form
-            className="flex flex-col h-full items-stretch justify-between"
+            className={classNames("flex-col h-full items-stretch justify-between",
+            getCurrentTab() === tabId ? "flex" : "hidden")}
             onKeyDown={keydownHandler}
             onSubmit={submitHandler}>
             <div className="px-5">

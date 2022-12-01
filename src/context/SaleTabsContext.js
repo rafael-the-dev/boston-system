@@ -20,21 +20,28 @@ const SaleTabsContextProvider = ({ children }) => {
     });
 
     const createPage = React.useCallback((id) => ({
-        element: <SaleContextProvider key={id}><PageComponent id={id} /></SaleContextProvider>,
+        element: <SaleContextProvider key={id}><PageComponent tabId={id} /></SaleContextProvider>,
         id,
     }), []);
 
     const getTabs = React.useCallback(() => tabs, [ tabs ]);
+    
+    const getCurrentTab = React.useCallback(() => tabs.selectedTab, [ tabs ]);
+    const setCurrentTab = React.useCallback((id) => setTabs(currentTabs => {
+        if(currentTabs.selectedTab === id) return currentTabs;
+
+        return {  ...currentTabs, selectedTab: id };
+    }), [])
 
     // add brand new tab
     const addTab = React.useCallback(() => {
         const id = uuidV4();
 
-        setPages(currentTabs => {
+        setTabs(currentTabs => {
             // Insert up to 5 pages
             if(currentTabs.list.length >= 5) return currentTabs;
 
-            return { list: [ ...currentTabs.list, createPage(id) ], selectedPage: id };
+            return { list: [ ...currentTabs.list, createPage(id) ], selectedTab: id };
         });
     }, [ createPage ]);
 
@@ -48,7 +55,7 @@ const SaleTabsContextProvider = ({ children }) => {
 
             return {
                 list,
-                selectedPage: list[list.length - 1].id
+                selectedTab: list[list.length - 1].id
             }
         })
     }, []);
@@ -87,10 +94,10 @@ const SaleTabsContextProvider = ({ children }) => {
             value={{
                 addTab,
                 categories,
-                getTabs,
+                getTabs, getCurrentTab,
                 products,
                 removeTab,
-                setCategories
+                setCategories, setCurrentTab
             }}>
             { children }
         </SaleTabsContext.Provider>
