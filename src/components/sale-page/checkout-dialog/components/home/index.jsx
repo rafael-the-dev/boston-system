@@ -6,12 +6,13 @@ import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DoneIcon from '@mui/icons-material/Done';
 
-import { CheckoutContext } from "src/context";
+import { CheckoutContext, SaleTabsContext } from "src/context";
 import { fetchHelper } from "src/helpers/queries"
 
 import PaymentMethod from "../payment-method"
 
 const CheckoutContainer = ({ fetchData, onClose, setPanel, salesSerie }) => {
+    const { fetchProducts } = React.useContext(SaleTabsContext);
     const { getPaymentMethods } = React.useContext(CheckoutContext);
     const [ loading, setLoading ] = React.useState(false);
 
@@ -54,7 +55,7 @@ const CheckoutContainer = ({ fetchData, onClose, setPanel, salesSerie }) => {
             const result = await fetchHelper({ options, url: "/api/sales" });
             setLoading(false);
             salesSerie.current = result.salesserie;
-            fetchData();
+            fetchProducts();
             setPanel("SUCCESSFULPAYMENT")
         } catch(e) {
             console.error(e);

@@ -1,0 +1,17 @@
+.paymentButton {
+    height: 60px;
+    width: 30%;
+}
+
+@media screen and (min-width: 1024px) {
+    .footer {
+        background: #e5e7eb;
+        display: flex;
+        padding: 0 0 0 1rem;
+    }
+
+    .paymentButton {
+        height: 70px;
+        width: 32%;
+    }
+}

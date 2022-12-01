@@ -1,9 +1,12 @@
 import * as React from "react";
 import Button from "@mui/material/Button";
 
+import { SaleTabsContext } from "src/context";
+
 import Dialog from "../dialog";
 
-const Container = ({ categories, products }) => {
+const Container = () => {
+    const { categories, products } = React.useContext(SaleTabsContext);
     const onOpen = React.useRef(null);
 
     const clickHandler = () => onOpen.current?.();

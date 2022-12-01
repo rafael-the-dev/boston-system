@@ -8,7 +8,7 @@ import DialogHeader from "src/components/dialog/components/dialog-header";
 import PaymentMethodHome from "./components/home";
 import SuccessfulPaymentPanel from "./components/successful-payment-panel"
 
-const CheckoutContainer = ({ fetchData, onOpen }) => {
+const CheckoutContainer = ({ onOpen }) => {
     const [ panel, setPanel ] = React.useState("PAYMENTMETHODS")
 
     const onClose = React.useRef(null);
@@ -24,7 +24,7 @@ const CheckoutContainer = ({ fetchData, onOpen }) => {
         </DialogHeader>
     ), [ closeHandler ]);
     
-    const paymentMethodMethodMemo = React.useMemo(() => <PaymentMethodHome fetchData={fetchData} onClose={closeHandler} salesSerie={salesSerie} setPanel={setPanel} />, [ closeHandler ])
+    const paymentMethodMethodMemo = React.useMemo(() => <PaymentMethodHome onClose={closeHandler} salesSerie={salesSerie} setPanel={setPanel} />, [ closeHandler ])
     const successfulPaymentPanel = React.useMemo(() => <SuccessfulPaymentPanel onClose={closeHandler} salesSerie={salesSerie}  setPanel={setPanel} />, [ closeHandler ])
 
     return (

@@ -5,4 +5,5 @@ export * from "./LoginContext";
 export * from "./SignUpContext";
 export * from "./SaleContext";
 export * from "./SalesContext";
+export * from "./SaleTabsContext"
 export * from "./SalesTabContext"

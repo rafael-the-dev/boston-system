@@ -1,6 +1,6 @@
 import { useRouter } from "next/router"
 
-import { AddStockContextProvider, SignUpContextProvider, SaleContextProvider, SalesContextProvider } from "src/context"
+import { AddStockContextProvider, SignUpContextProvider, SaleTabsContextProvider, SalesContextProvider } from "src/context"
 
 const ContextProvider = ({ children }) => {
     const { pathname } = useRouter();
@@ -9,7 +9,7 @@ const ContextProvider = ({ children }) => {
 
         return {
             "/add-stock": <AddStockContextProvider>{ children }</AddStockContextProvider>,
-            "/sale": <SaleContextProvider>{ children }</SaleContextProvider>,
+            "/sale": <SaleTabsContextProvider>{ children }</SaleTabsContextProvider>,
             "/sign-up": <SignUpContextProvider>{ children }</SignUpContextProvider>,
             "/users/[id]": <SignUpContextProvider>{ children }</SignUpContextProvider>,
             "/sales": <SalesContextProvider>{ children }</SalesContextProvider>

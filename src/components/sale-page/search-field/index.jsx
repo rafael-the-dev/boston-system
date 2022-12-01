@@ -4,13 +4,14 @@ import classNames from "classnames";
 
 import classes from "./styles.module.css";
 
-import { SaleContext } from "src/context";
+import { SaleContext, SaleTabsContext } from "src/context";
 import CartItem from "src/models/client/CartItem"
 
 import Input from "src/components/default-input";
 import Table from "./components/table"
 
-const Container = ({ products }) => {
+const Container = () => {
+    const { products } = React.useContext(SaleTabsContext);
     const { getCart } = React.useContext(SaleContext);
 
     const [ barCode, setBarCode ] = React.useState("");
