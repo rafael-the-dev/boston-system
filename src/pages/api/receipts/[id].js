@@ -13,9 +13,9 @@ const requestHandler = async (req, res, user ) => {
         case "GET": {
             const [ paymentMethods, products ] = await Promise.all([
                 query(`
-                    SELECT description, amount, Received as received, paymentmethodused.Change as client_change, PaymentSeries.data FROM paymentmethodused INNER JOIN paymentmethod ON paymentmethodused.fk_payment_mode=paymentmethod.idPaymentMethod
-                    INNER JOIN PaymentSeries ON PaymentSeries.idPaymentSeries=paymentmethodused.fk_payment_serie
-                    WHERE PaymentSeries.idPaymentSeries=(SELECT MAX(idPaymentSeries) FROM paymentseries WHERE paymentseries.fk_user=?)
+                    SELECT description, amount, Received as received, paymentmethodused.Change as client_change, paymentseries.data FROM paymentmethodused INNER JOIN paymentmethod ON paymentmethodused.fk_payment_mode=paymentmethod.idPaymentMethod
+                    INNER JOIN paymentseries ON paymentseries.idPaymentSeries=paymentmethodused.fk_payment_serie
+                    WHERE paymentseries.idPaymentSeries=(SELECT MAX(idPaymentSeries) FROM paymentseries WHERE paymentseries.fk_user=?)
                 `, [ user.idUser ]),
                 query(`
                     SELECT BarCod AS barCode, Iva as totalVAT, Nome AS description, Preco_venda as price, Quantity as quantity, Montante as totalAmount, Subtotal as subTotal  FROM sales INNER JOIN salesseries ON sales.SalesSerie=salesseries.idSalesSeries

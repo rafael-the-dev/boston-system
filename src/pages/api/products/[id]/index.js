@@ -12,7 +12,7 @@ const requestHandler = async (req, res) => {
 
     switch(method) {
         case "GET": {
-            return query(`SELECT * FROM Produto WHERE idProduto=?`, [ id ])
+            return query(`SELECT * FROM produto WHERE idProduto=?`, [ id ])
                 .then(result => {
                     res.json(result);
                     return;
@@ -24,7 +24,7 @@ const requestHandler = async (req, res) => {
             const { body } = req; 
             const { available, barCode, category, date, sellVat, name, purchasePrice, purchaseVat, sellPrice  } = JSON.parse(body);
 
-            return query(`SELECT * FROM Produto WHERE idProduto=?`, [ id ])
+            return query(`SELECT * FROM produto WHERE idProduto=?`, [ id ])
                 .then(result => {
                     if(result.length === 0) throw new Error404("Product already exists");
 
@@ -34,7 +34,7 @@ const requestHandler = async (req, res) => {
 
                     const values = [ available, barCode, category, date, sellVat, name, purchasePrice, purchaseVat, sellPrice, profit, id ];
 
-                    return query(`UPDATE Produto SET Estado=?, BarCod=?, fk_grupo=?, Data=?, Iva_venda=?, Nome=?, Preco_compra=?, IVA_compra=?, Preco_venda=?, Profit=? WHERE idProduto=?`, values)
+                    return query(`UPDATE produto SET Estado=?, BarCod=?, fk_grupo=?, Data=?, Iva_venda=?, Nome=?, Preco_compra=?, IVA_compra=?, Preco_venda=?, Profit=? WHERE idProduto=?`, values)
                         .then(() => res.json({ message: "Product was successfully updated" }));
                 })
         }

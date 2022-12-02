@@ -9,12 +9,12 @@ const requestHandler = (req, res) => {
 
     switch(method) {
         case "GET": {
-            return query("SELECT idFornecedor AS id, Nome AS name, Nuit AS nuit, Morada AS address, Estado AS state, Data AS date FROM Fornecedor;")
+            return query("SELECT idFornecedor AS id, Nome AS name, Nuit AS nuit, Morada AS address, Estado AS state, Data AS date FROM fornecedor;")
                 .then(result => res.status(200).json(result))
         }
         case "POST": {
             const { address, name, nuit } = JSON.parse(body);
-            return query(`INSERT INTO Fornecedor(Nome, Nuit, Morada, Estado, Data) VALUES(?,?,?, "ACTIVO", NOW())`, [ name, nuit, address ])
+            return query(`INSERT INTO fornecedor(Nome, Nuit, Morada, Estado, Data) VALUES(?,?,?, "ACTIVO", NOW())`, [ name, nuit, address ])
                 .then(() => res.status(201).send());
         }
     }

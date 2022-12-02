@@ -11,7 +11,7 @@ const requestHandler = (req, res) => {
         case "GET": {
             return query(`
                 SELECT idFornecedor AS id, Nome AS name, Nuit AS nuit, Morada AS address, Estado AS state, 
-                Data AS date FROM Fornecedor WHERE idFornecedor=?;`, [ id ])
+                Data AS date FROM fornecedor WHERE idFornecedor=?;`, [ id ])
                 .then(result => {
                     if(result.length === 0) throw new Error404("Supplier not found");
 
@@ -20,7 +20,7 @@ const requestHandler = (req, res) => {
         }
         case "PUT": {
             const { address, name, nuit } = JSON.parse(body);
-            return query(`UPDATE Fornecedor SET Nome=?, Nuit=?, Morada=? WHERE idFornecedor=?`, [ name, nuit, address, id ])
+            return query(`UPDATE fornecedor SET Nome=?, Nuit=?, Morada=? WHERE idFornecedor=?`, [ name, nuit, address, id ])
                 .then(() => res.status(200).send());
         }
     }

@@ -23,7 +23,7 @@ const requestHandler = async (req, res, user ) => {
                 salesId: null,
             }
            
-            return query(`INSERT INTO SalesSeries(Data, Estado, User) VALUES(now(),?,?)`, [ "CONCLUIDO", user.idUser  ])
+            return query(`INSERT INTO salesseries(Data, Estado, User) VALUES(now(),?,?)`, [ "CONCLUIDO", user.idUser  ])
                 .then(async (result) => {
                     const { insertId } = result;
                     errorRecovery.salesSeries = insertId;
@@ -38,7 +38,7 @@ const requestHandler = async (req, res, user ) => {
 
                     try {
                         await Promise.all([
-                            query("INSERT INTO Sales(SalesSerie, Montante, Iva, Subtotal, Total, Status, Data) VALUES(?,?,?,?,?,?,now())", [ insertId, totalAmount, totalVAT, total, total, "CONCLUIDO" ])
+                            query("INSERT INTO sales(SalesSerie, Montante, Iva, Subtotal, Total, Status, Data) VALUES(?,?,?,?,?,?,now())", [ insertId, totalAmount, totalVAT, total, total, "CONCLUIDO" ])
                                 .then(async salesResult => {
                                     const salesId = salesResult.insertId;
                                     errorRecovery.salesId = salesId;
@@ -47,14 +47,14 @@ const requestHandler = async (req, res, user ) => {
                                         products.map(product => {
                                             const { id, quantity, subTotal, stock, total, totalVAT } = product;
                                             return [
-                                                query("INSERT INTO SalesDetail(FKSales, Product, Quantity, Satus, User, Data) VALUES(?,?,?,?,?,now())", [ salesId, id, quantity, "CONCLUIDO", user.idUser ]),
+                                                query("INSERT INTO salesdetail(FKSales, Product, Quantity, Satus, User, Data) VALUES(?,?,?,?,?,now())", [ salesId, id, quantity, "CONCLUIDO", user.idUser ]),
                                                 query(`UPDATE stock SET total=? WHERE idStock=?`, [ stock.total, stock.stockId ])
                                             ]
                                         }).flatMap(item => item)
                                     );
     
                                 }),
-                            query('INSERT INTO PaymentSeries(status, fk_user, fk_salesserie, data) VALUES(?,?,?, now())', [ "CONCLUIDO", user.idUser, insertId ])
+                            query('INSERT INTO paymentseries(status, fk_user, fk_salesserie, data) VALUES(?,?,?, now())', [ "CONCLUIDO", user.idUser, insertId ])
                                 .then(async result => {
                                     const { insertId } = result;
                                     errorRecovery.paymentSeries = insertId;
@@ -62,7 +62,7 @@ const requestHandler = async (req, res, user ) => {
                                     await Promise.all(
                                         paymentMethods.map(method => {
                                             const { amount, id } = method;
-                                            return query("INSERT INTO PaymentMethodUsed(fk_payment_mode, fk_payment_serie, amount, status, Received, data) VALUES(?,?,?,?,?,now())", [ id, insertId, amount, "CONCLUIDO", amount ])
+                                            return query("INSERT INTO paymentmethodused(fk_payment_mode, fk_payment_serie, amount, status, Received, data) VALUES(?,?,?,?,?,now())", [ id, insertId, amount, "CONCLUIDO", amount ])
                                         })
                                     )
                                 })
@@ -72,9 +72,9 @@ const requestHandler = async (req, res, user ) => {
                     } catch(e) {
                         console.error(e)
                         await Promise.all([
-                            query("UPDATE SalesSeries SET Estado='FALHADO' WHERE idSalesSeries=?", [ errorRecovery.salesSeries ]),
-                            query("UPDATE Sales SET Status='FALHADO' WHERE SalesSerie=?", [ errorRecovery.salesSeries ]),
-                            query("UPDATE PaymentSeries SET status='FALHADO' WHERE fk_salesserie=?", [ errorRecovery.salesSeries ])
+                            query("UPDATE salesseries SET Estado='FALHADO' WHERE idSalesSeries=?", [ errorRecovery.salesSeries ]),
+                            query("UPDATE sales SET Status='FALHADO' WHERE SalesSerie=?", [ errorRecovery.salesSeries ]),
+                            query("UPDATE paymentSeries SET status='FALHADO' WHERE fk_salesserie=?", [ errorRecovery.salesSeries ])
                         ]);
 
                         await Promise.all(
@@ -85,11 +85,11 @@ const requestHandler = async (req, res, user ) => {
                         );
 
                         if(errorRecovery.salesId) {
-                            await query(`UPDATE SalesDetail SET Satus='FALHADO' WHERE FKSales=?`, [ errorRecovery.salesId ])
+                            await query(`UPDATE salesdetail SET Satus='FALHADO' WHERE FKSales=?`, [ errorRecovery.salesId ])
                         }
 
                         if(errorRecovery.paymentSeries) {
-                            await query(`UPDATE PaymentMethodUsed SET status='FALHADO' WHERE fk_payment_serie=?`, [ errorRecovery.paymentSeries ])
+                            await query(`UPDATE paymentmethodused SET status='FALHADO' WHERE fk_payment_serie=?`, [ errorRecovery.paymentSeries ])
                         }
 
                         throw e;

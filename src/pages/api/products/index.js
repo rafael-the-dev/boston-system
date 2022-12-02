@@ -12,7 +12,7 @@ const requestHandler = async (req, res, user) => {
 
     switch(method) {
         case "GET": {
-            return query(`SELECT * FROM Produto`)
+            return query(`SELECT * FROM produto`)
                 .then(result => {
                     res.json(result);
                 })
@@ -27,7 +27,7 @@ const requestHandler = async (req, res, user) => {
 
             const values = [ available, barCode, category, date, sellVat, name, profit, purchasePrice, purchaseVat, totalPurchasePrice, totalSellPrice, sellPrice ];
 
-            return query(`SELECT * FROM Produto WHERE BarCod=?`, [ barCode ])
+            return query(`SELECT * FROM produto WHERE BarCod=?`, [ barCode ])
                 .then(result => {
                     if(result.length !== 0) throw new Error404("Product already exists");
 

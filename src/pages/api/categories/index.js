@@ -9,7 +9,7 @@ const requestHandler = async (req, res) => {
     switch(method) {
         case "GET": {
             const x = new SerialPort();
-            return query(`SELECT * FROM Grupo`)
+            return query(`SELECT * FROM grupo`)
                 .then(result => {
                     res.json(result)
                 })
