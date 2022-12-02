@@ -4,7 +4,7 @@ module.exports = {
     env: {
         DB: {
             connectionLimit: 10,
-            host     : 'localhost',
+            host     : '127.0.0.1',
             user     : 'nanc_root',
             password : "40260101",
             database : 'nanc_mydb'
